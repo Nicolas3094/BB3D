@@ -6,13 +6,25 @@
 enum DIRECCION{
     X=1,Y=2,Z=3
 };
-class ColaPuntos {
+class ColaPuntosDBL {
+private:
     std::vector<Punto> cola;
     int x,y,z;
+
+    bool condition(Punto, Punto);
+    bool condition1(Punto, Punto);
+    bool condition2(Punto, Punto);
+    bool condition3(Punto, Punto);
 public:
-    ColaPuntos();
-    void push(Punto,DIRECCION);
+    ColaPuntosDBL();
+
+    static ColaPuntosDBL& Build();
+
+    void push(Punto&);
+    void remove(int);
     void pop();
+    void clear();
+    void update();
     Punto& top();
     Punto back();
     int size();

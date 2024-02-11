@@ -1,22 +1,34 @@
 #ifndef DIMENSION_H
 #define DIMENSION_H
 
+#include "../main.hpp"
+#include "Punto.hpp"
 #include <iostream>
 
 class Dim{
+private:
+    uint l; uint w; uint h;
 public:
-    double l; double w; double h; double vol;
     Dim();
-    Dim(double,double,double);
+    ~Dim();
+    Dim(uint,uint,uint);
+
+    static Dim& Build();
+
+    Punto getVector();
+    const uint getLargo() const;
+    const uint getAncho() const;
+    const uint getAlto() const;
+    const ulong getVolumen() const;
+
+
+    Dim& setLargo(uint);
+    Dim& setAncho(uint);
+    Dim& setAlto(uint);
 };
-class Punto{
-public:
-    double x; double y; double z;
-    Punto();
-    Punto(double,double,double);
-};
+
+
 std::ostream&  operator <<(std::ostream& , Dim& );
-std::ostream&  operator <<(std::ostream& , Punto& );
 
 bool operator==(Dim &, Dim &);
 bool operator!=(Dim &, Dim &);

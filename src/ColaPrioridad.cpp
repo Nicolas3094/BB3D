@@ -1,49 +1,100 @@
 #include "ColaPrioridad.hpp"
 
-ColaPuntos::ColaPuntos(){
-    x=0; y=0; z=0;
+ColaPuntosDBL::ColaPuntosDBL(){
 }
-Punto& ColaPuntos::top(){
+
+ColaPuntosDBL& ColaPuntosDBL::Build(){
+    ColaPuntosDBL* cola = new ColaPuntosDBL();
+    return *cola;
+}
+
+Punto& ColaPuntosDBL::top(){
     return this->cola.front();
 }
-Punto ColaPuntos::back(){
+
+Punto ColaPuntosDBL::back(){
     return this->cola.back();
 }
-void ColaPuntos::pop(){
-    if(z!=0) z--;
-    else if(y!=0) y--;
-    else x--;
-    cola.erase(cola.begin());
-}
-void ColaPuntos::push(Punto pt,DIRECCION dir){
 
-    if(dir==DIRECCION::X){
-         x++;
-         cola.push_back(pt);
+void ColaPuntosDBL::pop(){
+    if(cola.size() > 0){
+        cola.erase(cola.begin());
     }
-    else if(dir==DIRECCION::Y){
-        cola.insert(cola.begin()+z+y,pt);
-        y++;
-    }
-    else{ 
-        cola.insert(cola.begin(),pt);
-        z++;
-    }
-   
 }
-void ColaPuntos::printQ(){
+
+void ColaPuntosDBL::clear(){
+   cola.clear();
+}
+
+void ColaPuntosDBL::push(Punto& pt){
+    if(this->cola.size() == 0){
+        this->cola.push_back(pt);
+        return;
+    }
+    if (cola.at(cola.size() - 1) == pt){
+        return; 
+    }
+    if (condition(pt, cola.at(cola.size() - 1))) {
+        this->cola.push_back(pt);
+        return;
+    }
+    for(int i = this->cola.size() ; i > 0; i--){
+        if(condition(pt, cola[i]) ){
+            cola.insert(cola.begin() + i, pt);
+            return;
+        }
+        if (pt == cola[i]){
+            return;
+        }
+    }
+}
+
+void ColaPuntosDBL::remove(int index){
+   this->cola.erase(cola.begin() + index);
+}
+
+void ColaPuntosDBL::update(){
+    for(int i = this->cola.size() ; i > 0; i--){
+        Punto q = cola[i];
+        Punto qprev = cola[i - 1];
+        if( (qprev.x == q.x && qprev.z == q.z) || (qprev == q) ){
+            cola.erase(cola.begin() + i);
+        }
+    }
+}
+
+void ColaPuntosDBL::printQ(){
     for(auto pt : cola){
         std::cout << "("<<pt.x<<","<<pt.y<<","<<pt.z<<")->";
     }
     std::cout <<"NULL\n";
 }
-int ColaPuntos::size(){
+
+int ColaPuntosDBL::size(){
     return cola.size();
 }
-bool ColaPuntos::empty(){
+
+bool ColaPuntosDBL::empty(){
     return cola.empty();
 }
-Punto& ColaPuntos::operator[](int index)
+
+Punto& ColaPuntosDBL::operator[](int index)
 {
     return cola[index];
+}
+
+bool ColaPuntosDBL::condition1(Punto pt1, Punto pt2){
+    return pt1.x < pt2.x;
+}
+
+bool ColaPuntosDBL::condition2(Punto pt1, Punto pt2){
+    return pt1.x == pt2.x && pt1.z < pt2.z;
+}
+
+bool ColaPuntosDBL::condition3(Punto pt1, Punto pt2){
+    return pt1.x == pt2.x && pt1.z == pt2.z && pt1.y < pt2.y;
+}
+
+bool ColaPuntosDBL::condition(Punto pt1, Punto pt2){
+    return condition1(pt1, pt2) || condition2(pt1, pt2) || condition3(pt1, pt2);
 }
