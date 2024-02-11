@@ -43,7 +43,7 @@ void evaluatePoblation(Poblacion &poblacion, LoadedBins allItemsBin, Bin bin, RO
 {
     bin.setRotationWay(rotatiomWay);
 
-    for (uint` i = 0; i < poblacion.size(); i++)
+    for (uint i = 0; i < poblacion.size(); i++)
     {
         evaluateFitness(heuristicPoblation[i], allItemsBin, bin);
     }
