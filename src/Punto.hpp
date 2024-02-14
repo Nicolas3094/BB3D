@@ -4,23 +4,27 @@
 #include "../main.hpp"
 #include <iostream>
 
-class Punto{
+class Punto
+{
 public:
-    uint x; uint y; uint z;
+    int x;
+    int y;
+    int z;
     Punto();
-    Punto(const uint,const uint,const uint);
+    Punto(const int, const int, const int);
 
-     static Punto& Build(const uint,const uint,const uint);
+    static Punto &Build(const int, const int, const int);
 };
 
-std::ostream&  operator <<(std::ostream& , Punto& );
+std::ostream &operator<<(std::ostream &, Punto);
+std::ostream &operator<<(Punto, std::ostream &);
 
 bool operator==(Punto, Punto);
 bool operator!=(Punto, Punto);
 Punto operator+(Punto, Punto);
 Punto operator-(Punto, Punto);
-Punto operator*(uint, Punto);
-Punto operator*(Punto, uint);
-Punto operator/(Punto, uint);
+Punto operator*(int, Punto);
+Punto operator*(Punto, int);
+Punto operator/(Punto, int);
 
 #endif

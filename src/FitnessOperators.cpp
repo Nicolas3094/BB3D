@@ -3,7 +3,13 @@
 void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin &bin)
 {
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
-    ind.setFitness(bin.getLoadedVolume() / bin.getDimensions().getVolumen());
+    ind.setFitness((float)bin.getLoadedVolume() / (float)bin.getDimensions().getVolumen());
+}
+
+void evaluateFitnessDecodificated(Individuo &ind, LoadedBins itemData, Bin &bin)
+{
+    DBLF(bin, decodificateIndividual(ind, itemData, bin));
+    ind.setFitness((float)bin.getLoadedVolume() / (float)bin.getDimensions().getVolumen());
 }
 
 DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad)
@@ -18,11 +24,10 @@ DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad)
     return genome;
 }
 
-Poblacion buildHeuristicPoblation(const uint numberPoblation, Bin &bin, LoadedBins allItemsBin, ROTATION_WAY rotationWay)
+Poblacion buildHeuristicPoblation(const uint numberPoblation, Bin bin, LoadedBins allItemsBin)
 {
     std::vector<Chromosome> heuristicPoblationChromosome = buildCompleteHeuristicChromosomes(allItemsBin, numberPoblation);
     Poblacion heuristicPoblation(numberPoblation);
-    bin.setRotationWay(rotationWay);
     for (uint i = 0; i < numberPoblation; i++)
     {
         heuristicPoblation[i] = Individuo::Build()
@@ -31,20 +36,17 @@ Poblacion buildHeuristicPoblation(const uint numberPoblation, Bin &bin, LoadedBi
                                             .setGenome(heuristicPoblationChromosome[i])
                                             .setDGenome(generateRandomRepeatedAlalleleChromosome(
                                                 /* NumberCount= */ allItemsBin.size(),
-                                                /* minimum= */ 0,
-                                                /* maximum= */ getIdFromRotationWay(rotationWay))));
-        evaluateFitness(heuristicPoblation[i], allItemsBin, bin);
+                                                /* minimum= */ 1,
+                                                /* maximum= */ getIdFromRotationWay(bin.getRotationWay()))));
     }
 
     return heuristicPoblation;
 }
 
-void evaluatePoblation(Poblacion &poblacion, LoadedBins allItemsBin, Bin bin, ROTATION_WAY rotatiomWay)
+void evaluatePoblation(Poblacion &poblacion, LoadedBins allItemsBin, Bin bin)
 {
-    bin.setRotationWay(rotatiomWay);
-
     for (uint i = 0; i < poblacion.size(); i++)
     {
-        evaluateFitness(heuristicPoblation[i], allItemsBin, bin);
+        evaluateFitness(poblacion[i], allItemsBin, bin);
     }
 }

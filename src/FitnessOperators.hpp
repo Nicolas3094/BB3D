@@ -7,8 +7,9 @@
 #include "GenomeOperators.hpp"
 
 void evaluateFitness(Individuo &, LoadedBins, Bin &);
+void evaluateFitnessDecodificated(Individuo &, LoadedBins, Bin &);
 DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad);
-Poblacion buildHeuristicPoblation(const uint, LoadedBins, Bin &, ROTATION_WAY);
-void evaluatePoblation(Poblacion &, LoadedBins, Bin, ROTATION_WAY);
+Poblacion buildHeuristicPoblation(const uint, Bin, LoadedBins);
+void evaluatePoblation(Poblacion &, LoadedBins, Bin);
 
 #endif

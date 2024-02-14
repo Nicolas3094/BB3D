@@ -1,34 +1,98 @@
 #include "DBLF.hpp"
 
 void DBLF(
-    Bin& bin,
-    Chromosome itemsIdToPack, 
-    Chromosome itemsRotation, 
-    LoadedBins itemDataOrderById){
-    ROTATION_WAY rotationWay = bin.getRotationWay();
+    Bin &bin,
+    Chromosome itemsIdToPack,
+    Chromosome itemsRotation,
+    LoadedBins itemDataOrderById)
+{
     ColaPuntosDBL queue = ColaPuntosDBL::Build();
-    queue.push(Punto::Build(0,0,0));
+    queue.push(Punto::Build(0, 0, 0));
 
-    for(int i = 0; i < itemsIdToPack.size(); i++){
-        int boxId = itemsIdToPack[i];
-        ROTATION_MODE rotation = getRotationFromId(itemsRotation[i]);
-        ItemBin itemToPack = itemDataOrderById[i].rotate(rotationWay, rotation); 
-        if (!itemToPack.isValidOrientation()) {
-            continue;
-        }
-        for(int j = 0; j < queue.size(); j++){
-            Punto currenPoint = queue[i];
-            Punto dimensionPoint;
-            dimensionPoint.x = bin.getDimensions().getLargo();
-            dimensionPoint.y = bin.getDimensions().getAncho();
-            dimensionPoint.z = bin.getDimensions().getAlto();
-            if (canBePlaced(bin, currenPoint + dimensionPoint)) {
-                bool isOverlap = isOverlapped(queue[i], itemToPack, itemDataOrderById, bin, rotation);
-                if (!isOverlap){
+    for (int boxId : itemsIdToPack)
+    {
+        // std::cout << "Box: " << boxId << "\n";
+        ROTATION_MODE rotation = getRotationFromId(itemsRotation[boxId]);
+        // Item to pack
+        itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(), rotation);
+        // std::cout << "Available points: " << queue;
+        for (int j = queue.size() - 1; j >= 0; j--)
+        {
+            Punto currenPoint = queue[j];
+            Punto dimensionPoint = itemDataOrderById[boxId - 1].getCurrentDimension();
+            // std::cout << "Prueba con punto: " << currenPoint << "\n";
+            // std::cout << "Dimension point: " << dimensionPoint << "\n";
+            // std::cout << "Envelope: " << currenPoint + dimensionPoint << "\n";
+            if (canBePlaced(bin, currenPoint + dimensionPoint))
+            {
+                // std::cout << "Se puede poner." << "\n";
+                bool isOverlap = isOverlapped(currenPoint, itemDataOrderById[boxId - 1], bin);
+                if (!isOverlap)
+                {
                     queue.remove(j);
-                    addItemToBin(queue, bin, queue[i], itemToPack, itemDataOrderById, rotation);
+                    iterateByDeepestBottomLeft(currenPoint, itemDataOrderById[boxId - 1], bin);
+                    addItemToBin(queue, bin, currenPoint, itemDataOrderById[boxId - 1]);
+                    // std::cout << "Se inserto " << boxId<< "\n\n";
                     break;
                 }
+                /*else
+                {
+                    std::cout << "Traslapa con caja."
+                              << "\n\n";
+                }*/
+            }
+            /*else
+            {
+                std::cout << "No entra en contenedor."
+                          << "\n";
+            }*/
+        }
+    }
+}
+
+void DBLF(
+    Bin &bin,
+    LoadedBins itemsToPack)
+{
+    ROTATION_WAY rotationWay = bin.getRotationWay();
+    ColaPuntosDBL queue = ColaPuntosDBL::Build();
+    queue.push(Punto::Build(0, 0, 0));
+
+    for (ItemBin &item : itemsToPack)
+    {
+        std::cout << "Box: " << item.getId() << "\n";
+        std::cout << "Available points: " << queue;
+        for (int j = queue.size() - 1; j >= 0; j--)
+        {
+            Punto currenPoint = queue[j];
+            Punto dimensionPoint = item.getCurrentDimension();
+            std::cout << "Prueba con punto: " << currenPoint << "\n";
+            std::cout << "Dimension point: " << dimensionPoint << "\n";
+            std::cout << "Envelope: " << currenPoint + dimensionPoint << "\n";
+
+            if (canBePlaced(bin, currenPoint + dimensionPoint))
+            {
+                std::cout << "Se puede poner."
+                          << "\n";
+                bool isOverlap = isOverlapped(currenPoint, item, bin);
+                if (!isOverlap)
+                {
+                    queue.remove(j);
+                    iterateByDeepestBottomLeft(currenPoint, item, bin);
+                    addItemToBin(queue, bin, currenPoint, item);
+                    std::cout << "Se inserto " << item.getId() << "\n";
+                    break;
+                }
+                else
+                {
+                    std::cout << "Traslapa con caja."
+                              << "\n\n";
+                }
+            }
+            else
+            {
+                std::cout << "No entra en contenedor."
+                          << "\n";
             }
         }
     }

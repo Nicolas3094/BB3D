@@ -1,56 +1,68 @@
 #include "Dimension.hpp"
 
-Dim::~Dim(){}
+Dim::~Dim() {}
 
-Dim::Dim(uint l, uint w , uint h){
-    this->h=h;
-    this->l=l;
-    this->w=w;
+Dim::Dim(int l, int w, int h)
+{
+    this->h = h;
+    this->l = l;
+    this->w = w;
 }
-Dim::Dim(){
-    h=0;l=0;w=0;
+Dim::Dim()
+{
+    h = 0;
+    l = 0;
+    w = 0;
 }
-Dim& Dim::Build(){
+Dim &Dim::Build()
+{
     Dim *dim = new Dim();
     return *dim;
 }
 
-Dim& Dim::setAncho(uint ancho){
+Dim &Dim::setAncho(int ancho)
+{
     this->w = ancho;
     return *this;
 }
 
-Dim& Dim::setLargo(uint largo){
+Dim &Dim::setLargo(int largo)
+{
     this->l = largo;
     return *this;
 }
 
-Dim& Dim::setAlto(uint alto){
+Dim &Dim::setAlto(int alto)
+{
     this->h = alto;
     return *this;
 }
 
-const uint Dim::getAlto() const {
+const int Dim::getAlto() const
+{
     return h;
 }
 
-const uint Dim::getLargo() const {
+const int Dim::getLargo() const
+{
     return l;
 }
 
-const uint Dim::getAncho() const{
+const int Dim::getAncho() const
+{
     return w;
 }
 
-const ulong Dim::getVolumen() const{
-    return this->w*this->l*this->h;
+const long Dim::getVolumen() const
+{
+    return this->w * this->l * this->h;
 }
 
-Punto Dim::getVector(){
-    Punto punto = Punto(this->l,this->w,this->h);
+Punto Dim::getVector()
+{
+    Punto punto = Punto(this->l, this->w, this->h);
     return punto;
 }
-
 
 bool operator==(Dim &d1, Dim &d2)
 {

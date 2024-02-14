@@ -9,6 +9,6 @@ enum ROTATION_WAY
     SIX_WAY = 6
 };
 
-uint getIdFromRotationWay(ROTATION_WAY);
+int getIdFromRotationWay(ROTATION_WAY);
 
 #endif

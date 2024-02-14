@@ -40,3 +40,18 @@ std::ostream &operator<<(std::ostream &COUT, Individuo &ind)
          << ind.getGenome() << "\n";
     return COUT;
 }
+
+LoadedBins decodificateIndividual(Individuo indivudual, LoadedBins dataSet, Bin bin)
+{
+    int genomeSize = indivudual.getGenome().getGenome().size();
+    LoadedBins itemsToPack(genomeSize);
+    for (int i = 0; i < genomeSize; i++)
+    {
+        ItemBin item = dataSet[indivudual.getGenome().getGenome()[i] - 1];
+        itemsToPack[i] = item.rotate(
+            bin.getRotationWay(),
+            getRotationFromId(indivudual.getGenome().getDGenome()[i]));
+    }
+
+    return itemsToPack;
+}

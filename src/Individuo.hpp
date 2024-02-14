@@ -3,6 +3,7 @@
 
 #include "../main.hpp"
 #include "Chromosome.hpp"
+#include "Bin.hpp"
 
 class Individuo
 {
@@ -22,9 +23,10 @@ public:
     DoubleGenome &getGenome();
 };
 
-DoubleGenome *createGenome(Chromosome, Chromosome);
-
 std::ostream &operator<<(std::ostream &, Individuo &);
+
 typedef std::vector<Individuo> Poblacion;
+
+LoadedBins decodificateIndividual(Individuo, LoadedBins, Bin);
 
 #endif

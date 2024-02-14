@@ -6,6 +6,7 @@
 #include "Bin.hpp"
 #include "ColaPrioridad.hpp"
 
-void DBLF(Bin&,Chromosome,Chromosome,LoadedBins);
+void DBLF(Bin &, Chromosome, Chromosome, LoadedBins);
+void DBLF(Bin &, LoadedBins);
 
 #endif

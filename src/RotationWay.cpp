@@ -1,6 +1,6 @@
 #include "RotationWay.hpp"
 
-uint getIdFromRotationWay(ROTATION_WAY rotation)
+int getIdFromRotationWay(ROTATION_WAY rotation)
 {
     switch (rotation)
     {

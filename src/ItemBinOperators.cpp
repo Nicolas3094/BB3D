@@ -1,29 +1,31 @@
 #include "ItemBinOperators.hpp"
 
-bool canBePlaced(Bin bin,const Punto &possiblePoint){
+bool canBePlaced(Bin bin, const Punto &possiblePoint)
+{
     return possiblePoint.z <= bin.getDimensions().getAlto() &&
            possiblePoint.y <= bin.getDimensions().getAncho() &&
            possiblePoint.x <= bin.getDimensions().getLargo();
 }
 
-bool isABIntersect(Punto Amax, Punto Amin, Punto Bmax, Punto Bmin){
-    return Amin.x < Bmax.x && Amax.x > Bmin.x 
-        && Amin.y < Bmax.y && Amax.y > Bmin.y
-        && Amin.z < Bmax.z  && Amax.z > Bmin.z;
+bool isABIntersect(Punto Amax, Punto Amin, Punto Bmax, Punto Bmin)
+{
+    if ((Amin.x >= Bmax.x || Amax.x <= Bmin.x) || (Amin.y >= Bmax.y || Amax.y <= Bmin.y) || (Amin.z >= Bmax.z || Amax.z <= Bmin.z))
+    {
+        return false;
+    }
+    return true;
 }
-//Min O(1), Max O(N), Prom O(N/2)
-bool isOverlapped(Punto position, ItemBin currentBin, LoadedBins dataSet, Bin bin, ROTATION_MODE rotation){
-    for(int i = 0; i < bin.getNumberOfLoadedItems() ; i++){
-        Punto Bmin = bin.getLoadedItems()[i].getPunto();
-        //Verifica si la caja tiene su respectiva rotacion.
-        ItemBin oldItem = dataSet[bin.getLoadedItems()[i].getId() - 1];
-        oldItem = oldItem.rotate(bin.getRotationWay(), rotation);
 
+bool isOverlapped(Punto position, ItemBin currentItem, Bin bin)
+{
+    for (ItemBin loadedItem : bin.getLoadedItems())
+    {
         if (isABIntersect(
-                /* Amax= */ position, 
-                /* Amin= */ position + currentBin.getCurrentDimension(),
-                /* Bmax= */ oldItem.getCurrentDimension(), 
-                /* Bmin= */ Bmin + oldItem.getCurrentDimension())){
+                /* Amax= */ position + currentItem.getCurrentDimension(),
+                /* Amin= */ position,
+                /* Bmax= */ loadedItem.getPunto() + loadedItem.getCurrentDimension(),
+                /* Bmin= */ loadedItem.getPunto()))
+        {
             return true;
         }
     }
@@ -31,61 +33,82 @@ bool isOverlapped(Punto position, ItemBin currentBin, LoadedBins dataSet, Bin bi
     return false;
 }
 
-//Min O(1), Max O(N2), Prom O(N2)
-void iterateByDeepestBottomLeft(Punto& punto, ItemBin item, LoadedBins dataSet, Bin bin, ROTATION_MODE rotationWay){
-    if (bin.getNumberOfLoadedItems() <= 1){
+// Min O(1), Max O(N2), Prom O(N2)
+void iterateByDeepestBottomLeft(Punto &punto, ItemBin item, Bin bin)
+{
+    if (bin.getNumberOfLoadedItems() <= 1)
+    {
         return;
     }
-    Punto copyPoint = punto;
-    //Go first by Deepest - X
-    if (punto.x != 0){
-        while (!isOverlapped(copyPoint, item, dataSet, bin, rotationWay))
+    // Go first by Deepest - X
+    if (punto.x != 0)
+    {
+        while (!isOverlapped(punto, item, bin))
         {
-           punto.x -= 1;
-           if (punto.x == 0) {
-            break;
-           }
+            punto.x -= 1;
+            if (punto.x == -1)
+            {
+                break;
+            }
         }
+        punto.x += 1;
     }
-    //Go Second by Bottom - Z
-    if (punto.z != 0){
-        while (!isOverlapped(punto, item, dataSet, bin, rotationWay))
+    // Go Second by Bottom - Z
+    if (punto.z != 0)
+    {
+        while (!isOverlapped(punto, item, bin))
         {
-           punto.z -= 1;
-           if (punto.z == 0) {
-            break;
-           }
+            punto.z -= 1;
+            if (punto.z == -1)
+            {
+                break;
+            }
         }
+        punto.z += 1;
     }
-    //Go Thirsd by With - Y
-    if (punto.y != 0){
-        while (!isOverlapped(punto, item, dataSet, bin, rotationWay))
+
+    // Go Thirsd by With - Y
+    if (punto.y != 0)
+    {
+        while (!isOverlapped(punto, item, bin))
         {
-           punto.y -= 1;
-           if (punto.y == 0) {
-            break;
-           }
+            punto.y -= 1;
+            if (punto.y == -1)
+            {
+                break;
+            }
         }
+        punto.y += 1;
     }
-}
-void addItemToBin(ColaPuntosDBL& queue, Bin& bin, Punto& punto, ItemBin item, LoadedBins idBins, ROTATION_MODE rotationMode){
-    iterateByDeepestBottomLeft(punto, item, idBins, bin, rotationMode);
-    item.rotate(bin.getRotationWay(), rotationMode);
-    bin.addItem(item);
-    Punto resultPoint = punto + item.getCurrentDimension();
-    Punto newPoint;
-    if ( resultPoint.x < bin.getDimensions().getLargo()){
-        newPoint = Punto::Build(resultPoint.x, punto.y, punto.z);
-        queue.push(newPoint);
-    }
-    if ( resultPoint.y < bin.getDimensions().getAncho()){
-         newPoint = Punto::Build(punto.x, resultPoint.y, punto.z);
-        queue.push(newPoint);
-    }
-    if ( resultPoint.z < bin.getDimensions().getAlto()){\
-         newPoint = Punto::Build(punto.x, punto.y, resultPoint.z);
-        queue.push(newPoint);
-    }
-    queue.update();
 }
 
+void addItemToBin(ColaPuntosDBL &queue, Bin &bin, const Punto &punto, ItemBin item)
+{
+    bin.addItem(item.setPosicion(punto));
+    Punto resultPoint = punto + item.getCurrentDimension();
+    // std::cout << "rusltantPoint\n";
+    if (resultPoint.x < bin.getDimensions().getLargo())
+    {
+        Punto newPoint;
+        newPoint = Punto::Build(resultPoint.x, punto.y, punto.z);
+        // std::cout << "Added point X: " << newPoint << "\n";
+        queue.push(newPoint);
+    }
+    if (resultPoint.y < bin.getDimensions().getAncho())
+    {
+        Punto newPoint;
+        newPoint = Punto::Build(punto.x, resultPoint.y, punto.z);
+        // std::cout << "Added point: Y" << newPoint << "\n";
+        queue.push(newPoint);
+    }
+    if (resultPoint.z < bin.getDimensions().getAlto())
+    {
+        Punto newPoint;
+        newPoint = Punto::Build(punto.x, punto.y, resultPoint.z);
+        // std::cout << "Added point: Z" << newPoint << "\n";
+        queue.push(newPoint);
+    }
+    // std::cout << "New points added: " << queue;
+    queue.update();
+    // std::cout << "Points updated: " << queue;
+}

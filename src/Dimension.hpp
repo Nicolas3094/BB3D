@@ -5,32 +5,33 @@
 #include "Punto.hpp"
 #include <iostream>
 
-class Dim{
+class Dim
+{
 private:
-    uint l; uint w; uint h;
+    int l;
+    int w;
+    int h;
+
 public:
     Dim();
     ~Dim();
-    Dim(uint,uint,uint);
+    Dim(int, int, int);
 
-    static Dim& Build();
+    static Dim &Build();
 
     Punto getVector();
-    const uint getLargo() const;
-    const uint getAncho() const;
-    const uint getAlto() const;
-    const ulong getVolumen() const;
+    const int getLargo() const;
+    const int getAncho() const;
+    const int getAlto() const;
+    const long getVolumen() const;
 
-
-    Dim& setLargo(uint);
-    Dim& setAncho(uint);
-    Dim& setAlto(uint);
+    Dim &setLargo(int);
+    Dim &setAncho(int);
+    Dim &setAlto(int);
 };
 
-
-std::ostream&  operator <<(std::ostream& , Dim& );
+std::ostream &operator<<(std::ostream &, Dim &);
 
 bool operator==(Dim &, Dim &);
 bool operator!=(Dim &, Dim &);
-
 #endif

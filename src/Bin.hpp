@@ -7,35 +7,37 @@
 
 typedef std::vector<ItemBin> LoadedBins;
 
-class Bin{
+class Bin
+{
 private:
-   Dim dimensions;
-   ulong loadedVolume;
-   ulong numberOfLoadedItems;
-   LoadedBins loadedItems;
-   ROTATION_WAY rotation;
+    Dim dimensions;
+    ulong loadedVolume;
+    ulong numberOfLoadedItems;
+    LoadedBins loadedItems;
+    ROTATION_WAY rotation;
+
 public:
     Bin();
     ~Bin();
 
-    static Bin& Build();
+    static Bin &Build();
 
-    Bin& addItem(ItemBin);
-    Bin& setLargo(uint);
-    Bin& setAncho(uint);
-    Bin& setAlto(uint);
-    Bin& setRotationWay(ROTATION_WAY);
+    Bin &addItem(ItemBin);
+    Bin &setLargo(int);
+    Bin &setAncho(int);
+    Bin &setAlto(int);
+    Bin &setRotationWay(ROTATION_WAY);
 
     const Dim getDimensions() const;
-    ulong getLoadedVolume ();
-    uint getNumberOfLoadedItems() ;
+    int getLoadedVolume();
+    int getNumberOfLoadedItems();
     LoadedBins getLoadedItems();
     std::vector<Punto> getPostitionOfItems();
-    std::vector<uint> getIdItems();
+    std::vector<int> getIdItems();
     ROTATION_WAY getRotationWay();
-
 };
 
-
+std::ostream &operator<<(std::ostream &, const LoadedBins &);
+std::ostream &operator<<(std::ostream &, Bin);
 
 #endif

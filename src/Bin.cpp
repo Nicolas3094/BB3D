@@ -9,60 +9,101 @@ Bin::Bin()
     this->loadedVolume = 0;
 }
 
-Bin& Bin::addItem(ItemBin itemBin){
+Bin &Bin::addItem(ItemBin itemBin)
+{
     this->loadedItems.push_back(itemBin);
     this->numberOfLoadedItems += 1;
     this->loadedVolume += itemBin.getVolumen();
     return *this;
 }
-Bin& Bin::setLargo(uint largo){
+Bin &Bin::setLargo(int largo)
+{
     this->dimensions.setLargo(largo);
     return *this;
 }
-Bin& Bin::setAncho(uint ancho){
+Bin &Bin::setAncho(int ancho)
+{
     this->dimensions.setAncho(ancho);
     return *this;
 }
-Bin& Bin::setAlto(uint alto){
+Bin &Bin::setAlto(int alto)
+{
     this->dimensions.setAlto(alto);
     return *this;
 }
 
-Bin& Bin::setRotationWay(ROTATION_WAY rotation){
+Bin &Bin::setRotationWay(ROTATION_WAY rotation)
+{
     this->rotation = rotation;
     return *this;
 }
 
-const Dim Bin::getDimensions() const {
+const Dim Bin::getDimensions() const
+{
     return dimensions;
 }
-ulong Bin::getLoadedVolume(){
+int Bin::getLoadedVolume()
+{
     return this->loadedVolume;
 }
 
-uint Bin::getNumberOfLoadedItems(){
-   return this->numberOfLoadedItems;
+int Bin::getNumberOfLoadedItems()
+{
+    return this->numberOfLoadedItems;
 }
 
-LoadedBins Bin::getLoadedItems(){
+LoadedBins Bin::getLoadedItems()
+{
     return this->loadedItems;
 }
-std::vector<Punto> Bin::getPostitionOfItems(){
+std::vector<Punto> Bin::getPostitionOfItems()
+{
     std::vector<Punto> points;
-    for(int i = 0; i < loadedItems.size(); i++) {
+    for (int i = 0; i < loadedItems.size(); i++)
+    {
         points.push_back(loadedItems[i].getPunto());
     }
     return points;
 }
 
-std::vector<uint> Bin::getIdItems(){
-    std::vector<uint> ids;
-    for(int i = 0; i < loadedItems.size() ; i++){
+std::vector<int> Bin::getIdItems()
+{
+    std::vector<int> ids;
+    for (int i = 0; i < loadedItems.size(); i++)
+    {
         ids.push_back(loadedItems[i].getId());
     }
     return ids;
 }
 
-ROTATION_WAY Bin::getRotationWay(){
+ROTATION_WAY Bin::getRotationWay()
+{
     return this->rotation;
+}
+
+std::ostream &operator<<(std::ostream &COUT, const LoadedBins &loadedBins)
+{
+    COUT << "LOADED BINS\n"
+         << "size: " << loadedBins.size()
+         << "\nLoaded Items: |";
+
+    for (auto items : loadedBins)
+    {
+        COUT << items.getId() << "|";
+    }
+    COUT << "\n";
+
+    return COUT;
+}
+std::ostream &operator<<(std::ostream &COUT, Bin bin)
+{
+    COUT << "BIN\n"
+         << "Length: " << bin.getDimensions().getLargo() << "\n"
+         << "Width: " << bin.getDimensions().getAncho() << "\n"
+         << "Height: " << bin.getDimensions().getAlto() << "\n"
+         << "Number Of LoadedItems: " << bin.getNumberOfLoadedItems() << "\n"
+         << "Loaded volume: " << bin.getLoadedVolume() << "\n"
+         << "Rotation way: " << getIdFromRotationWay(bin.getRotationWay()) << "\n";
+
+    return COUT;
 }

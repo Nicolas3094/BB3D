@@ -15,13 +15,13 @@ ItemBin &ItemBin::Build()
     return *item;
 }
 
-ItemBin &ItemBin::setId(uint id)
+ItemBin &ItemBin::setId(int id)
 {
     this->id = id;
     return *this;
 }
 
-ItemBin &ItemBin::setTipo(uint id)
+ItemBin &ItemBin::setTipo(int id)
 {
     this->tipo = id;
     return *this;
@@ -33,21 +33,21 @@ ItemBin &ItemBin::setPosicion(Punto point)
     return *this;
 }
 
-ItemBin &ItemBin::setAlto(uint alto)
+ItemBin &ItemBin::setAlto(int alto)
 {
     this->dimension.setAlto(alto);
     this->currentDimension.z = alto;
     return *this;
 }
 
-ItemBin &ItemBin::setLargo(uint longitud)
+ItemBin &ItemBin::setLargo(int longitud)
 {
     this->dimension.setLargo(longitud);
     this->currentDimension.x = longitud;
     return *this;
 }
 
-ItemBin &ItemBin::setAncho(uint ancho)
+ItemBin &ItemBin::setAncho(int ancho)
 {
     this->dimension.setAncho(ancho);
     this->currentDimension.y = ancho;
@@ -72,27 +72,27 @@ ItemBin &ItemBin::setRotation(ROTATION_WAY rot)
     return *this;
 }
 
-uint ItemBin::getId()
+int ItemBin::getId()
 {
     return this->id;
 }
 
-uint ItemBin::getTipo()
+int ItemBin::getTipo()
 {
     return this->tipo;
 }
 
-uint ItemBin::getLargo()
+int ItemBin::getLargo()
 {
     return this->currentDimension.x;
 }
 
-uint ItemBin::getAncho()
+int ItemBin::getAncho()
 {
     return this->currentDimension.y;
 }
 
-uint ItemBin::getAlto()
+int ItemBin::getAlto()
 {
     return this->currentDimension.z;
 }
@@ -220,4 +220,20 @@ bool operator>(ItemBin bin1, ItemBin bin2)
 bool operator==(ItemBin bin1, ItemBin bin2)
 {
     return bin1.getTipo() == bin2.getTipo();
+}
+
+std::ostream &operator<<(std::ostream &COUT, ItemBin &item)
+{
+    COUT << "ITEM BIN\n"
+         << "Id: " << item.getId() << "\n"
+         << "Type: " << item.getTipo() << "\n"
+         << "Length: " << item.getDimension().getLargo() << "\n"
+         << "Width: " << item.getDimension().getAncho() << "\n"
+         << "Height: " << item.getDimension().getAlto() << "\n"
+         << "Rotation vector: " << item.getRotations() << "\n"
+         << "Current dimensions: " << item.getCurrentDimension() << "\n"
+         << "Current rotation: " << getIdFromRotationWay(item.getRotation()) << "\n"
+         << "Has valid rotation: " << item.isValidOrientation() << "\n";
+
+    return COUT;
 }

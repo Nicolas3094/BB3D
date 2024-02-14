@@ -1,20 +1,20 @@
 #include "GenomeOperators.hpp"
 
 // Function to return the next random number
-uint getNum(std::vector<uint> &v)
+int getNum(std::vector<int> &v)
 {
     // Size of the vector
-    uint n = v.size();
+    int n = v.size();
 
     // Generate a random number
     srand(time(NULL));
 
     // Make sure the number is within
     // the index range
-    uint index = rand() % n;
+    int index = rand() % n;
 
     // Get random number from the vector
-    uint num = v[index];
+    int num = v[index];
 
     // Remove the number from the vector
     std::swap(v[index], v[n - 1]);
@@ -24,14 +24,14 @@ uint getNum(std::vector<uint> &v)
 }
 
 // Function to generate n non-repeating random numbers
-Chromosome generatePermutation(uint n)
+Chromosome generatePermutation(int n)
 {
-    std::vector<uint> v(n);
+    std::vector<int> v(n);
     Chromosome chromosome(n);
-    for (uint i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
         v[i] = i + 1;
 
-    for (uint i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
         chromosome[i] = (getNum(v));
     }
@@ -41,7 +41,7 @@ Chromosome generatePermutation(uint n)
 LoadedBins decodeChromosome(Chromosome chromosome, LoadedBins allOrderByIdItems)
 {
     LoadedBins bins(chromosome.size());
-    for (uint i = 0; i < chromosome.size(); i++)
+    for (int i = 0; i < chromosome.size(); i++)
     {
         bins[i] = allOrderByIdItems[chromosome[i]];
     }
@@ -51,14 +51,14 @@ LoadedBins decodeChromosome(Chromosome chromosome, LoadedBins allOrderByIdItems)
 Chromosome codeChromosome(LoadedBins idItemsToPacked)
 {
     Chromosome chromosome(idItemsToPacked.size());
-    for (uint i = 0; i < idItemsToPacked.size(); i++)
+    for (int i = 0; i < idItemsToPacked.size(); i++)
     {
         chromosome[i] = idItemsToPacked[i].getId();
     }
     return chromosome;
 }
 
-std::vector<Chromosome> buildHeuristicChromosomes(LoadedBins allItemBins, bool reverse = false)
+std::vector<Chromosome> buildHeuristicChromosomes(LoadedBins allItemBins, bool reverse = true)
 {
     LoadedBins sortedByVolumes = allItemBins;
     LoadedBins sortedByLenght = allItemBins;
@@ -106,7 +106,7 @@ std::vector<Chromosome> buildHeuristicChromosomes(LoadedBins allItemBins, bool r
     return poblacionHeuristica;
 }
 
-std::vector<Chromosome> buildCompleteHeuristicChromosomes(const LoadedBins &allBins, const uint numberOfChromosomes)
+std::vector<Chromosome> buildCompleteHeuristicChromosomes(const LoadedBins &allBins, const int numberOfChromosomes)
 {
     std::vector<Chromosome> chromosomePoblation;
     std::vector<Chromosome> heursiticChromosomePoblation = buildHeuristicChromosomes(allBins);
@@ -119,12 +119,12 @@ std::vector<Chromosome> buildCompleteHeuristicChromosomes(const LoadedBins &allB
     return chromosomePoblation;
 }
 
-std::vector<Chromosome> buildChromosomes(const LoadedBins &allBins, const uint numberOfChromosomes)
+std::vector<Chromosome> buildChromosomes(const LoadedBins &allBins, const int numberOfChromosomes)
 {
     std::vector<Chromosome> chromosomePoblation;
-    uint longOfChromosome = allBins.size();
+    int longOfChromosome = allBins.size();
 
-    for (uint i = 0; i < numberOfChromosomes; i++)
+    for (int i = 0; i < numberOfChromosomes; i++)
     {
         chromosomePoblation.push_back(generatePermutation(longOfChromosome));
     }
@@ -132,12 +132,20 @@ std::vector<Chromosome> buildChromosomes(const LoadedBins &allBins, const uint n
     return chromosomePoblation;
 }
 
-Chromosome generateRandomRepeatedAlalleleChromosome(uint NumberCount, uint minimum, uint maximum)
+Chromosome generateRandomRepeatedAlalleleChromosome(int NumberCount, int minimum, int maximum)
 {
+    Chromosome values(NumberCount);
+    if (maximum == 0)
+    {
+        for (int i = 0; i < NumberCount; i++)
+        {
+            values[i] = 0;
+        }
+        return values;
+    }
     std::random_device rd;
     std::mt19937 gen(rd()); // these can be global and/or static, depending on how you use random elsewhere
 
-    Chromosome values(NumberCount);
     std::uniform_int_distribution<> dis(minimum, maximum);
     std::generate(values.begin(), values.end(), [&]()
                   { return dis(gen); });

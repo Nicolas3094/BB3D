@@ -24,12 +24,12 @@ DoubleGenome &DoubleGenome::setDGenome(Chromosome chromosome)
     return *this;
 }
 
-Chromosome DoubleGenome::getGenome()
+Chromosome &DoubleGenome::getGenome()
 {
     return this->genome;
 }
 
-Chromosome DoubleGenome::getDGenome()
+Chromosome &DoubleGenome::getDGenome()
 {
     return this->doubleGenome;
 }
@@ -72,4 +72,25 @@ std::ostream &operator<<(std::ostream &COUT, Chromosome &chr)
         }
     }
     return COUT << "|";
+}
+
+bool operator==(Chromosome chr1, Chromosome chr2)
+{
+    if (chr1.size() != chr2.size())
+    {
+        throw std::invalid_argument("Chromosomes have different lenght.");
+    }
+    for (int i = 0; i < chr1.size(); i++)
+    {
+        if (chr1[i] != chr2[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool operator==(DoubleGenome gen1, DoubleGenome gen2)
+{
+    return gen1.getGenome() == gen2.getGenome() && gen1.getDGenome() == gen2.getDGenome();
 }

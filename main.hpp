@@ -9,14 +9,16 @@
 #include <cstdlib>
 #include <random>
 #include <time.h>
-#include <algorithm> 
+#include <algorithm>
 #include <functional>
+#include <limits.h>
+#include <experimental/random>
 
-#define print(x) std::cout<< x <<"\n"
-#define MAX_RAN 32767
+#define print(x) std::cout << x << "\n"
+#define MAX_RAN INT_MAX
 
-typedef std::vector<unsigned int> Chromosome;
+typedef std::vector<int> Chromosome;
 typedef unsigned int uint;
 typedef unsigned long ulong;
 
-#endif 
+#endif
