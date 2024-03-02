@@ -21,4 +21,5 @@ typedef std::vector<int> Chromosome;
 typedef unsigned int uint;
 typedef unsigned long ulong;
 
+void evaluatePoblationTime();
 #endif

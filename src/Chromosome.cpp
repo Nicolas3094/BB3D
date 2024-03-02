@@ -15,6 +15,13 @@ DoubleGenome &DoubleGenome::Build()
 DoubleGenome &DoubleGenome::setGenome(Chromosome chromosome)
 {
     this->genome = chromosome;
+    if (this->doubleGenome.size() == 0)
+    {
+        for (int i = 0; i < genome.size(); i++)
+        {
+            this->doubleGenome.push_back(0);
+        }
+    }
     return *this;
 }
 
@@ -45,17 +52,21 @@ std::ostream &operator<<(std::ostream &COUT, DoubleGenome &gen)
             COUT << "|";
         }
     }
-    COUT << "|"
-         << "\n"
-         << "|";
-    for (int i = 0; i < gen.getDGenome().size(); i++)
+    if (gen.getDGenome().size() > 0)
     {
-        COUT << gen.getDGenome()[i];
-        if (i != gen.getDGenome().size() - 1)
+        COUT << "|"
+             << "\n"
+             << "|";
+        for (int i = 0; i < gen.getDGenome().size(); i++)
         {
-            COUT << "|";
+            COUT << gen.getDGenome()[i];
+            if (i != gen.getDGenome().size() - 1)
+            {
+                COUT << "|";
+            }
         }
     }
+
     COUT << "|"
          << "\n";
     return COUT;

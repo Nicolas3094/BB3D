@@ -4,13 +4,12 @@
 #include "../src/Individuo.hpp"
 
 int hamming(DoubleGenome, DoubleGenome);
-
 DoubleGenome crossOx(DoubleGenome, DoubleGenome, int, int);
 void swapPointValue(DoubleGenome &, int, int);
 void inverseMutation(DoubleGenome &, int, int);
 void randomInsertion(DoubleGenome &, int, int);
-DoubleGenome randomInsertionOfSubsequence(DoubleGenome, int, int, int);
-DoubleGenome randomReversingInsertionOfSubsequence(DoubleGenome, int, int, int);
+void randomInsertionOfSubsequence(DoubleGenome &, int, int, int);
+void randomReversingInsertionOfSubsequence(DoubleGenome &, int, int, int);
 void randomSwap(DoubleGenome &, int, int);
 void randomSwapSubsequences(DoubleGenome &, int, int, int, int);
 void randomReversingSwapOfSubsequences(DoubleGenome &, int, int, int, int);

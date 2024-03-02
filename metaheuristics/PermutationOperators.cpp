@@ -6,9 +6,20 @@ int hamming(DoubleGenome gen1, DoubleGenome gen2)
     int count = 0;
     for (int i = 0; i < gen1.getGenome().size(); i++)
     {
-        if (gen1.getGenome()[i] != gen2.getGenome()[i] && gen1.getDGenome()[i] != gen2.getDGenome()[i])
+        if (gen1.getDGenome().size() > 0)
         {
-            count += 1;
+            if (gen1.getGenome()[i] == gen2.getGenome()[i] && gen1.getDGenome()[i] == gen2.getDGenome()[i])
+            {
+                count += 1;
+            }
+        }
+        else
+        {
+
+            if (gen1.getGenome()[i] == gen2.getGenome()[i])
+            {
+                count += 1;
+            }
         }
     }
     return count;
@@ -49,8 +60,8 @@ DoubleGenome crossOx(DoubleGenome gen1, DoubleGenome gen2, int i, int j)
                 m[gen2.getGenome()[l]] = true;
                 resultant[k] = gen2.getGenome()[l];
                 resultantRot[k] = gen2.getDGenome()[l];
+                break;
             }
-            break;
         }
     }
 
@@ -84,6 +95,7 @@ void inverseMutation(DoubleGenome &gen, int i, int j)
     for (int k = i; k <= j; k++)
     {
         gen.getGenome()[k] = genTmp.getGenome()[j - k + i];
+        gen.getDGenome()[k] = genTmp.getDGenome()[j - k + i];
     }
 }
 
@@ -98,6 +110,7 @@ void randomInsertion(DoubleGenome &gen, int indexToInsert, int indexValue)
     {
         gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, valueToInsert);
         gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, valueRotToInsert);
+
         gen.getGenome().erase(gen.getGenome().begin() + indexValue);
         gen.getDGenome().erase(gen.getDGenome().begin() + indexValue);
     }
@@ -105,71 +118,51 @@ void randomInsertion(DoubleGenome &gen, int indexToInsert, int indexValue)
     {
         gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, valueToInsert);
         gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, valueRotToInsert);
+
         gen.getGenome().erase(gen.getGenome().begin() + indexValue + 1);
         gen.getDGenome().erase(gen.getDGenome().begin() + indexValue + 1);
     }
     else
     {
-        return;
+        throw std::invalid_argument("RI: index inside the interval [init, end]");
     }
 }
 
-DoubleGenome randomInsertionOfSubsequence(DoubleGenome gen, int indexToInsert, int i, int j)
+void randomInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
     int n = gen.getGenome().size();
-    DoubleGenome newGenome;
-    DoubleGenome subSequenceGenome;
-
-    int valueIndex = gen.getGenome()[indexToInsert];
-    int valueIndexRot = gen.getDGenome()[indexToInsert];
-
-    addRangeToGenome(subSequenceGenome, gen, i, j + 1);
-    int nSub = subSequenceGenome.getGenome().size();
-
-    if (indexToInsert < i)
+    int nSub = init + end + 1;
+    Chromosome subSequence(nSub);
+    Chromosome subSequenceRot(nSub);
+    for (int i = init; i < nSub; i++)
     {
-        addRangeToGenome(newGenome, gen, 0, indexToInsert);
-        addRangeToGenome(newGenome, subSequenceGenome, 0, nSub);
-        addToGenome(newGenome, valueIndex, valueIndexRot);
+        subSequence[i - init] = gen.getGenome()[i];
+        subSequenceRot[i - init] = gen.getDGenome()[i];
+    }
 
-        if (indexToInsert < i - 1)
-        {
+    if (indexToInsert < init)
+    {
+        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
+        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
 
-            addRangeToGenome(newGenome, gen, indexToInsert + 1, i);
-        }
-        if (j < n - 1)
-        {
-            addRangeToGenome(newGenome, gen, j + 1, n);
-        }
-        else if (j < indexToInsert)
-        {
-            addRangeToGenome(newGenome, gen, 0, i);
+        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequence.begin(), subSequence.end());
+        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceRot.begin(), subSequenceRot.end());
+    }
+    else if (indexToInsert > end)
+    {
+        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequence.begin(), subSequence.end());
+        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceRot.begin(), subSequenceRot.end());
 
-            if (j + 1 < indexToInsert)
-            {
-                addRangeToGenome(newGenome, gen, j + 1, indexToInsert);
-            }
-            if (indexToInsert < n - 1)
-            {
-                addRangeToGenome(newGenome, subSequenceGenome, 0, nSub);
-                addToGenome(newGenome, valueIndex, valueIndexRot);
-            }
-            else
-            {
-                addToGenome(newGenome, valueIndex, valueIndexRot);
-                addRangeToGenome(newGenome, subSequenceGenome, 0, nSub);
-            }
-            addRangeToGenome(newGenome, gen, indexToInsert + 1, n);
-        }
-        if (newGenome.getGenome().size() != n)
-        {
-            throw std::invalid_argument("Genes are not equal.");
-        }
-        return newGenome;
+        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
+        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
+    }
+    else
+    {
+        throw std::invalid_argument("RIS: index inside the interval [init, end]");
     }
 }
 
-DoubleGenome randomReversingInsertionOfSubsequence(DoubleGenome gen, int indexToInsert, int i, int j)
+void randomReversingInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
     DoubleGenome newGenome;
     DoubleGenome subSequenceGenome;
@@ -178,7 +171,7 @@ DoubleGenome randomReversingInsertionOfSubsequence(DoubleGenome gen, int indexTo
     int valueRot = gen.getDGenome()[indexToInsert];
     double r = ((double)rand() / (RAND_MAX)) + 1;
 
-    addRangeToGenome(subSequenceGenome, gen, i, j + 1);
+    addRangeToGenome(subSequenceGenome, gen, init, end + 1);
     int nSub = subSequenceGenome.getGenome().size();
 
     if (r > 0.5)
@@ -187,61 +180,45 @@ DoubleGenome randomReversingInsertionOfSubsequence(DoubleGenome gen, int indexTo
         for (int k = 0; k < nSub; k++)
         {
             subSequenceGenome.getGenome()[k] = gen.getGenome()[nSub - k - 1];
+            subSequenceGenome.getDGenome()[k] = gen.getDGenome()[nSub - k - 1];
         }
     }
-    if (indexToInsert < i)
+
+    if (indexToInsert < init)
     {
-        addRangeToGenome(newGenome, gen, 0, indexToInsert);
-        addRangeToGenome(newGenome, gen, 0, nSub);
-        addToGenome(newGenome, value, valueRot);
+        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
+        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
 
-        if (indexToInsert < i - 1)
-        {
-            addRangeToGenome(newGenome, gen, indexToInsert + 1, i);
-        }
-        if (j < n - 1)
-        {
-            addRangeToGenome(newGenome, gen, j + 1, n);
-        }
+        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
+        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
     }
-    else if (indexToInsert > j)
+    else if (indexToInsert > end)
     {
-        addRangeToGenome(newGenome, gen, 0, i);
+        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
+        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
 
-        if (j + 1 < indexToInsert)
-        {
-            addRangeToGenome(newGenome, gen, j + 1, indexToInsert);
-        }
-        if (indexToInsert < n - 1 || r > 0.5)
-        {
-
-            addRangeToGenome(newGenome, gen, 0, nSub);
-        }
-        else
-        {
-            addToGenome(newGenome, value, valueRot);
-            addRangeToGenome(newGenome, gen, 0, nSub);
-        }
-        addRangeToGenome(newGenome, gen, indexToInsert + 1, n);
+        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
+        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
     }
-
-    if (newGenome.getGenome().size() != n)
+    else
     {
-        throw std::invalid_argument("Chromosomes are not equal.");
+        throw std::invalid_argument("RRIS: index inside the interval [init, end]");
     }
-    return newGenome;
 }
 
 void randomSwap(DoubleGenome &gen, int i, int j)
 {
+    int valueSwap, valueSwapRot, valueSwap2, valueSwapRot2;
 
-    int valueSwap = gen.getGenome()[i];
-    int valueSwapRot = gen.getDGenome()[i];
+    valueSwap = gen.getGenome()[i];
+    valueSwapRot = gen.getDGenome()[i];
+    valueSwap2 = gen.getGenome()[j];
+    valueSwapRot2 = gen.getDGenome()[j];
 
-    gen.getGenome()[i] = newGen.getGenome()[j];
-    gen.getDGenome()[i] = newGen.getDGenome()[j];
-    newGen.getGenome()[j] = valueSwap;
-    newGen.getDGenome()[j] = valueSwapRot;
+    gen.getGenome()[i] = valueSwap2;
+    gen.getDGenome()[i] = valueSwapRot2;
+    gen.getGenome()[j] = valueSwap;
+    gen.getDGenome()[j] = valueSwapRot;
 }
 
 void randomSwapSubsequences(DoubleGenome &gen, int init1, int end1, int init2, int end2)
@@ -271,7 +248,7 @@ void randomSwapSubsequences(DoubleGenome &gen, int init1, int end1, int init2, i
 }
 
 void randomReversingSwapOfSubsequences(
-    DoubleGenome gen &, int init1, int end1, int init2, int end2)
+    DoubleGenome &gen, int init1, int end1, int init2, int end2)
 {
     double r1 = ((double)rand() / (RAND_MAX)) + 1;
     double r2 = ((double)rand() / (RAND_MAX)) + 1;
@@ -353,11 +330,11 @@ void combine2(DoubleGenome &gen, int indexToInsert, int i, int j)
     }
     if (ran > 1 / 3 && ran <= 2 / 3)
     {
-        gen = randomInsertionOfSubsequence(gen, indexToInsert, i, j);
+        randomInsertionOfSubsequence(gen, indexToInsert, i, j);
     }
     else
     {
-        gen = randomReversingInsertionOfSubsequence(gen, indexToInsert, i, j);
+        randomReversingInsertionOfSubsequence(gen, indexToInsert, i, j);
     }
 }
 

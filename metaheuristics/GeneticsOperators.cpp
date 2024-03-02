@@ -13,7 +13,7 @@ Individuo crossIndivituals(
     DoubleGenome childGenome = crossOver(parent1.getGenome(), parent2.getGenome());
     if (bin.getRotationWay() != ROTATION_WAY::ZERO_WAY)
     {
-        flipMutation(childGenome);
+        flipMutation(childGenome, probMutationRot, bin.getRotationWay());
     }
     mutation(childGenome, mutationType, probMutation);
     Individuo newChild = Individuo::Build().setGenome(childGenome);
@@ -53,7 +53,7 @@ void flipMutation(DoubleGenome &gen, double probability, ROTATION_WAY rotation)
         {
             continue;
         }
-        gen.getDGenome()[i] = std::experimental::randint(1, getIdFromRotationWay(rotation))
+        gen.getDGenome()[i] = std::experimental::randint(1, getIdFromRotationWay(rotation));
     }
 }
 DoubleGenome crossOver(DoubleGenome gen1, DoubleGenome gen2)
@@ -101,9 +101,11 @@ int tournament(Poblacion poblation, double probability)
 }
 int rouletteWheel(Poblacion poblation)
 {
-    int totalFitness, init, countWeight, i;
+    int totalFitness, init, countWeight, n, i;
     double r;
-    std::vector<double> weightedFitnessPoblation(poblation.size());
+    n = poblation.size();
+    std::vector<double>
+        weightedFitnessPoblation(n);
 
     totalFitness = 0;
     for (auto individual : poblation)
@@ -111,14 +113,15 @@ int rouletteWheel(Poblacion poblation)
         totalFitness += individual.getFitness();
     }
     // Calculate weights
-    for (int i = 0; i < poblation.size(); i++)
+    for (i = 0; i < n; i++)
     {
-        fitnessPoblation[i] = poblation[i].getFitness() / totalFitness;
+        weightedFitnessPoblation[i] = poblation[i].getFitness() / totalFitness;
     }
-    init = std::experimental::randint(0, poblation.size() - 1);
+    init = std::experimental::randint(0, n - 1);
     r = rand() % (n - 2) + 1;
     countWeight = 0;
     i = init;
+
     while (countWeight < r)
     {
         countWeight += weightedFitnessPoblation[i++];
@@ -126,10 +129,11 @@ int rouletteWheel(Poblacion poblation)
         {
             break;
         }
-        if (i == poblation.size() - 1)
+        if (i == n - 1)
         {
             i = 0;
         }
     }
+
     return i;
 }
