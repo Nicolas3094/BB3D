@@ -99,7 +99,7 @@ void inverseMutation(DoubleGenome &gen, int i, int j)
     }
 }
 
-void randomInsertion(DoubleGenome &gen, int indexToInsert, int indexValue)
+void insertion(DoubleGenome &gen, int indexToInsert, int indexValue)
 {
     int n, valueToInsert, valueRotToInsert, tmpValue, tmpValueRot;
     n = gen.getGenome().size();
@@ -128,7 +128,7 @@ void randomInsertion(DoubleGenome &gen, int indexToInsert, int indexValue)
     }
 }
 
-void randomInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
+void insertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
     int n = gen.getGenome().size();
     int nSub = end - init + 1;
@@ -168,7 +168,7 @@ void randomInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init
 void randomReversingInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
     DoubleGenome newGenome, subSequenceGenome;
-    int n, value, valueRot;
+    int n, value, valueRot, nSub;
     double r;
 
     n = gen.getGenome().size();
@@ -176,8 +176,8 @@ void randomReversingInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert,
     valueRot = gen.getDGenome()[indexToInsert];
     r = uniformUnit();
     addRangeToGenome(subSequenceGenome, gen, init, end + 1);
+    nSub = subSequenceGenome.getGenome().size();
 
-    int nSub = subSequenceGenome.getGenome().size();
     if (r > 0.5)
     {
         std::reverse(subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
@@ -209,7 +209,7 @@ void randomReversingInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert,
     }
 }
 
-void randomSwap(DoubleGenome &gen, int i, int j)
+void swap(DoubleGenome &gen, int i, int j)
 {
     int valueSwap, valueSwapRot, valueSwap2, valueSwapRot2;
 
@@ -224,86 +224,39 @@ void randomSwap(DoubleGenome &gen, int i, int j)
     gen.getDGenome()[j] = valueSwapRot;
 }
 
-void randomSwapSubsequences(DoubleGenome &gen, int init1, int end1, int init2, int end2)
+void swapSubsequences(DoubleGenome &gen, int init1, int end1, int init2, int end2)
 {
     if (end1 - init1 != end2 - init2)
     {
         throw std::invalid_argument("Subsequences most have with same lenght.");
     }
-    int n;
-    n = end2 - init2 + 1;
-    DoubleGenome subSequenceGenome;
-    for (int i = init2; i < n; i++)
-    {
-        subSequenceGenome.getGenome().push_back(gen.getGenome()[i]);
-        subSequenceGenome.getDGenome().push_back(gen.getDGenome()[i]);
-    }
-
-    copyEqualRangeToGenome(gen, subSequenceGenome, init1, end1, 0, n - 1);
-    subSequenceGenome.getGenome().clear();
-    subSequenceGenome.getDGenome().clear();
-    for (int i = init1; i < n; i++)
-    {
-        subSequenceGenome.getGenome().push_back(gen.getGenome()[i]);
-        subSequenceGenome.getDGenome().push_back(gen.getDGenome()[i]);
-    }
-    copyEqualRangeToGenome(gen, subSequenceGenome, init2, end2, 0, n - 1);
+    copySubsequence(gen, buildSubsequence(gen, init2, end2), init1, end1);
+    copySubsequence(gen, buildSubsequence(gen, init1, end1), init2, end2);
 }
 
 void randomReversingSwapOfSubsequences(
     DoubleGenome &gen, int init1, int end1, int init2, int end2)
 {
-    double r1, r2;
-    r1 = uniformUnit();
-    r2 = uniformUnit();
     if (end1 - init1 != end2 - init2)
     {
         throw std::invalid_argument("Subsequences most have with same lenght.");
     }
-    DoubleGenome subSequenceGenome;
-    int n;
-    n = end2 - init2 + 1;
-    if (r1 > 0.5)
-    {
-        for (int i = init2; i < n; i++)
-        {
-            subSequenceGenome.getGenome().push_back(gen.getGenome()[i]);
-            subSequenceGenome.getDGenome().push_back(gen.getDGenome()[i]);
-        }
-        copyEqualRangeToGenome(gen, subSequenceGenome, init1, end1, 0, n - 1);
-        subSequenceGenome.getGenome().clear();
-        subSequenceGenome.getDGenome().clear();
-    }
-    else
-    {
+    double r1, r2;
+    r1 = uniformUnit();
+    r2 = uniformUnit();
+    DoubleGenome subSequenceGenome = buildSubsequence(gen, init2, end2);
+    DoubleGenome secondSubSequenceGenome = buildSubsequence(gen, init1, end1);
 
-        for (int i = init2; i < n; i++)
-        {
-            subSequenceGenome.getGenome().push_back(gen.getGenome()[i]);
-            subSequenceGenome.getDGenome().push_back(gen.getDGenome()[i]);
-        }
-        copyReversedEqualRangeToGenome(gen, subSequenceGenome, init1, end1, init2, end2);
-        subSequenceGenome.getGenome().clear();
-        subSequenceGenome.getDGenome().clear();
-    }
-    if (r2 > 0.5)
+    if (r1 <= 0.5)
     {
-        for (int i = init1; i < n; i++)
-        {
-            subSequenceGenome.getGenome().push_back(gen.getGenome()[i]);
-            subSequenceGenome.getDGenome().push_back(gen.getDGenome()[i]);
-        }
-        copyEqualRangeToGenome(gen, subSequenceGenome, init2, end2, 0, n - 1);
+        reverseGenome(subSequenceGenome);
     }
-    else
+    if (r2 <= 0.5)
     {
-        for (int i = init1; i < n; i++)
-        {
-            subSequenceGenome.getGenome().push_back(gen.getGenome()[i]);
-            subSequenceGenome.getDGenome().push_back(gen.getDGenome()[i]);
-        }
-        copyReversedEqualRangeToGenome(gen, gen, init2, end2, init1, end1);
+        reverseGenome(secondSubSequenceGenome);
     }
+    copySubsequence(gen, subSequenceGenome, init1, end1);
+    copySubsequence(gen, secondSubSequenceGenome, init2, end2);
 }
 
 void combine1(DoubleGenome &gen, int i1, int j1, int i2, int j2)
@@ -313,11 +266,11 @@ void combine1(DoubleGenome &gen, int i1, int j1, int i2, int j2)
 
     if (r <= 1 / 3)
     {
-        randomSwap(gen, i1, j2);
+        swap(gen, i1, j2);
     }
     else if (r > 1 / 3 && r <= 2 / 3)
     {
-        randomSwapSubsequences(gen, i1, j1, i2, j2);
+        swapSubsequences(gen, i1, j1, i2, j2);
     }
     else
     {
@@ -331,11 +284,11 @@ void combine2(DoubleGenome &gen, int indexToInsert, int i, int j)
 
     if (ran <= 1 / 3)
     {
-        randomInsertion(gen, i, j);
+        insertion(gen, i, j);
     }
     if (ran > 1 / 3 && ran <= 2 / 3)
     {
-        randomInsertionOfSubsequence(gen, indexToInsert, i, j);
+        insertionOfSubsequence(gen, indexToInsert, i, j);
     }
     else
     {
@@ -373,6 +326,7 @@ void mutateC2(DoubleGenome &gen, int randomStep)
 {
     int n, step, init, end, index;
     double r;
+    r = uniformUnit();
     n = gen.getDGenome().size();
     step = randomStep;
 
@@ -395,13 +349,12 @@ void mutateC2(DoubleGenome &gen, int randomStep)
     }
     if (r < 0.5)
     {
-        index = std::experimental::randint(0, init);
+        index = std::experimental::randint(0, init - 1);
     }
     else
     {
         index = std::experimental::randint(end + 1, n);
     }
-
     combine2(gen, index, init, end);
 }
 
@@ -479,10 +432,28 @@ void copyReversedEqualRangeToGenome(
     }
 }
 
-double randnum(double aa, double bb)
-{                                 // defining a function to create random numbers
-    static std::random_device rd; // non-deterministic, but may be slow
-    static std::mt19937 engine{rd()};
-    static std::uniform_real_distribution<double> distribution(aa, bb);
-    return distribution(engine);
+DoubleGenome buildSubsequence(DoubleGenome gen, int init, int end)
+{
+    DoubleGenome subSequence;
+    for (int i = init; i <= end; i++)
+    {
+        subSequence.getGenome().push_back(gen.getGenome()[i]);
+        subSequence.getDGenome().push_back(gen.getDGenome()[i]);
+    }
+    return subSequence;
+}
+
+void copySubsequence(DoubleGenome &gen, DoubleGenome subSequenceGenome, int init, int end)
+{
+    for (int i = init; i <= end; i++)
+    {
+        gen.getGenome()[i] = subSequenceGenome.getGenome()[i - init];
+        gen.getDGenome()[i] = subSequenceGenome.getDGenome()[i - init];
+    }
+}
+
+void reverseGenome(DoubleGenome &subSequenceGenome)
+{
+    std::reverse(subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
+    std::reverse(subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
 }
