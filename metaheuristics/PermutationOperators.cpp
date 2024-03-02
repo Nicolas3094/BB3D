@@ -83,7 +83,7 @@ void swapPointValue(DoubleGenome &gen, int i, int value)
             gen.getGenome()[i] = value;
             gen.getDGenome()[i] = gen.getDGenome()[j];
             gen.getGenome()[j] = tmp;
-            gen.getGenome()[j] = tmpRot;
+            gen.getDGenome()[j] = tmpRot;
             break;
         }
     }
@@ -131,20 +131,19 @@ void randomInsertion(DoubleGenome &gen, int indexToInsert, int indexValue)
 void randomInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
     int n = gen.getGenome().size();
-    int nSub = init + end + 1;
+    int nSub = end - init + 1;
     Chromosome subSequence(nSub);
     Chromosome subSequenceRot(nSub);
-    for (int i = init; i < nSub; i++)
+
+    for (int i = init; i < end + 1; i++)
     {
         subSequence[i - init] = gen.getGenome()[i];
         subSequenceRot[i - init] = gen.getDGenome()[i];
     }
-
     if (indexToInsert < init)
     {
         gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
         gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
-
         gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequence.begin(), subSequence.end());
         gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceRot.begin(), subSequenceRot.end());
     }
@@ -160,30 +159,30 @@ void randomInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init
     {
         throw std::invalid_argument("RIS: index inside the interval [init, end]");
     }
+    if (gen.getGenome().size() != n || gen.getDGenome().size() != n)
+    {
+        throw std::invalid_argument("RIS: mutation got different size.");
+    }
 }
 
 void randomReversingInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
-    DoubleGenome newGenome;
-    DoubleGenome subSequenceGenome;
-    int n = gen.getGenome().size();
-    int value = gen.getGenome()[indexToInsert];
-    int valueRot = gen.getDGenome()[indexToInsert];
-    double r = ((double)rand() / (RAND_MAX)) + 1;
+    DoubleGenome newGenome, subSequenceGenome;
+    int n, value, valueRot;
+    double r;
 
+    n = gen.getGenome().size();
+    value = gen.getGenome()[indexToInsert];
+    valueRot = gen.getDGenome()[indexToInsert];
+    r = uniformUnit();
     addRangeToGenome(subSequenceGenome, gen, init, end + 1);
-    int nSub = subSequenceGenome.getGenome().size();
 
+    int nSub = subSequenceGenome.getGenome().size();
     if (r > 0.5)
     {
-        // it is inverted
-        for (int k = 0; k < nSub; k++)
-        {
-            subSequenceGenome.getGenome()[k] = gen.getGenome()[nSub - k - 1];
-            subSequenceGenome.getDGenome()[k] = gen.getDGenome()[nSub - k - 1];
-        }
+        std::reverse(subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
+        std::reverse(subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
     }
-
     if (indexToInsert < init)
     {
         gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
@@ -203,6 +202,10 @@ void randomReversingInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert,
     else
     {
         throw std::invalid_argument("RRIS: index inside the interval [init, end]");
+    }
+    if (gen.getGenome().size() != n || gen.getDGenome().size() != n)
+    {
+        throw std::invalid_argument("RRIS: mutation got different size.");
     }
 }
 
@@ -250,8 +253,9 @@ void randomSwapSubsequences(DoubleGenome &gen, int init1, int end1, int init2, i
 void randomReversingSwapOfSubsequences(
     DoubleGenome &gen, int init1, int end1, int init2, int end2)
 {
-    double r1 = ((double)rand() / (RAND_MAX)) + 1;
-    double r2 = ((double)rand() / (RAND_MAX)) + 1;
+    double r1, r2;
+    r1 = uniformUnit();
+    r2 = uniformUnit();
     if (end1 - init1 != end2 - init2)
     {
         throw std::invalid_argument("Subsequences most have with same lenght.");
@@ -304,7 +308,8 @@ void randomReversingSwapOfSubsequences(
 
 void combine1(DoubleGenome &gen, int i1, int j1, int i2, int j2)
 {
-    double r = ((double)rand() / (RAND_MAX)) + 1;
+    double r = uniformUnit();
+    ;
 
     if (r <= 1 / 3)
     {
@@ -322,7 +327,7 @@ void combine1(DoubleGenome &gen, int i1, int j1, int i2, int j2)
 
 void combine2(DoubleGenome &gen, int indexToInsert, int i, int j)
 {
-    double ran = ((double)rand() / (RAND_MAX)) + 1;
+    double ran = uniformUnit();
 
     if (ran <= 1 / 3)
     {
@@ -367,7 +372,7 @@ void mutateC1(DoubleGenome &gen, int randomStep = -1)
 void mutateC2(DoubleGenome &gen, int randomStep)
 {
     int n, step, init, end, index;
-    double r, r1;
+    double r;
     n = gen.getDGenome().size();
     step = randomStep;
 
@@ -403,7 +408,6 @@ void mutateC2(DoubleGenome &gen, int randomStep)
 void mutateInversion(DoubleGenome &gen, int randomStep = -1)
 {
     int n, step, i, j;
-    double r, r1;
     n = gen.getDGenome().size();
     step = randomStep;
     if (randomStep == -1)
@@ -429,10 +433,11 @@ void addRangeToChromosome(Chromosome &chromosome, Chromosome chromosmeToAdd, int
 
 void addRangeToGenome(DoubleGenome &gen, DoubleGenome genToAdd, int init, int end)
 {
+
     for (int i = init; i < end; i++)
     {
-        addRangeToChromosome(gen.getGenome(), genToAdd.getGenome(), init, end);
-        addRangeToChromosome(gen.getDGenome(), genToAdd.getDGenome(), init, end);
+        gen.getGenome().push_back(genToAdd.getGenome()[i]);
+        gen.getDGenome().push_back(genToAdd.getDGenome()[i]);
     }
 }
 
@@ -472,4 +477,12 @@ void copyReversedEqualRangeToGenome(
     {
         throw std::invalid_argument(" CopyReversedEqualRangeToGenome ERROR");
     }
+}
+
+double randnum(double aa, double bb)
+{                                 // defining a function to create random numbers
+    static std::random_device rd; // non-deterministic, but may be slow
+    static std::mt19937 engine{rd()};
+    static std::uniform_real_distribution<double> distribution(aa, bb);
+    return distribution(engine);
 }

@@ -2,6 +2,7 @@
 #define PERMUTATION_OPERATOS_H
 
 #include "../src/Individuo.hpp"
+#include "RandomNumbers.hpp"
 
 int hamming(DoubleGenome, DoubleGenome);
 DoubleGenome crossOx(DoubleGenome, DoubleGenome, int, int);
