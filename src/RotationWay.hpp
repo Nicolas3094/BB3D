@@ -10,5 +10,9 @@ enum ROTATION_WAY
 };
 
 int getIdFromRotationWay(ROTATION_WAY);
+ROTATION_WAY getRotationWayFromId(int);
+
+bool operator==(ROTATION_WAY, ROTATION_WAY);
+bool operator!=(ROTATION_WAY, ROTATION_WAY);
 
 #endif

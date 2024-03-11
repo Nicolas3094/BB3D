@@ -4,15 +4,15 @@ ItemBin::ItemBin()
 {
     this->dimension = Dim::Build().setAlto(0).setAncho(0).setLargo(0);
     this->rotation = ROTATION_WAY::ZERO_WAY;
-    this->currentDimension = dimension.getVector();
+    this->currentDimension = Punto::Build(0, 0, 0);
     this->hasValidRotation = true;
 }
 ItemBin::~ItemBin() {}
 
-ItemBin &ItemBin::Build()
+ItemBin ItemBin::Build()
 {
-    ItemBin *item = new ItemBin();
-    return *item;
+    ItemBin item;
+    return item;
 }
 
 ItemBin &ItemBin::setId(int id)
@@ -132,9 +132,9 @@ Punto ItemBin::getCurrentDimension()
     return this->currentDimension;
 }
 
-ItemBin &ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
+void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
 {
-    this->rotation = rotationWay;
+
     switch (rotationWay)
     {
     case TWO:
@@ -199,7 +199,6 @@ ItemBin &ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
     default:
         break;
     }
-    return *this;
 }
 
 bool ItemBin::isValidOrientation()

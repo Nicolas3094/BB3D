@@ -1,9 +1,10 @@
 #include "FitnessOperators.hpp"
 
-void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin &bin)
+void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
 {
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
     ind.setFitness((float)bin.getLoadedVolume() / (float)bin.getDimensions().getVolumen());
+    // std::cout << "loaded items: " << bin.getNumberOfLoadedItems() << "\n";
 }
 
 void evaluateFitnessDecodificated(Individuo &ind, LoadedBins itemData, Bin &bin)
@@ -45,7 +46,7 @@ Poblacion buildHeuristicPoblation(const uint numberPoblation, Bin bin, LoadedBin
 
 void evaluatePoblation(Poblacion &poblacion, LoadedBins allItemsBin, Bin bin)
 {
-    for (uint i = 0; i < poblacion.size(); i++)
+    for (int i = 0; i < poblacion.size(); i++)
     {
         evaluateFitness(poblacion[i], allItemsBin, bin);
     }

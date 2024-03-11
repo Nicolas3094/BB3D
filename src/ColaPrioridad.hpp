@@ -23,9 +23,9 @@ private:
 public:
     ColaPuntosDBL();
 
-    static ColaPuntosDBL &Build();
+    static ColaPuntosDBL Build();
 
-    void push(Punto &);
+    void push(Punto);
     void remove(int);
     void pop();
     void clear();

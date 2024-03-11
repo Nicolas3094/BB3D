@@ -8,6 +8,11 @@ Bin::Bin()
     this->numberOfLoadedItems = 0;
     this->loadedVolume = 0;
 }
+Bin Bin::Build()
+{
+    Bin bin;
+    return bin;
+}
 
 Bin &Bin::addItem(ItemBin itemBin)
 {

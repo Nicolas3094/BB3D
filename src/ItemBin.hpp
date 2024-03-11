@@ -21,7 +21,7 @@ public:
     ItemBin();
     ~ItemBin();
 
-    static ItemBin &Build();
+    static ItemBin Build();
 
     ItemBin &setId(int);
     ItemBin &setTipo(int);
@@ -48,9 +48,23 @@ public:
 
     bool isValidOrientation();
 
-    ItemBin &rotate(ROTATION_WAY, ROTATION_MODE);
+    void rotate(ROTATION_WAY, ROTATION_MODE);
 };
 
+struct VolumeGreater
+{
+    bool operator()(ItemBin lx, ItemBin rx)
+    {
+        return lx.getLargo() * lx.getAncho() * lx.getAlto() < rx.getLargo() * rx.getAncho() * rx.getAlto();
+    }
+};
+struct VolumeLess
+{
+    bool operator()(ItemBin lx, ItemBin rx)
+    {
+        lx.getLargo() * lx.getAncho() * lx.getAlto() > rx.getLargo() * rx.getAncho() * rx.getAlto();
+    }
+};
 struct LengthGreater
 {
     bool operator()(ItemBin lx, ItemBin rx)

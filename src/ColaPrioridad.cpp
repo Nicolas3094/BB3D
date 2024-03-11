@@ -4,10 +4,10 @@ ColaPuntosDBL::ColaPuntosDBL()
 {
 }
 
-ColaPuntosDBL &ColaPuntosDBL::Build()
+ColaPuntosDBL ColaPuntosDBL::Build()
 {
-    ColaPuntosDBL *cola = new ColaPuntosDBL();
-    return *cola;
+    ColaPuntosDBL cola;
+    return cola;
 }
 
 Punto &ColaPuntosDBL::top()
@@ -33,7 +33,7 @@ void ColaPuntosDBL::clear()
     cola.clear();
 }
 
-void ColaPuntosDBL::push(Punto &pt)
+void ColaPuntosDBL::push(Punto pt)
 {
     if (this->cola.size() == 0)
     {

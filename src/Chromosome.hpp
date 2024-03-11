@@ -2,6 +2,9 @@
 #define CHROMOSOME_H
 
 #include "../main.hpp"
+#include <vector>
+
+typedef std::vector<int> Chromosome;
 
 class DoubleGenome
 {
@@ -13,7 +16,7 @@ public:
     DoubleGenome();
     ~DoubleGenome();
 
-    static DoubleGenome &Build();
+    static DoubleGenome Build();
 
     DoubleGenome &setGenome(Chromosome);
     DoubleGenome &setDGenome(Chromosome);

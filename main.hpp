@@ -17,9 +17,10 @@
 #define print(x) std::cout << x << "\n"
 #define MAX_RAN INT_MAX
 
-typedef std::vector<int> Chromosome;
 typedef unsigned int uint;
 typedef unsigned long ulong;
-
+void genetic();
 void evaluatePoblationTime();
+void iterGeneticAll(std::string, std::string, std::string, int);
+void printResults(std::vector<double>, std::vector<long int>, std::string, std::string, std::string, int);
 #endif

@@ -6,10 +6,10 @@ DoubleGenome::~DoubleGenome()
 {
 }
 
-DoubleGenome &DoubleGenome::Build()
+DoubleGenome DoubleGenome::Build()
 {
-    DoubleGenome *newGenome = new DoubleGenome();
-    return *newGenome;
+    DoubleGenome newGenome;
+    return newGenome;
 }
 
 DoubleGenome &DoubleGenome::setGenome(Chromosome chromosome)

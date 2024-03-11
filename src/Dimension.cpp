@@ -14,10 +14,10 @@ Dim::Dim()
     l = 0;
     w = 0;
 }
-Dim &Dim::Build()
+Dim Dim::Build()
 {
-    Dim *dim = new Dim();
-    return *dim;
+    Dim dim;
+    return dim;
 }
 
 Dim &Dim::setAncho(int ancho)

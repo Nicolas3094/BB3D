@@ -91,12 +91,8 @@ void swapPointValue(DoubleGenome &gen, int i, int value)
 
 void inverseMutation(DoubleGenome &gen, int i, int j)
 {
-    DoubleGenome genTmp = gen;
-    for (int k = i; k <= j; k++)
-    {
-        gen.getGenome()[k] = genTmp.getGenome()[j - k + i];
-        gen.getDGenome()[k] = genTmp.getDGenome()[j - k + i];
-    }
+    std::reverse(gen.getGenome().begin() + i, gen.getGenome().begin() + j);
+    std::reverse(gen.getDGenome().begin() + i, gen.getDGenome().begin() + j);
 }
 
 void insertion(DoubleGenome &gen, int indexToInsert, int indexValue)
@@ -296,7 +292,7 @@ void combine2(DoubleGenome &gen, int indexToInsert, int i, int j)
     }
 }
 
-void mutateC1(DoubleGenome &gen, int randomStep = -1)
+void mutateC1(DoubleGenome &gen, int randomStep)
 {
     int n, step, i, j, i2, j2, low, high;
     n = gen.getDGenome().size();
@@ -304,19 +300,19 @@ void mutateC1(DoubleGenome &gen, int randomStep = -1)
 
     if (randomStep == 1)
     {
-        step = rand() % (n - 2) + 1;
+        step = randomInteger(1, n - 2);
     }
-    else if (randomStep < 2 && randomStep >= 0)
+    else if (randomStep <= 2 && randomStep >= 0)
     {
         step = 2;
     }
     low = 1;
     high = std::floor(n / 2) - static_cast<int>(std::floor(step / 2)) + 1;
-    i = std::experimental::randint(low, high);
+    i = randomInteger(low, high);
     j = i + static_cast<int>(std::floor(step / 2)) - 1;
     low = static_cast<int>(std::floor(n / 2));
     high = n - static_cast<int>(std::floor(step / 2));
-    i2 = std::experimental::randint(low, high);
+    i2 = randomInteger(low, high);
     j2 = i2 + static_cast<int>(std::floor(step / 2)) - 1;
 
     combine1(gen, i, j, i2, j2);
@@ -332,13 +328,13 @@ void mutateC2(DoubleGenome &gen, int randomStep)
 
     if (randomStep == -1)
     {
-        step = std::experimental::randint(1, n - 2);
+        step = randomInteger(1, n - 2);
     }
     else if (randomStep < 2 && randomStep >= 0)
     {
         step = 2;
     }
-    init = std::experimental::randint(1, static_cast<int>(std::floor(n / 2)));
+    init = randomInteger(1, static_cast<int>(std::floor(n / 2)));
     if (init + step > n - 2)
     {
         end = n - 2;
@@ -349,30 +345,40 @@ void mutateC2(DoubleGenome &gen, int randomStep)
     }
     if (r < 0.5)
     {
-        index = std::experimental::randint(0, init - 1);
+        index = randomInteger(0, init - 1);
     }
     else
     {
-        index = std::experimental::randint(end + 1, n);
+        index = randomInteger(end + 1, n);
     }
     combine2(gen, index, init, end);
 }
 
-void mutateInversion(DoubleGenome &gen, int randomStep = -1)
+void mutateInversion(DoubleGenome &gen, int randomStep)
 {
+    // std::cout << "Mutate inversion\n";
     int n, step, i, j;
     n = gen.getDGenome().size();
     step = randomStep;
     if (randomStep == -1)
     {
-        step = std::experimental::randint(1, n - 2);
+        step = randomInteger(1, n - 2);
     }
-    else if (randomStep < 2)
+    else if (randomStep <= 2)
     {
         step = 2;
     }
-    i = std::experimental::randint(1, static_cast<int>(std::floor(n / 2)));
-    j = i + step + 1;
+    i = randomInteger(1, static_cast<int>(std::floor(n / 2)));
+    // std::cout << "i " << i << ", j " << j << "\n";
+
+    if (i + step > n - 1)
+    {
+        j = n - 1;
+    }
+    else
+    {
+        j = i + step - 1;
+    }
     inverseMutation(gen, i, j);
 }
 

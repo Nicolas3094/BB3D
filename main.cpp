@@ -1,42 +1,111 @@
 #include "main.hpp"
+
 #include "src/FitnessOperators.hpp"
 #include "metaheuristics/GeneticsOperators.hpp"
 #include "metaheuristics/PermutationOperators.hpp"
+#include "metaheuristics/GeneticAlgorithm.hpp"
 #include "readData/ReadData.hpp"
 #include <chrono>
-
 int main()
 {
-  srand(time(NULL));
+  std::string algorithmName, rotationType, mutationType, algorithm;
+  std::cout << "Select algorithm: GA ABC FFA\n";
+  std::cin >> algorithm;
+  std::cout << "\nSelect mutationType: InverseMutation C1Mutation C2Mutation\n";
+  std::cin >> mutationType;
+  std::cout << "\nSelect problem: P1A2 P2A2 P3A2 P4A2 P5A2\n";
+  std::cin >> algorithmName;
+  std::cout << "\nSelect rotation type: 0 2 6\n";
+  std::cin >> rotationType;
+  if (algorithm != "GA" && algorithm != "ABC" && algorithm != "FFA")
+  {
+    std::cout << "\nSelect valid algorithm.\n";
+    return main();
+  }
+  if (mutationType != "InverseMutation" && mutationType != "C1Mutation" && mutationType != "C2Mutation")
+  {
+    std::cout << "\nSelect valid mutationType.\n";
+    return main();
+  }
+  if (algorithmName != "P1A2" && algorithmName != "P2A2" && algorithmName != "P3A2" && algorithmName != "P4A2" && algorithmName != "P5A2")
+  {
+    std::cout << "\nSelect valid algorithmName.\n";
+    return main();
+  }
+  if (rotationType != "0" && rotationType != "2" && rotationType != "6")
+  {
+    std::cout << "\nSelect valid rotationType.\n";
+    return main();
+  }
+  iterGeneticAll(algorithmName, mutationType, algorithm, std::stoi(rotationType));
+  // system("pause");
+}
 
-  Chromosome chromosome1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  Chromosome chromosome2{2, 8, 5, 1, 9, 6, 3, 4, 7, 10};
-  DoubleGenome gen = DoubleGenome::Build().setGenome(chromosome1);
-  DoubleGenome gen2 = DoubleGenome::Build().setGenome(chromosome2);
-  DoubleGenome mutGen2 = gen2;
-  // DoubleGenome child = crossOx(gen, gen2, 2, 4);
-  cout << gen2 << "\n";
-  // swapPointValue(gen2, 2, 4);
-  // inverseMutation(gen2, 2, 4);
-  // randomReversingInsertionOfSubsequence(gen2, 2, 3, 6);
-  // randomSwap(gen2, 2, 4);
-  // swapSubsequences(gen2, 2, 4, 6, 8);
+void iterGeneticAll(std::string algorithmName, std::string mutationType, std::string algorithm, int rotationWay)
+{
 
-  double promHamming = 0.0;
+  vector<DatasetBinBacking> DATASSET;
+  const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Instance\\" + algorithmName + ".csv";
   try
   {
-    mutateC2(mutGen2, 2);
+    DATASSET = readData(dataPATH);
   }
 
   catch (const std::exception &ex)
   {
     cerr << ex.what() << "\n";
   }
-  promHamming += hamming(gen2, mutGen2);
-  mutGen2 = gen2;
-  cout << "Diff: " << promHamming << "\n";
+  std::vector<double> responses(DATASSET.size());
+  std::vector<long int> durationResponses(DATASSET.size());
+  std::cout << "\nStart evolving.\n";
+  for (int i = 0; i < DATASSET.size(); i++)
+  {
+    auto start = std::chrono::high_resolution_clock::now();
+    GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
+                                            .setProblem(DATASSET[i])
+                                            .setMaxIteration(1000)
+                                            .setNumberOfIndividuals(50)
+                                            .setCrossProbability(0.75)
+                                            .setDMutationProbability(0.05)
+                                            .setSelectionProbability(0.85)
+                                            .setRotationType(getRotationWayFromId(rotationWay));
+    Poblacion bestPob = geneticAlgorithm.evolve();
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    responses[i] = bestPob[0].getFitness();
+    durationResponses[i] = duration.count();
+    printResults(responses, durationResponses, algorithmName, mutationType, algorithm, rotationWay);
+  }
+}
 
-  system("pause");
+void genetic()
+{
+
+  vector<DatasetBinBacking> DATASSET;
+  const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Instance\\P1A2.csv";
+  try
+  {
+    DATASSET = readData(dataPATH);
+  }
+
+  catch (const std::exception &ex)
+  {
+    cerr << ex.what() << "\n";
+  }
+  auto start = std::chrono::high_resolution_clock::now();
+  GeneticAlgorithm algorithm = GeneticAlgorithm::Build()
+                                   .setProblem(DATASSET[0])
+                                   .setMaxIteration(1000)
+                                   .setNumberOfIndividuals(50)
+                                   .setCrossProbability(0.75)
+                                   .setDMutationProbability(0.05)
+                                   .setSelectionProbability(0.85);
+  Poblacion bestPob = algorithm.evolve();
+  auto stop = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+  std::cout << "Initial best fit: " << bestPob[0].getFitness() << "\n";
+  std::cout << "Initial worst fit: " << bestPob[bestPob.size() - 1].getFitness() << "\n";
+  print("Duration: " << duration.count() << "ms");
 }
 
 void evaluatePoblationTime()
@@ -71,4 +140,36 @@ void evaluatePoblationTime()
   print("Item places: " << dataset.bin.getLoadedItems());
   print("FI: " << heuristicPoblation[0].getFitness());
   print("Genome: " << heuristicPoblation[0].getGenome());
+}
+
+void printResults(std::vector<double> result, std::vector<long int> delays, std::string algorithmName, std::string mutationType, std::string alrgorithm, int rotationWay)
+{
+  std::string rotationType;
+  if (rotationWay == 0)
+  {
+    rotationType = "ZERO";
+  }
+  else if (rotationWay == 2)
+  {
+    rotationType = "TWO";
+  }
+  else
+  {
+    rotationType = "SIX";
+  }
+  const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Results\\" + algorithmName + "\\" + mutationType + "\\" + alrgorithm + "\\" + rotationType + "\\" + alrgorithm + ".csv";
+  const string timePATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Results\\" + algorithmName + "\\" + mutationType + "\\" + alrgorithm + "\\" + rotationType + "\\t.csv";
+
+  ofstream MyFile(dataPATH);
+  for (auto res : result)
+  {
+    MyFile << res << "\n";
+  }
+  MyFile.close();
+  ofstream MyFile2(timePATH);
+  for (auto res : delays)
+  {
+    MyFile2 << res << "\n";
+  }
+  MyFile2.close();
 }

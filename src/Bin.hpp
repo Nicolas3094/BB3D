@@ -20,7 +20,7 @@ public:
     Bin();
     ~Bin();
 
-    static Bin &Build();
+    static Bin Build();
 
     Bin &addItem(ItemBin);
     Bin &setLargo(int);

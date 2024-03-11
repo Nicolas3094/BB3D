@@ -4,4 +4,7 @@
 #include "../main.hpp"
 #include <chrono>
 double uniformUnit();
+
+int randomInteger(int, int);
+
 #endif

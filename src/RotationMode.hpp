@@ -2,7 +2,9 @@
 #define ROTATION_MODE_H
 #include "../main.hpp"
 
-enum ROTATION_MODE{
+enum ROTATION_MODE
+{
+    NONE = 0,
     ONE = 1,
     TWO = 2,
     THREE = 3,

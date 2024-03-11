@@ -5,10 +5,10 @@ Individuo::Individuo()
     this->fitness = 0;
 }
 
-Individuo &Individuo::Build()
+Individuo Individuo::Build()
 {
-    Individuo *newInd = new Individuo();
-    return *newInd;
+    Individuo newInd;
+    return newInd;
 }
 
 Individuo &Individuo::setFitness(double fitness)
@@ -48,10 +48,20 @@ LoadedBins decodificateIndividual(Individuo indivudual, LoadedBins dataSet, Bin 
     for (int i = 0; i < genomeSize; i++)
     {
         ItemBin item = dataSet[indivudual.getGenome().getGenome()[i] - 1];
-        itemsToPack[i] = item.rotate(
-            bin.getRotationWay(),
-            getRotationFromId(indivudual.getGenome().getDGenome()[i]));
+        if (bin.getRotationWay() != ROTATION_WAY::ZERO_WAY)
+        {
+            item.rotate(
+                bin.getRotationWay(),
+                getRotationFromId(indivudual.getGenome().getDGenome()[i]));
+        }
+
+        itemsToPack[i] = item;
     }
 
     return itemsToPack;
+}
+
+void rankPoblation(Poblacion &poblation)
+{
+    std::sort(poblation.begin(), poblation.end(), greater_fitness());
 }

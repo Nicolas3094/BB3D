@@ -13,7 +13,7 @@ public:
     Punto();
     Punto(const int, const int, const int);
 
-    static Punto &Build(const int, const int, const int);
+    static Punto Build(const int, const int, const int);
 };
 
 std::ostream &operator<<(std::ostream &, Punto);

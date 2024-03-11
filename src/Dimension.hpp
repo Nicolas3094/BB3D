@@ -17,7 +17,7 @@ public:
     ~Dim();
     Dim(int, int, int);
 
-    static Dim &Build();
+    static Dim Build();
 
     Punto getVector();
     const int getLargo() const;

@@ -8,10 +8,13 @@ Punto::Punto()
 }
 Punto::Punto(const int x, const int y, const int z) : x(x), y(y), z(z) {}
 
-Punto &Punto::Build(const int x, const int y, const int z)
+Punto Punto::Build(const int x, const int y, const int z)
 {
-    Punto *pt = new Punto(x, y, z);
-    return *pt;
+    Punto pt;
+    pt.x = x;
+    pt.y = y;
+    pt.z = z;
+    return pt;
 }
 
 bool operator==(Punto pt1, Punto pt2)

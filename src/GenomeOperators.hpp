@@ -16,8 +16,8 @@ Chromosome generatePermutation(int);
 LoadedBins decodeChromosome(Chromosome, LoadedBins);
 Chromosome codeChromosome(LoadedBins);
 std::vector<Chromosome> buildHeuristicChromosomes(LoadedBins, bool);
-std::vector<Chromosome> buildCompleteHeuristicChromosomes(const LoadedBins &, const int);
-std::vector<Chromosome> buildChromosomes(const LoadedBins &, const int);
+std::vector<Chromosome> buildCompleteHeuristicChromosomes(LoadedBins, int);
+std::vector<Chromosome> buildChromosomes(LoadedBins, int);
 Chromosome generateRandomRepeatedAlalleleChromosome(int, int, int);
 
 #endif

@@ -17,7 +17,7 @@ public:
     Individuo &setFitness(double);
     Individuo &setGenome(DoubleGenome);
 
-    static Individuo &Build();
+    static Individuo Build();
 
     double getFitness();
     DoubleGenome &getGenome();
@@ -27,6 +27,15 @@ std::ostream &operator<<(std::ostream &, Individuo &);
 
 typedef std::vector<Individuo> Poblacion;
 
+struct greater_fitness
+{
+    inline bool operator()(Individuo struct1, Individuo struct2)
+    {
+        return (struct1.getFitness() > struct2.getFitness());
+    }
+};
+
 LoadedBins decodificateIndividual(Individuo, LoadedBins, Bin);
+void rankPoblation(Poblacion &);
 
 #endif

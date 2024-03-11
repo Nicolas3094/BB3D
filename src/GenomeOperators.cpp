@@ -1,4 +1,5 @@
 #include "GenomeOperators.hpp"
+#include <chrono>
 
 // Function to return the next random number
 int getNum(std::vector<int> &v)
@@ -26,15 +27,15 @@ int getNum(std::vector<int> &v)
 // Function to generate n non-repeating random numbers
 Chromosome generatePermutation(int n)
 {
-    std::vector<int> v(n);
     Chromosome chromosome(n);
-    for (int i = 0; i < n; i++)
-        v[i] = i + 1;
+    static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    static std::default_random_engine gen(seed);
 
     for (int i = 0; i < n; i++)
-    {
-        chromosome[i] = (getNum(v));
-    }
+        chromosome[i] = i + 1;
+
+    std::shuffle(chromosome.begin(), chromosome.end(), gen);
+
     return chromosome;
 }
 
@@ -68,11 +69,11 @@ std::vector<Chromosome> buildHeuristicChromosomes(LoadedBins allItemBins, bool r
 
     if (!reverse)
     {
-        std::sort(sortedByVolumes.begin(), sortedByVolumes.end());
+        std::sort(sortedByVolumes.begin(), sortedByVolumes.end(), VolumeLess());
     }
     else
     {
-        std::sort(sortedByVolumes.begin(), sortedByVolumes.end(), std::greater<ItemBin>());
+        std::sort(sortedByVolumes.begin(), sortedByVolumes.end(), VolumeGreater());
     }
     poblacionHeuristica.push_back(codeChromosome(sortedByVolumes));
     if (reverse)
@@ -106,7 +107,7 @@ std::vector<Chromosome> buildHeuristicChromosomes(LoadedBins allItemBins, bool r
     return poblacionHeuristica;
 }
 
-std::vector<Chromosome> buildCompleteHeuristicChromosomes(const LoadedBins &allBins, const int numberOfChromosomes)
+std::vector<Chromosome> buildCompleteHeuristicChromosomes(LoadedBins allBins, int numberOfChromosomes)
 {
     std::vector<Chromosome> chromosomePoblation;
     std::vector<Chromosome> heursiticChromosomePoblation = buildHeuristicChromosomes(allBins);
@@ -119,14 +120,13 @@ std::vector<Chromosome> buildCompleteHeuristicChromosomes(const LoadedBins &allB
     return chromosomePoblation;
 }
 
-std::vector<Chromosome> buildChromosomes(const LoadedBins &allBins, const int numberOfChromosomes)
+std::vector<Chromosome> buildChromosomes(LoadedBins allBins, int numberOfChromosomes)
 {
-    std::vector<Chromosome> chromosomePoblation;
+    std::vector<Chromosome> chromosomePoblation(numberOfChromosomes);
     int longOfChromosome = allBins.size();
-
     for (int i = 0; i < numberOfChromosomes; i++)
     {
-        chromosomePoblation.push_back(generatePermutation(longOfChromosome));
+        chromosomePoblation[i] = generatePermutation(longOfChromosome);
     }
 
     return chromosomePoblation;
@@ -143,10 +143,10 @@ Chromosome generateRandomRepeatedAlalleleChromosome(int NumberCount, int minimum
         }
         return values;
     }
-    std::random_device rd;
-    std::mt19937 gen(rd()); // these can be global and/or static, depending on how you use random elsewhere
-
+    static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    static std::default_random_engine gen(seed);
     std::uniform_int_distribution<> dis(minimum, maximum);
+
     std::generate(values.begin(), values.end(), [&]()
                   { return dis(gen); });
     return values;

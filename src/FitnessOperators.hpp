@@ -6,7 +6,7 @@
 #include "DBLF.hpp"
 #include "GenomeOperators.hpp"
 
-void evaluateFitness(Individuo &, LoadedBins, Bin &);
+void evaluateFitness(Individuo &, LoadedBins, Bin);
 void evaluateFitnessDecodificated(Individuo &, LoadedBins, Bin &);
 DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad);
 Poblacion buildHeuristicPoblation(const uint, Bin, LoadedBins);

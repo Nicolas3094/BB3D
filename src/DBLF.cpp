@@ -4,15 +4,17 @@ void DBLF(
     Bin &bin,
     Chromosome itemsIdToPack,
     Chromosome itemsRotation,
-    LoadedBins itemDataOrderById)
+    LoadedBins itemDataOrderById,
+    bool print)
 {
+    // std::cout << "genome: " << itemsIdToPack << "\n";
     ColaPuntosDBL queue = ColaPuntosDBL::Build();
     queue.push(Punto::Build(0, 0, 0));
-
+    int countAllele = 0;
     for (int boxId : itemsIdToPack)
     {
         // std::cout << "Box: " << boxId << "\n";
-        ROTATION_MODE rotation = getRotationFromId(itemsRotation[boxId]);
+        ROTATION_MODE rotation = getRotationFromId(itemsRotation[countAllele++]);
         // Item to pack
         itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(), rotation);
         // std::cout << "Available points: " << queue;
@@ -32,7 +34,7 @@ void DBLF(
                     queue.remove(j);
                     iterateByDeepestBottomLeft(currenPoint, itemDataOrderById[boxId - 1], bin);
                     addItemToBin(queue, bin, currenPoint, itemDataOrderById[boxId - 1]);
-                    // std::cout << "Se inserto " << boxId<< "\n\n";
+                    // std::cout << "Se inserto " << boxId << "\n\n";
                     break;
                 }
                 /*else
