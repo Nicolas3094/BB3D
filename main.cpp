@@ -9,13 +9,13 @@
 int main()
 {
   std::string algorithmName, rotationType, mutationType, algorithm;
-  std::cout << "Select algorithm: [1]GA [2]ABC [3]FFA\n";
+  std::cout << "Select algorithm:\n[1] Genetic Algorithm\n[2] Artificial Bee Colony Algorithm \n[3] Firefly Algorithm\n";
   std::cin >> algorithm;
-  std::cout << "\nSelect mutationType: [1]InverseMutation [2]C1Mutation [3]C2Mutation\n";
+  std::cout << "\nSelect mutationType:\n[1] Inverse Mutation\n[2] Group C1 Mutation\n[3] Group C2 Mutation\n";
   std::cin >> mutationType;
-  std::cout << "\nSelect problem: [1]P1A2 [2]P2A2 [3]P3A2 [4]P4A2 [5]P5A2\n";
+  std::cout << "\nSelect problem:\n[1] P1A2\n[2] P2A2\n[3] P3A2\n[4] P4A2\n[5] P5A2\n";
   std::cin >> algorithmName;
-  std::cout << "\nSelect rotation type: [1]0 [2]2 [3]6\n";
+  std::cout << "\nSelect rotation type: [1]ZERO-ROTATION [2]2-ROTATION [3]6-ROTATION\n";
   std::cin >> rotationType;
   if (algorithm != "1" && algorithm != "2" && algorithm != "3")
   {
@@ -84,6 +84,7 @@ int main()
   {
     rotationType = "6";
   }
+
   iterGeneticAll(algorithmName, mutationType, algorithm, std::stoi(rotationType));
   // system("pause");
 }
@@ -105,15 +106,15 @@ void iterGeneticAll(std::string algorithmName, std::string mutationType, std::st
   MutationType mutationTyped;
   if (mutationType == "1")
   {
-    mutationType = MutationType::INVERSE_MUTATION;
+    mutationTyped = MutationType::INVERSE_MUTATION;
   }
   else if (mutationType == "2")
   {
-    mutationType = MutationType::C1;
+    mutationTyped = MutationType::C1;
   }
   else
   {
-    mutationType = MutationType::C2;
+    mutationTyped = MutationType::C2;
   }
   std::vector<double> responses(DATASSET.size());
   std::vector<long int> durationResponses(DATASSET.size());
@@ -121,23 +122,21 @@ void iterGeneticAll(std::string algorithmName, std::string mutationType, std::st
   for (int i = 0; i < DATASSET.size(); i++)
   {
     auto start = std::chrono::high_resolution_clock::now();
-    if (algorithm == "GA")
-    {
-      GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
-                                              .setProblem(DATASSET[i])
-                                              .setMaxIteration(1000)
-                                              .setNumberOfIndividuals(50)
-                                              .setCrossProbability(0.75)
-                                              .setDMutationProbability(0.05)
-                                              .setSelectionProbability(0.85)
-                                              .setRotationType(getRotationWayFromId(rotationWay))
-                                              .setMutationType(mutationTyped);
-      Poblacion bestPob = geneticAlgorithm.evolve();
-    }
+    GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
+                                            .setProblem(DATASSET[i])
+                                            .setMaxIteration(1000)
+                                            .setNumberOfIndividuals(50)
+                                            .setCrossProbability(0.75)
+                                            .setDMutationProbability(0.05)
+                                            .setSelectionProbability(0.85)
+                                            .setRotationType(getRotationWayFromId(rotationWay))
+                                            .setMutationType(mutationTyped);
+    Poblacion bestPob = geneticAlgorithm.evolve();
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     responses[i] = bestPob[0].getFitness();
     durationResponses[i] = duration.count();
+    std::cout << (i + 1) << ": " << responses[i] << "\n";
     printResults(responses, durationResponses, algorithmName, mutationType, algorithm, rotationWay);
   }
 }
@@ -235,7 +234,6 @@ void printResults(std::vector<double> result, std::vector<long int> delays, std:
   }
   const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Results\\" + algorithmName + "\\" + mutationType + "\\" + alrgorithm + "\\" + rotationType + "\\" + alrgorithm + ".csv";
   const string timePATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Results\\" + algorithmName + "\\" + mutationType + "\\" + alrgorithm + "\\" + rotationType + "\\t.csv";
-
   ofstream MyFile(dataPATH);
   for (auto res : result)
   {

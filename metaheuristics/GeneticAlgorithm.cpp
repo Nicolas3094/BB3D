@@ -156,7 +156,6 @@ Poblacion GeneticAlgorithm::evolve()
     maxPoblation = poblation.size();
     for (int i = 0; i < maxIteration; i++)
     {
-        // std::cout << "next gen\n";
         nextGeneration(poblation);
         // std::cout << "order\n";
         rankPoblation(poblation);
