@@ -11,11 +11,11 @@ int main()
   std::string algorithmName, rotationType, mutationType, algorithm;
   std::cout << "Select algorithm:\n[1] Genetic Algorithm\n[2] Artificial Bee Colony Algorithm \n[3] Firefly Algorithm\n";
   std::cin >> algorithm;
-  std::cout << "\nSelect mutationType:\n[1] Inverse Mutation\n[2] Group C1 Mutation\n[3] Group C2 Mutation\n";
+  std::cout << "Select mutationType:\n[1] Inverse Mutation\n[2] Group C1 Mutation\n[3] Group C2 Mutation\n";
   std::cin >> mutationType;
-  std::cout << "\nSelect problem:\n[1] P1A2\n[2] P2A2\n[3] P3A2\n[4] P4A2\n[5] P5A2\n";
+  std::cout << "Select problem:\n[1] P1A2\n[2] P2A2\n[3] P3A2\n[4] P4A2\n[5] P5A2\n";
   std::cin >> algorithmName;
-  std::cout << "\nSelect rotation type: [1]ZERO-ROTATION [2]2-ROTATION [3]6-ROTATION\n";
+  std::cout << "Select rotation type:\n[1] ZERO-ROTATION\n[2] 2-ROTATION\n[3] 6-ROTATION\n";
   std::cin >> rotationType;
   if (algorithm != "1" && algorithm != "2" && algorithm != "3")
   {
@@ -136,7 +136,7 @@ void iterGeneticAll(std::string algorithmName, std::string mutationType, std::st
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     responses[i] = bestPob[0].getFitness();
     durationResponses[i] = duration.count();
-    std::cout << (i + 1) << ": " << responses[i] << "\n";
+    // std::cout << (i + 1) << ": " << responses[i] << "\n";
     printResults(responses, durationResponses, algorithmName, mutationType, algorithm, rotationWay);
   }
 }
