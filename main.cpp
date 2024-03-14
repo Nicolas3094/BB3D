@@ -21,10 +21,10 @@ void iterGeneticAll()
   std::string algorithmName, rotationType, mutationType, algorithm;
   std::cout << "Select algorithm:\n[1] Genetic Algorithm\n[2] Artificial Bee Colony Algorithm \n[3] Firefly Algorithm\n";
   std::cin >> algorithm;
-  std::cout << "Select mutationType:\n[1] Inverse Mutation\n[2] Group C1 Mutation\n[3] Group C2 Mutation\n";
-  std::cin >> mutationType;
   std::cout << "Select problem:\n[1] P1A2\n[2] P2A2\n[3] P3A2\n[4] P4A2\n[5] P5A2\n";
   std::cin >> algorithmName;
+  // std::cout << "Select mutationType:\n[1] Inverse Mutation\n[2] Group C1 Mutation\n[3] Group C2 Mutation\n";
+  // std::cin >> mutationType;
   std::cout << "Select rotation type:\n[1] ZERO-ROTATION\n[2] 2-ROTATION\n[3] 6-ROTATION\n";
   std::cin >> rotationType;
   if (algorithm != "1" && algorithm != "2" && algorithm != "3")
@@ -107,75 +107,79 @@ void iterGeneticAll()
     cerr << ex.what() << "\n";
   }
   MutationType mutationTyped;
-  if (mutationType == "1")
-  {
-    mutationTyped = MutationType::INVERSE_MUTATION;
-  }
-  else if (mutationType == "2")
-  {
-    mutationTyped = MutationType::C1;
-  }
-  else
-  {
-    mutationTyped = MutationType::C2;
-  }
   std::vector<double> responses(DATASSET.size());
   std::vector<long int> durationResponses(DATASSET.size());
   std::cout << "\nStart evolving.\n";
-  for (int i = 0; i < DATASSET.size(); i++)
+  for (int i = 1; i <= 3; i++)
   {
-    auto start = std::chrono::high_resolution_clock::now();
-    Poblacion bestPob;
-    if (algorithm == "GA")
+    if (i == 1)
     {
-      GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
-                                              .setMaxIteration(1000)
-                                              .setNumberOfIndividuals(100)
-                                              .setCrossProbability(0.75)
-                                              .setDMutationProbability(0.05)
-                                              .setSelectionProbability(0.85)
-                                              .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
-                                              .setMutationType(mutationTyped)
-                                              .setProblem(DATASSET[i]);
-      bestPob = geneticAlgorithm.evolve();
+      mutationTyped = MutationType::INVERSE_MUTATION;
     }
-    else if (algorithm == "ABC")
+    else if (i == 2)
     {
-      ArtificialBeeColonyAlgorithm abc = ArtificialBeeColonyAlgorithm::Build()
-                                             .setMaxIteration(1000)
-                                             .setNumberOfIndividuals(20)
-                                             .setNumberOfSites(6)
-                                             .setNumberOfEliteSites(4)
-                                             .setNumberOfEliteBees(4)
-                                             .setNumberOfNonEliteBees(2)
-                                             .setMutationProbabiliy(1.0)
-                                             .setDMutationProbability(0.05)
-                                             .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
-                                             .setMutationType(mutationTyped)
-                                             .setProblem(DATASSET[i]);
-      bestPob = abc.search();
+      mutationTyped = MutationType::C1;
     }
     else
     {
-      FireflyAlgorithm firefly = FireflyAlgorithm::Build()
-                                     .setMaxIteration(1000)
-                                     .setNumberOfIndividuals(15)
-                                     .setupIndex(2)
-                                     .setMutationProbabiliy(1.0)
-                                     .setDMutationProbability(0.05)
-                                     .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
-                                     .setMutationType(mutationTyped)
-                                     .setProblem(DATASSET[i]);
-      bestPob = firefly.search();
+      mutationTyped = MutationType::C2;
     }
+    for (int i = 0; i < DATASSET.size(); i++)
+    {
+      auto start = std::chrono::high_resolution_clock::now();
+      Poblacion bestPob;
+      if (algorithm == "GA")
+      {
+        GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
+                                                .setMaxIteration(1000)
+                                                .setNumberOfIndividuals(100)
+                                                .setCrossProbability(0.75)
+                                                .setDMutationProbability(0.05)
+                                                .setSelectionProbability(0.85)
+                                                .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
+                                                .setMutationType(mutationTyped)
+                                                .setProblem(DATASSET[i]);
+        bestPob = geneticAlgorithm.evolve();
+      }
+      else if (algorithm == "ABC")
+      {
+        ArtificialBeeColonyAlgorithm abc = ArtificialBeeColonyAlgorithm::Build()
+                                               .setMaxIteration(1000)
+                                               .setNumberOfIndividuals(20)
+                                               .setNumberOfSites(6)
+                                               .setNumberOfEliteSites(4)
+                                               .setNumberOfEliteBees(4)
+                                               .setNumberOfNonEliteBees(2)
+                                               .setMutationProbabiliy(1.0)
+                                               .setDMutationProbability(0.05)
+                                               .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
+                                               .setMutationType(mutationTyped)
+                                               .setProblem(DATASSET[i]);
+        bestPob = abc.search();
+      }
+      else
+      {
+        FireflyAlgorithm firefly = FireflyAlgorithm::Build()
+                                       .setMaxIteration(1000)
+                                       .setNumberOfIndividuals(15)
+                                       .setupIndex(2)
+                                       .setMutationProbabiliy(1.0)
+                                       .setDMutationProbability(0.05)
+                                       .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
+                                       .setMutationType(mutationTyped)
+                                       .setProblem(DATASSET[i]);
+        bestPob = firefly.search();
+      }
 
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    responses[i] = bestPob[0].getFitness();
-    durationResponses[i] = duration.count();
-    // std::cout << (i + 1) << ": " << responses[i] << "\n";
-    printResults(responses, durationResponses, algorithmName, mutationType, algorithm, std::stoi(rotationType));
+      auto stop = std::chrono::high_resolution_clock::now();
+      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+      responses[i] = bestPob[0].getFitness();
+      durationResponses[i] = duration.count();
+      // std::cout << (i + 1) << ": " << responses[i] << "\n";
+      printResults(responses, durationResponses, algorithmName, mutationType, algorithm, std::stoi(rotationType));
+    }
   }
+
   std::string response;
   std::cout << "Repeat experiment: Y/N\n";
   std::cin >> response;
