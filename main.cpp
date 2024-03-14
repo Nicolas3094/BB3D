@@ -32,11 +32,11 @@ void iterGeneticAll()
     std::cout << "\nSelect valid algorithm.\n";
     return iterGeneticAll();
   }
-  if (mutationType != "1" && mutationType != "2" && mutationType != "3")
+  /*if (mutationType != "1" && mutationType != "2" && mutationType != "3")
   {
     std::cout << "\nSelect valid mutationType.\n";
     return iterGeneticAll();
-  }
+  }*/
   if (algorithmName != "2" && algorithmName != "3" && algorithmName != "4" && algorithmName != "5" && algorithmName != "1")
   {
     std::cout << "\nSelect valid algorithmName.\n";
