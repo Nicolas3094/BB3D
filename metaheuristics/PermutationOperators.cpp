@@ -126,83 +126,23 @@ void insertion(DoubleGenome &gen, int indexToInsert, int indexValue)
 
 void insertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
-    int n = gen.getGenome().size();
-    int nSub = end - init + 1;
-    Chromosome subSequence(nSub);
-    Chromosome subSequenceRot(nSub);
+    DoubleGenome subSequence = buildSubsequenceGenome(gen, init, end);
 
-    for (int i = init; i < end + 1; i++)
-    {
-        subSequence[i - init] = gen.getGenome()[i];
-        subSequenceRot[i - init] = gen.getDGenome()[i];
-    }
-    if (indexToInsert < init)
-    {
-        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
-        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
-        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequence.begin(), subSequence.end());
-        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceRot.begin(), subSequenceRot.end());
-    }
-    else if (indexToInsert > end)
-    {
-        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequence.begin(), subSequence.end());
-        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceRot.begin(), subSequenceRot.end());
-
-        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
-        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
-    }
-    else
-    {
-        throw std::invalid_argument("RIS: index inside the interval [init, end]");
-    }
-    if (gen.getGenome().size() != n || gen.getDGenome().size() != n)
-    {
-        throw std::invalid_argument("RIS: mutation got different size.");
-    }
+    addSubsequence(gen, subSequence, indexToInsert, init, end);
 }
 
 void randomReversingInsertionOfSubsequence(DoubleGenome &gen, int indexToInsert, int init, int end)
 {
-    DoubleGenome newGenome, subSequenceGenome;
-    int n, value, valueRot, nSub;
     double r;
-
-    n = gen.getGenome().size();
-    value = gen.getGenome()[indexToInsert];
-    valueRot = gen.getDGenome()[indexToInsert];
+    DoubleGenome subSequenceGenome = buildSubsequenceGenome(gen, init, end);
     r = uniformUnit();
-    addRangeToGenome(subSequenceGenome, gen, init, end + 1);
-    nSub = subSequenceGenome.getGenome().size();
 
     if (r > 0.5)
     {
-        std::reverse(subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
-        std::reverse(subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
+        reverseGenome(subSequenceGenome);
     }
-    if (indexToInsert < init)
-    {
-        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
-        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
 
-        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
-        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
-    }
-    else if (indexToInsert > end)
-    {
-        gen.getGenome().insert(gen.getGenome().begin() + indexToInsert, subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
-        gen.getDGenome().insert(gen.getDGenome().begin() + indexToInsert, subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
-
-        gen.getGenome().erase(gen.getGenome().begin() + init, gen.getGenome().begin() + end + 1);
-        gen.getDGenome().erase(gen.getDGenome().begin() + init, gen.getDGenome().begin() + end + 1);
-    }
-    else
-    {
-        throw std::invalid_argument("RRIS: index inside the interval [init, end]");
-    }
-    if (gen.getGenome().size() != n || gen.getDGenome().size() != n)
-    {
-        throw std::invalid_argument("RRIS: mutation got different size.");
-    }
+    addSubsequence(gen, subSequenceGenome, indexToInsert, init, end);
 }
 
 void swap(DoubleGenome &gen, int i, int j)
@@ -330,11 +270,11 @@ void mutateC2(DoubleGenome &gen, int randomStep)
     {
         step = randomInteger(1, n - 2);
     }
-    else if (randomStep < 2 && randomStep >= 0)
+    else if (randomStep <= 2)
     {
         step = 2;
     }
-    init = randomInteger(1, static_cast<int>(std::floor(n / 2)));
+    init = randomInteger(1, n / 2);
     if (init + step > n - 2)
     {
         end = n - 2;
@@ -349,7 +289,7 @@ void mutateC2(DoubleGenome &gen, int randomStep)
     }
     else
     {
-        index = randomInteger(end + 1, n);
+        index = randomInteger(end + 1, n - 1);
     }
     combine2(gen, index, init, end);
 }
@@ -462,4 +402,48 @@ void reverseGenome(DoubleGenome &subSequenceGenome)
 {
     std::reverse(subSequenceGenome.getGenome().begin(), subSequenceGenome.getGenome().end());
     std::reverse(subSequenceGenome.getDGenome().begin(), subSequenceGenome.getDGenome().end());
+}
+
+DoubleGenome buildSubsequenceGenome(DoubleGenome fullSequence, int init, int end)
+{
+    DoubleGenome subSequence;
+    for (int i = init; i < end + 1; i++)
+    {
+        subSequence.getGenome().push_back(fullSequence.getGenome()[i]);
+        subSequence.getDGenome().push_back(fullSequence.getDGenome()[i]);
+    }
+    return subSequence;
+}
+
+void addSubsequence(DoubleGenome &fullSequence, DoubleGenome subSequence, int indexToInsert, int init, int end)
+{
+    int n;
+
+    n = fullSequence.getGenome().size();
+
+    if (indexToInsert < init)
+    {
+        fullSequence.getGenome().erase(fullSequence.getGenome().begin() + init, fullSequence.getGenome().begin() + end + 1);
+        fullSequence.getDGenome().erase(fullSequence.getDGenome().begin() + init, fullSequence.getDGenome().begin() + end + 1);
+
+        fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert, subSequence.getGenome().begin(), subSequence.getGenome().end());
+        fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert, subSequence.getDGenome().begin(), subSequence.getDGenome().end());
+    }
+    else if (indexToInsert > end)
+    {
+        fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert, subSequence.getGenome().begin(), subSequence.getGenome().end());
+        fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert, subSequence.getDGenome().begin(), subSequence.getDGenome().end());
+
+        fullSequence.getGenome().erase(fullSequence.getGenome().begin() + init, fullSequence.getGenome().begin() + end + 1);
+        fullSequence.getDGenome().erase(fullSequence.getDGenome().begin() + init, fullSequence.getDGenome().begin() + end + 1);
+    }
+    else
+    {
+        throw std::invalid_argument("RIS/RRIS: index inside the interval [init, end]");
+    }
+    if (fullSequence.getGenome().size() != n || fullSequence.getDGenome().size() != n)
+    {
+        std::cout << "result " << fullSequence.getGenome() << "\n";
+        throw std::invalid_argument("RIS/RRIS: mutation got different size.");
+    }
 }

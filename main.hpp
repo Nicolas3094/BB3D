@@ -21,6 +21,6 @@ typedef unsigned int uint;
 typedef unsigned long ulong;
 void genetic();
 void evaluatePoblationTime();
-void iterGeneticAll(std::string, std::string, std::string, int);
+void iterGeneticAll();
 void printResults(std::vector<double>, std::vector<long int>, std::string, std::string, std::string, int);
 #endif

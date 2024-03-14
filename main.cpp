@@ -4,9 +4,19 @@
 #include "metaheuristics/GeneticsOperators.hpp"
 #include "metaheuristics/PermutationOperators.hpp"
 #include "metaheuristics/GeneticAlgorithm.hpp"
+#include "metaheuristics/ArtificialBeeColonyAlgorithm.hpp"
+#include "metaheuristics/FireflyAlgorithm.hpp"
 #include "readData/ReadData.hpp"
 #include <chrono>
 int main()
+{
+
+  iterGeneticAll();
+
+  // system("pause");
+}
+
+void iterGeneticAll()
 {
   std::string algorithmName, rotationType, mutationType, algorithm;
   std::cout << "Select algorithm:\n[1] Genetic Algorithm\n[2] Artificial Bee Colony Algorithm \n[3] Firefly Algorithm\n";
@@ -20,22 +30,22 @@ int main()
   if (algorithm != "1" && algorithm != "2" && algorithm != "3")
   {
     std::cout << "\nSelect valid algorithm.\n";
-    return main();
+    return iterGeneticAll();
   }
   if (mutationType != "1" && mutationType != "2" && mutationType != "3")
   {
     std::cout << "\nSelect valid mutationType.\n";
-    return main();
+    return iterGeneticAll();
   }
   if (algorithmName != "2" && algorithmName != "3" && algorithmName != "4" && algorithmName != "5" && algorithmName != "1")
   {
     std::cout << "\nSelect valid algorithmName.\n";
-    return main();
+    return iterGeneticAll();
   }
   if (rotationType != "1" && rotationType != "2" && rotationType != "3")
   {
     std::cout << "\nSelect valid rotationType.\n";
-    return main();
+    return iterGeneticAll();
   }
 
   if (algorithm == "1")
@@ -85,13 +95,6 @@ int main()
     rotationType = "6";
   }
 
-  iterGeneticAll(algorithmName, mutationType, algorithm, std::stoi(rotationType));
-  // system("pause");
-}
-
-void iterGeneticAll(std::string algorithmName, std::string mutationType, std::string algorithm, int rotationWay)
-{
-
   vector<DatasetBinBacking> DATASSET;
   const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Instance\\" + algorithmName + ".csv";
   try
@@ -122,22 +125,63 @@ void iterGeneticAll(std::string algorithmName, std::string mutationType, std::st
   for (int i = 0; i < DATASSET.size(); i++)
   {
     auto start = std::chrono::high_resolution_clock::now();
-    GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
-                                            .setProblem(DATASSET[i])
-                                            .setMaxIteration(1000)
-                                            .setNumberOfIndividuals(50)
-                                            .setCrossProbability(0.75)
-                                            .setDMutationProbability(0.05)
-                                            .setSelectionProbability(0.85)
-                                            .setRotationType(getRotationWayFromId(rotationWay))
-                                            .setMutationType(mutationTyped);
-    Poblacion bestPob = geneticAlgorithm.evolve();
+    Poblacion bestPob;
+    if (algorithm == "GA")
+    {
+      GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
+                                              .setMaxIteration(1000)
+                                              .setNumberOfIndividuals(100)
+                                              .setCrossProbability(0.75)
+                                              .setDMutationProbability(0.05)
+                                              .setSelectionProbability(0.85)
+                                              .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
+                                              .setMutationType(mutationTyped)
+                                              .setProblem(DATASSET[i]);
+      bestPob = geneticAlgorithm.evolve();
+    }
+    else if (algorithm == "ABC")
+    {
+      ArtificialBeeColonyAlgorithm abc = ArtificialBeeColonyAlgorithm::Build()
+                                             .setMaxIteration(1000)
+                                             .setNumberOfIndividuals(20)
+                                             .setNumberOfSites(6)
+                                             .setNumberOfEliteSites(4)
+                                             .setNumberOfEliteBees(4)
+                                             .setNumberOfNonEliteBees(2)
+                                             .setMutationProbabiliy(1.0)
+                                             .setDMutationProbability(0.05)
+                                             .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
+                                             .setMutationType(mutationTyped)
+                                             .setProblem(DATASSET[i]);
+      bestPob = abc.search();
+    }
+    else
+    {
+      FireflyAlgorithm firefly = FireflyAlgorithm::Build()
+                                     .setMaxIteration(1000)
+                                     .setNumberOfIndividuals(15)
+                                     .setupIndex(2)
+                                     .setMutationProbabiliy(1.0)
+                                     .setDMutationProbability(0.05)
+                                     .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
+                                     .setMutationType(mutationTyped)
+                                     .setProblem(DATASSET[i]);
+      bestPob = firefly.search();
+    }
+
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     responses[i] = bestPob[0].getFitness();
     durationResponses[i] = duration.count();
     // std::cout << (i + 1) << ": " << responses[i] << "\n";
-    printResults(responses, durationResponses, algorithmName, mutationType, algorithm, rotationWay);
+    printResults(responses, durationResponses, algorithmName, mutationType, algorithm, std::stoi(rotationType));
+  }
+  std::string response;
+  std::cout << "Repeat experiment: Y/N\n";
+  std::cin >> response;
+  if (response == "y" || response == "Y")
+  {
+    iterGeneticAll();
   }
 }
 
@@ -156,13 +200,15 @@ void genetic()
     cerr << ex.what() << "\n";
   }
   auto start = std::chrono::high_resolution_clock::now();
+  std::cout << "Init\n";
   GeneticAlgorithm algorithm = GeneticAlgorithm::Build()
                                    .setProblem(DATASSET[0])
                                    .setMaxIteration(1000)
                                    .setNumberOfIndividuals(50)
                                    .setCrossProbability(0.75)
                                    .setDMutationProbability(0.05)
-                                   .setSelectionProbability(0.85);
+                                   .setSelectionProbability(0.85)
+                                   .setMutationType(MutationType::C2);
   Poblacion bestPob = algorithm.evolve();
   auto stop = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);

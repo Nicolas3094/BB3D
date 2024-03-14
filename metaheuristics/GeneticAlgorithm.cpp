@@ -95,12 +95,15 @@ Individuo GeneticAlgorithm::instantiateChild(Individuo parent1, Individuo parent
     // std::cout << "end crossoved \n";
     if (rotationType != ROTATION_WAY::ZERO_WAY)
     {
+        // std::cout << "entered fliped\n";
         flipMutation(child.getGenome(), this->dMutationProbability, this->rotationType);
+        // std::cout << "end fliped\n";
     }
-    // std::cout << "entered fliped" << child.getGenome() << "\n";
+    // std::cout << "entered mutate\n";
     mutate(child.getGenome());
-    // std::cout << "enter to evaluated " << child.getGenome() << "\n";
+    // std::cout << "end mutate\n";
     evaluateFitness(child, this->dataSet.totalItems, this->dataSet.bin);
+    // std::cout << "end evaluation\n";
     return child;
 }
 
@@ -128,9 +131,7 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
         {
             adaptiveProbability = 1.0 - (oldPoblation[id1].getFitness() + oldPoblation[id2].getFitness()) / 2;
             this->mutationProbaility = adaptiveProbability;
-            // std::cout << "Childer\n";
             Individuo child1 = instantiateChild(oldPoblation[id1], oldPoblation[id2]);
-            // std::cout << "Child1" << child1.getGenome() << "\n";
             Individuo child2 = instantiateChild(oldPoblation[id2], oldPoblation[id1]);
             // std::cout << "Child2" << child2.getGenome() << "\n";
             if (child1.getFitness() > child2.getFitness())
@@ -156,6 +157,7 @@ Poblacion GeneticAlgorithm::evolve()
     maxPoblation = poblation.size();
     for (int i = 0; i < maxIteration; i++)
     {
+        // std::cout << i << " ";
         nextGeneration(poblation);
         // std::cout << "order\n";
         rankPoblation(poblation);

@@ -71,12 +71,13 @@ int tournament(Poblacion poblation, double probability)
 {
     long n, i1, i2;
     double r;
-    i1 = randomInteger(0, n);
-    i2 = randomInteger(0, n);
+    n = poblation.size();
+    i1 = randomInteger(0, n - 1);
+    i2 = randomInteger(0, n - 1);
     r = uniformUnit();
     while (i1 == i2)
     {
-        i2 = randomInteger(0, n);
+        i2 = randomInteger(0, n - 1);
     }
 
     if (r <= probability)

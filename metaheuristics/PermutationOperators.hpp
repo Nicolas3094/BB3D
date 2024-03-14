@@ -27,4 +27,6 @@ void copyReversedEqualRangeToGenome(DoubleGenome &, DoubleGenome, int, int, int,
 DoubleGenome buildSubsequence(DoubleGenome, int, int);
 void copySubsequence(DoubleGenome &, DoubleGenome, int, int);
 void reverseGenome(DoubleGenome &);
+void addSubsequence(DoubleGenome &, DoubleGenome, int, int, int);
+DoubleGenome buildSubsequenceGenome(DoubleGenome, int, int);
 #endif

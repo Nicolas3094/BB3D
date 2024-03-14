@@ -5,8 +5,8 @@
 #include "MutationType.hpp"
 
 Individuo crossIndivituals(LoadedBins, Bin, MutationType, Individuo, Individuo, double, double);
-void mutationWithType(DoubleGenome &, MutationType, double, int);
-void flipMutation(DoubleGenome &, double, ROTATION_WAY);
+void mutationWithType(DoubleGenome &, MutationType, double, int step = -1);
+void flipMutation(DoubleGenome &gen, double probability, ROTATION_WAY rotation);
 DoubleGenome crossOver(DoubleGenome, DoubleGenome);
 int tournament(Poblacion, double);
 int rouletteWheel(Poblacion);
