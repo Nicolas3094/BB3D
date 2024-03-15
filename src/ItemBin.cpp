@@ -135,9 +135,8 @@ Punto ItemBin::getCurrentDimension()
 void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
 {
 
-    switch (rotationWay)
+    if (rotationWay == ROTATION_WAY::TWO_WAY)
     {
-    case TWO:
         switch (rotationMode)
         {
         case ONE:
@@ -153,8 +152,9 @@ void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
         default:
             break;
         }
-        break;
-    case SIX:
+    }
+    else if (rotationWay == ROTATION_WAY::SIX_WAY)
+    {
         switch (rotationMode)
         {
         case ONE:
@@ -194,10 +194,6 @@ void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
         default:
             break;
         }
-        break;
-
-    default:
-        break;
     }
 }
 

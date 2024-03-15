@@ -109,30 +109,35 @@ void iterGeneticAll()
   MutationType mutationTyped;
   std::vector<double> responses(DATASSET.size());
   std::vector<long int> durationResponses(DATASSET.size());
-  std::cout << "\nStart evolving.\n";
   for (int i = 1; i <= 3; i++)
   {
     if (i == 1)
     {
       mutationTyped = MutationType::INVERSE_MUTATION;
+      mutationType = "1";
     }
     else if (i == 2)
     {
       mutationTyped = MutationType::C1;
+      mutationType = "2";
     }
     else
     {
       mutationTyped = MutationType::C2;
+      mutationType = "3";
     }
+    std::cout << "Init " << mutationTyped << "\n";
+    std::cout << "\nStart evolving.\n";
     for (int i = 0; i < DATASSET.size(); i++)
     {
+      std::cout << (i + 1) << "-";
       auto start = std::chrono::high_resolution_clock::now();
       Poblacion bestPob;
       if (algorithm == "GA")
       {
         GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
                                                 .setMaxIteration(1000)
-                                                .setNumberOfIndividuals(100)
+                                                .setNumberOfIndividuals(50)
                                                 .setCrossProbability(0.75)
                                                 .setDMutationProbability(0.05)
                                                 .setSelectionProbability(0.85)
@@ -175,9 +180,9 @@ void iterGeneticAll()
       auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
       responses[i] = bestPob[0].getFitness();
       durationResponses[i] = duration.count();
-      // std::cout << (i + 1) << ": " << responses[i] << "\n";
       printResults(responses, durationResponses, algorithmName, mutationType, algorithm, std::stoi(rotationType));
     }
+    std::cout << "\n";
   }
 
   std::string response;

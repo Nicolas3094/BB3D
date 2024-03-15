@@ -79,8 +79,8 @@ Individuo GeneticAlgorithm::crossover(Individuo parent1, Individuo parent2)
     int n, init, end;
 
     n = parent1.getGenome().getGenome().size();
-    init = std::experimental::randint(3, n / 2);
-    end = std::experimental::randint(init + 1, n);
+    init = randomInteger(3, (n / 2) - 1);
+    end = randomInteger(init + 1, n - 1);
 
     return Individuo::Build()
         .setGenome(crossOx(parent1.getGenome(), parent2.getGenome(), init, end))

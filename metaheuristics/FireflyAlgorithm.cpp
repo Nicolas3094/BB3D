@@ -25,7 +25,7 @@ FireflyAlgorithm &FireflyAlgorithm::setMutationProbabiliy(double mutationProbail
     return *this;
 }
 
-FireflyAlgorithm &FireflyAlgorithm::setDMutationProbability(double mutationProbaility)
+FireflyAlgorithm &FireflyAlgorithm::setDMutationProbability(double dMutationProbability)
 {
     this->dMutationProbability = dMutationProbability;
     return *this;
@@ -65,7 +65,6 @@ Poblacion FireflyAlgorithm::search()
 {
     int n, numberFireflies, iteration, firefly, mostAttactiveFirefly, bestFirefly, distance;
     double gamma, bestIntensity, Ii, Ij;
-
     Poblacion fireflyPoblation = initialPoblation();
 
     n = fireflyPoblation[0].getGenome().getGenome().size();

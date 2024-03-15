@@ -12,7 +12,6 @@
 #include <algorithm>
 #include <functional>
 #include <limits.h>
-#include <experimental/random>
 
 #define print(x) std::cout << x << "\n"
 #define MAX_RAN INT_MAX

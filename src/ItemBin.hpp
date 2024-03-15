@@ -62,7 +62,7 @@ struct VolumeLess
 {
     bool operator()(ItemBin lx, ItemBin rx)
     {
-        lx.getLargo() * lx.getAncho() * lx.getAlto() > rx.getLargo() * rx.getAncho() * rx.getAlto();
+        return lx.getLargo() * lx.getAncho() * lx.getAlto() > rx.getLargo() * rx.getAncho() * rx.getAlto();
     }
 };
 struct LengthGreater

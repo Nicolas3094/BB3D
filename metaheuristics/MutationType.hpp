@@ -1,5 +1,6 @@
 #ifndef MUTATION_TYPE_H
 #define MUTATION_TYPE_H
+#include <iostream>
 
 enum MutationType
 {
@@ -8,4 +9,5 @@ enum MutationType
     INVERSE_MUTATION
 };
 
+std::ostream &operator<<(std::ostream &, MutationType &);
 #endif

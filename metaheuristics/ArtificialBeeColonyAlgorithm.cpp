@@ -47,7 +47,7 @@ ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setMutationProbabili
     return *this;
 }
 
-ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setDMutationProbability(double mutationProbaility)
+ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setDMutationProbability(double dMutationProbability)
 {
     this->dMutationProbability = dMutationProbability;
     return *this;
