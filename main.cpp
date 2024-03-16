@@ -8,11 +8,15 @@
 #include "metaheuristics/FireflyAlgorithm.hpp"
 #include "readData/ReadData.hpp"
 #include <chrono>
+#include <filesystem>
+
+std::string LOCAL_PATH = std::__fs::filesystem::current_path();
+
 int main()
 {
-
   iterGeneticAll();
 
+  std::cin.get();
   // system("pause");
 }
 
@@ -96,7 +100,7 @@ void iterGeneticAll()
   }
 
   vector<DatasetBinBacking> DATASSET;
-  const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Instance\\" + algorithmName + ".csv";
+  const string dataPATH = LOCAL_PATH + "/Instance/" + algorithmName + ".csv";
   try
   {
     DATASSET = readData(dataPATH);
@@ -198,7 +202,7 @@ void genetic()
 {
 
   vector<DatasetBinBacking> DATASSET;
-  const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Instance\\P1A2.csv";
+  const string dataPATH = LOCAL_PATH + "/Instance/P1A2.csv";
   try
   {
     DATASSET = readData(dataPATH);
@@ -229,7 +233,7 @@ void genetic()
 void evaluatePoblationTime()
 {
   vector<DatasetBinBacking> DATASSET;
-  const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Instance\\P5A2.csv";
+  const string dataPATH = LOCAL_PATH + "/Instance/P5A2.csv";
   try
   {
     DATASSET = readData(dataPATH);
@@ -287,8 +291,8 @@ void printResults(std::vector<double> result, std::vector<long int> delays, std:
   {
     mutationType = "C2Mutation";
   }
-  const string dataPATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Results\\" + algorithmName + "\\" + mutationType + "\\" + alrgorithm + "\\" + rotationType + "\\" + alrgorithm + ".csv";
-  const string timePATH = "C:\\Users\\nicoo\\OneDrive\\Documentos\\Progamming\\3DBPP_CPP\\Results\\" + algorithmName + "\\" + mutationType + "\\" + alrgorithm + "\\" + rotationType + "\\t.csv";
+  const string dataPATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/" + alrgorithm + ".csv";
+  const string timePATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/t.csv";
   ofstream MyFile(dataPATH);
   for (auto res : result)
   {
