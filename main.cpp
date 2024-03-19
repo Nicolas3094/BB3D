@@ -47,6 +47,7 @@ void iterGeneticAll()
   }*/
   if (algorithmName != "2" && algorithmName != "3" && algorithmName != "4" && algorithmName != "5" && algorithmName != "1")
   {
+    ßßß
     std::cout << "\nSelect valid algorithmName.\n";
     return iterGeneticAll();
   }
@@ -159,9 +160,9 @@ void iterGeneticAll()
         ArtificialBeeColonyAlgorithm abc = ArtificialBeeColonyAlgorithm::Build()
                                                .setMaxIteration(1000)
                                                .setNumberOfIndividuals(20)
-                                               .setNumberOfSites(6)
-                                               .setNumberOfEliteSites(4)
-                                               .setNumberOfEliteBees(4)
+                                               .setNumberOfSites(10)
+                                               .setNumberOfEliteSites(6)
+                                               .setNumberOfEliteBees(3)
                                                .setNumberOfNonEliteBees(2)
                                                .setMutationProbabiliy(1.0)
                                                .setDMutationProbability(0.05)
@@ -174,8 +175,8 @@ void iterGeneticAll()
       {
         FireflyAlgorithm firefly = FireflyAlgorithm::Build()
                                        .setMaxIteration(1000)
-                                       .setNumberOfIndividuals(15)
-                                       .setupIndex(2)
+                                       .setNumberOfIndividuals(25)
+                                       .setupIndex(4)
                                        .setMutationProbabiliy(1.0)
                                        .setDMutationProbability(0.05)
                                        .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
