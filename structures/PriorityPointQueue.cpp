@@ -46,99 +46,99 @@ void PriorityPointQueue::clear()
 
 void PriorityPointQueue::enqueue(Punto pt)
 {
+    Node<Punto> *newNode, *currentNode, *previousNode;
+    // std::cout << "point: " << pt << "\n";
     if (isEmpty())
     {
-        size++;
         rear = new Node<Punto>(pt);
-        return;
-    }
-    if (pt == rear->data)
-    {
-        return;
-    }
-    if (condition(pt, rear->data))
-    {
-        // REAR -> oldRear ... => REAR -> newNode <-> oldRear ...
-        Node<Punto> *newNode;
-        newNode = new Node<Punto>(pt);
 
-        newNode->next = rear;
-        rear->previous = newNode;
-        rear = newNode;
-
+        currentNode = null;
         newNode = null;
+        previousNode = null;
         delete newNode;
-
+        delete currentNode;
+        delete previousNode;
+        size++;
         return;
     }
 
-    Node<Punto> *currentNode;
     currentNode = rear;
-
-    while (currentNode->next != null)
+    while (currentNode != HEAD)
     {
         // Do not add if the point is already in list.
         if (pt == currentNode->data)
         {
             currentNode = null;
+            newNode = null;
+            previousNode = null;
+            delete newNode;
             delete currentNode;
+            delete previousNode;
+
             return;
         }
         //  If satisfies condition, it is added at front.
         if (condition(pt, currentNode->data))
         {
-            addNodeAt(currentNode, pt);
+            addNodeBeforeAt(currentNode, pt);
             currentNode = null;
+            newNode = null;
+            previousNode = null;
+            delete newNode;
             delete currentNode;
+            delete previousNode;
+            size++;
             return;
         }
-
+        previousNode = currentNode;
         currentNode = currentNode->next;
     }
-    // Otherwise, it is inserted at HEAD.
-    Node<Punto> *newNode;
-
-    // ... currentNode -> HEAD => ... currentNode <-> newNode -> HEAD
-    currentNode->next = newNode;
-    newNode->previous = currentNode;
-
-    currentNode = null;
-    newNode = null;
-    delete newNode;
-    delete currentNode;
-}
-void PriorityPointQueue::addNodeAt(Node<Punto> *currentNode, Punto point)
-{
-    Node<Punto> *newNode, *prevNode;
-    newNode = new Node<Punto>(point);
-    //  case 1: REAR -> currentNode -> HEAD || REAR -> currentNode <-> nextNode <->...
-    if (currentNode->previous == null)
-    {
-        // REAR -> newNode <-> currentNode  -> ...
-        newNode->next = currentNode;     //  newNode -> currentNode <-> ...
-        currentNode->previous = newNode; //  newNode <-> currentNode <-> ...
-        rear = newNode;                  // REAR -> newNode <-> currentNode <-> ...
-    }
-    // case 2: ... <-> previousNode <-> currentNode  -> HEAD ||  ... <-> previousNode <-> currentNode <-> nextNode <->...
-    else
-    {
-        // ...<-> prevNode <-> newNode <-> currentNode -> ...
-        prevNode = currentNode->previous;
-        newNode->next = currentNode;     // newNode -> currentNode -> ...
-        newNode->previous = prevNode;    // ... <-> prevNode <- newNode -> currentNode -> ...
-        prevNode->next = newNode;        // ... <-> prevNode <-> newNode -> currentNode -> ...
-        currentNode->previous = newNode; // ... <-> prevNode <-> newNode <-> currentNode -> ...
-    }
-
-    newNode = null;
-    prevNode = null;
-    currentNode = null;
-
-    delete prevNode;
-    delete newNode;
-    delete currentNode;
+    // Other cases, previousNode -> HEAD ==> previousNode <-> newNode -> HEAD
+    newNode = new Node<Punto>(pt);
+    newNode->previous = previousNode;
+    previousNode->next = newNode;
 
     size++;
+
+    currentNode = null;
+    newNode = null;
+    previousNode = null;
+    delete newNode;
+    delete currentNode;
+    delete previousNode;
+
+    // std::cout << *this << "\n";
+}
+
+// ... prevNode  <-> newNode <-> currentNode ...
+void PriorityPointQueue::addNodeBeforeAt(Node<Punto> *currentNode, Punto point)
+{
+    Node<Punto> *newNode, *previousNode;
+    newNode = new Node<Punto>(point);
+
+    // case 1: // REAR-> currentNode ==> REAR -> newNode <-> currentNode
+    if (currentNode->previous == REAR)
+    {
+        newNode->next = currentNode;     // NULL-> newNod -> currentNode && REAR-> currentNode
+        currentNode->previous = newNode; // NULL -> newNod <-> currentNode ...
+        rear = newNode;                  // REAR -> newNode <-> currentNode ...
+    }
+    // case 2: ... prevNode <-> currentNode ==> ... prevNode <-> newNode <-> currentNode
+    else
+    {
+        previousNode = currentNode->previous;
+        newNode->next = currentNode;               // NULL -> newNod -> currentNode && prevNode <-> currentNode
+        newNode->previous = currentNode->previous; // prevNode <- newNod -> currentNode && prevNode <-> currentNode
+        currentNode->previous = newNode;           // prevNode <- newNod <-> currentNode && prevNode -> currentNode
+        previousNode->next = newNode;              // prevNode <-> newNod <-> currentNode
+    }
+
+    currentNode = null;
+    newNode = null;
+    previousNode = null;
+    delete newNode;
+    delete currentNode;
+    delete previousNode;
 }
 void PriorityPointQueue::update()
 {
@@ -177,6 +177,7 @@ void PriorityPointQueue::removeNode(Node<Punto> *node)
     if (prevNode == null && nextNode == null)
     {
         rear = null;
+        delete rear;
     }
     // Case: REAR -> node <-> nextNode <-> ..
     else if (prevNode == null && nextNode != null)

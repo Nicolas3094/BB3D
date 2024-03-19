@@ -30,7 +30,7 @@ public:
     int getSize();
     bool isEmpty();
     void removeNode(Node<Punto> *);
-    void addNodeAt(Node<Punto> *, Punto);
+    void addNodeBeforeAt(Node<Punto> *, Punto);
 };
 
 std::ostream &operator<<(std::ostream &, PriorityPointQueue &);

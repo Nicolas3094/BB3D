@@ -104,7 +104,7 @@ void addItemToBin(ColaPuntosDBL &queue, Bin &bin, const Punto &punto, ItemBin it
         newPoint = Punto::Build(punto.x, punto.y, resultPoint.z);
         queue.push(newPoint);
     }
-    // queue.update();
+    queue.update();
 }
 
 void addItemToBinQueue(PriorityPointQueue &queue, Bin &bin, const Punto &punto, ItemBin item)
@@ -129,5 +129,5 @@ void addItemToBinQueue(PriorityPointQueue &queue, Bin &bin, const Punto &punto, 
         newPoint = Punto::Build(punto.x, punto.y, resultPoint.z);
         queue.enqueue(newPoint);
     }
-    // queue.update();
+    queue.update();
 }

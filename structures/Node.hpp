@@ -2,6 +2,8 @@
 #define NODE_H
 
 #define null nullptr
+#define REAR nullptr
+#define HEAD nullptr
 
 template <typename T>
 class Node

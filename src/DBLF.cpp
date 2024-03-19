@@ -21,8 +21,8 @@ void DBLFQueue(
         {
             Punto currentPoint = rear->data;
             Punto dimensionPoint = itemDataOrderById[boxId - 1].getCurrentDimension();
-            // std::cout << "dim: " << dimensionPoint << "\n";
-            // std::cout << "point: " << currentPoint << "\n";
+            /* std::cout << "dim: " << dimensionPoint << "\n";
+            std::cout << "point: " << currentPoint << "\n";*/
             if (canBePlaced(bin, currentPoint + dimensionPoint))
             {
                 if (!isOverlapped(currentPoint, itemDataOrderById[boxId - 1], bin))
@@ -30,8 +30,9 @@ void DBLFQueue(
                     queue.removeNode(rear);
                     iterateByDeepestBottomLeft(currentPoint, itemDataOrderById[boxId - 1], bin);
                     addItemToBinQueue(queue, bin, currentPoint, itemDataOrderById[boxId - 1]);
-                    // std::cout << "new points added\n";
-                    /*if (boxId == BOX_ID)
+                    /*std::cout << "new points added\n";
+                    std::cout << queue << "\n";
+                    if (boxId == BOX_ID)
                     {
                         std::cout << queue << "\n";
                         return;
@@ -42,7 +43,7 @@ void DBLFQueue(
             rear = rear->next;
         }
     }
-    std::cout << queue << "\n";
+    // std::cout << queue << "\n";
     rear = null;
     if (tmp != null)
     {
@@ -92,7 +93,7 @@ void DBLF(
             }
         }
     }
-    std::cout << queue << "\n";
+    // std::cout << queue << "\n";
 }
 
 void DBLF(

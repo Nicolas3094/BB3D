@@ -17,8 +17,8 @@ std::string LOCAL_PATH = std::__fs::filesystem::current_path();
 int main()
 {
   // testDblf();
-  testDblfOneInstance();
-  //   iterGeneticAll();
+  //  testDblfOneInstance();
+  iterGeneticAll();
 
   // std::cin.get();
   //  system("pause");
@@ -238,7 +238,7 @@ void testDblf()
 {
 
   vector<DatasetBinBacking> DATASSET;
-  const string dataPATH = LOCAL_PATH + "/Instance/P1A2.csv";
+  const string dataPATH = LOCAL_PATH + "/Instance/P5A2.csv";
   try
   {
     DATASSET = readData(dataPATH);
@@ -251,18 +251,24 @@ void testDblf()
   DatasetBinBacking data = DATASSET[0];
   Poblacion heuristicPoblation = buildHeuristicPoblation(1000, data.bin, data.totalItems);
   Poblacion secondPob = heuristicPoblation;
+  auto start = std::chrono::high_resolution_clock::now();
   for (Individuo &ind : heuristicPoblation)
   {
     Bin bin = data.bin;
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), data.totalItems);
     ind.setFitness((double)bin.getLoadedVolume() / (double)bin.getDimensions().getVolumen());
   }
+  auto stop = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+  auto start2 = std::chrono::high_resolution_clock::now();
   for (Individuo &ind : secondPob)
   {
     Bin bin = data.bin;
     DBLFQueue(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), data.totalItems);
     ind.setFitness((double)bin.getLoadedVolume() / (double)bin.getDimensions().getVolumen());
   }
+  auto stop2 = std::chrono::high_resolution_clock::now();
+  auto duration2 = std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2);
   for (int i = 0; i < secondPob.size(); i++)
   {
     if (heuristicPoblation[i].getFitness() != secondPob[i].getFitness())
@@ -274,6 +280,7 @@ void testDblf()
                 << secondPob[i].getGenome() << "\n\n";
     }
   }
+  std::cout << "DBLF: " << duration.count() << " | DBLFQueue: " << duration2.count() << "\n";
 }
 
 void evaluatePoblationTime()
