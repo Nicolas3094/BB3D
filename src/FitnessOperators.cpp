@@ -2,9 +2,8 @@
 
 void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
 {
-    DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
+    DBLFQueue(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
     ind.setFitness((float)bin.getLoadedVolume() / (float)bin.getDimensions().getVolumen());
-    // std::cout << "loaded items: " << bin.getNumberOfLoadedItems() << "\n";
 }
 
 void evaluateFitnessDecodificated(Individuo &ind, LoadedBins itemData, Bin &bin)

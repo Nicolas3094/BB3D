@@ -143,6 +143,8 @@ void PriorityPointQueue::addNodeBeforeAt(Node<Punto> *currentNode, Punto point)
 void PriorityPointQueue::update()
 {
     Node<Punto> *node, *prevNode;
+    if (rear == REAR)
+        return;
     node = rear;
     while (node->next != null)
     {
