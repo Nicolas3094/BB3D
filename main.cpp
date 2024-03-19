@@ -9,15 +9,19 @@
 #include "readData/ReadData.hpp"
 #include <chrono>
 #include <filesystem>
+#include "structures/PriorityPointQueue.hpp"
+#include "structures/ColaPrioridad.hpp"
 
 std::string LOCAL_PATH = std::__fs::filesystem::current_path();
 
 int main()
 {
-  iterGeneticAll();
+  // testDblf();
+  testDblfOneInstance();
+  //   iterGeneticAll();
 
-  std::cin.get();
-  // system("pause");
+  // std::cin.get();
+  //  system("pause");
 }
 
 void iterGeneticAll()
@@ -198,7 +202,7 @@ void iterGeneticAll()
   }
 }
 
-void genetic()
+void testDblfOneInstance()
 {
 
   vector<DatasetBinBacking> DATASSET;
@@ -212,22 +216,64 @@ void genetic()
   {
     cerr << ex.what() << "\n";
   }
-  auto start = std::chrono::high_resolution_clock::now();
-  std::cout << "Init\n";
-  GeneticAlgorithm algorithm = GeneticAlgorithm::Build()
-                                   .setProblem(DATASSET[0])
-                                   .setMaxIteration(1000)
-                                   .setNumberOfIndividuals(50)
-                                   .setCrossProbability(0.75)
-                                   .setDMutationProbability(0.05)
-                                   .setSelectionProbability(0.85)
-                                   .setMutationType(MutationType::C2);
-  Poblacion bestPob = algorithm.evolve();
-  auto stop = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-  std::cout << "Initial best fit: " << bestPob[0].getFitness() << "\n";
-  std::cout << "Initial worst fit: " << bestPob[bestPob.size() - 1].getFitness() << "\n";
-  print("Duration: " << duration.count() << "ms");
+  DatasetBinBacking data = DATASSET[0];
+  Chromosome chromosome{8, 9, 6, 12, 4, 15, 10, 11, 5, 16, 1, 14, 3, 13, 7, 2};
+  Chromosome chromosomeRot{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  DoubleGenome genome = DoubleGenome::Build().setGenome(chromosome).setDGenome(chromosomeRot);
+  Individuo ind = Individuo::Build().setGenome(genome);
+  Individuo indQ = Individuo::Build().setGenome(genome);
+  Bin bin = DATASSET[0].bin;
+  Bin binQ = DATASSET[0].bin;
+
+  DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), data.totalItems);
+  ind.setFitness((double)bin.getLoadedVolume() / (double)bin.getDimensions().getVolumen());
+
+  DBLFQueue(binQ, indQ.getGenome().getGenome(), indQ.getGenome().getDGenome(), data.totalItems);
+  indQ.setFitness((double)binQ.getLoadedVolume() / (double)binQ.getDimensions().getVolumen());
+
+  std::cout << ind.getFitness() << " | " << indQ.getFitness() << "\n";
+}
+
+void testDblf()
+{
+
+  vector<DatasetBinBacking> DATASSET;
+  const string dataPATH = LOCAL_PATH + "/Instance/P1A2.csv";
+  try
+  {
+    DATASSET = readData(dataPATH);
+  }
+
+  catch (const std::exception &ex)
+  {
+    cerr << ex.what() << "\n";
+  }
+  DatasetBinBacking data = DATASSET[0];
+  Poblacion heuristicPoblation = buildHeuristicPoblation(1000, data.bin, data.totalItems);
+  Poblacion secondPob = heuristicPoblation;
+  for (Individuo &ind : heuristicPoblation)
+  {
+    Bin bin = data.bin;
+    DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), data.totalItems);
+    ind.setFitness((double)bin.getLoadedVolume() / (double)bin.getDimensions().getVolumen());
+  }
+  for (Individuo &ind : secondPob)
+  {
+    Bin bin = data.bin;
+    DBLFQueue(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), data.totalItems);
+    ind.setFitness((double)bin.getLoadedVolume() / (double)bin.getDimensions().getVolumen());
+  }
+  for (int i = 0; i < secondPob.size(); i++)
+  {
+    if (heuristicPoblation[i].getFitness() != secondPob[i].getFitness())
+    {
+      std::cout << "not equal\n";
+      std::cout << heuristicPoblation[i].getFitness() << "\n"
+                << secondPob[i].getFitness() << "\n";
+      std::cout << heuristicPoblation[i].getGenome() << "\n"
+                << secondPob[i].getGenome() << "\n\n";
+    }
+  }
 }
 
 void evaluatePoblationTime()
@@ -262,6 +308,38 @@ void evaluatePoblationTime()
   print("Item places: " << dataset.bin.getLoadedItems());
   print("FI: " << heuristicPoblation[0].getFitness());
   print("Genome: " << heuristicPoblation[0].getGenome());
+}
+
+void genetic()
+{
+
+  vector<DatasetBinBacking> DATASSET;
+  const string dataPATH = LOCAL_PATH + "/Instance/P1A2.csv";
+  try
+  {
+    DATASSET = readData(dataPATH);
+  }
+
+  catch (const std::exception &ex)
+  {
+    cerr << ex.what() << "\n";
+  }
+  auto start = std::chrono::high_resolution_clock::now();
+  std::cout << "Init\n";
+  GeneticAlgorithm algorithm = GeneticAlgorithm::Build()
+                                   .setProblem(DATASSET[0])
+                                   .setMaxIteration(1000)
+                                   .setNumberOfIndividuals(50)
+                                   .setCrossProbability(0.75)
+                                   .setDMutationProbability(0.05)
+                                   .setSelectionProbability(0.85)
+                                   .setMutationType(MutationType::C2);
+  Poblacion bestPob = algorithm.evolve();
+  auto stop = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+  std::cout << "Initial best fit: " << bestPob[0].getFitness() << "\n";
+  std::cout << "Initial worst fit: " << bestPob[bestPob.size() - 1].getFitness() << "\n";
+  print("Duration: " << duration.count() << "ms");
 }
 
 void printResults(std::vector<double> result, std::vector<long int> delays, std::string algorithmName, std::string mutationTypeNumber, std::string alrgorithm, int rotationWay)

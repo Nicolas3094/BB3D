@@ -86,29 +86,48 @@ void addItemToBin(ColaPuntosDBL &queue, Bin &bin, const Punto &punto, ItemBin it
 {
     bin.addItem(item.setPosicion(punto));
     Punto resultPoint = punto + item.getCurrentDimension();
-    // std::cout << "rusltantPoint\n";
     if (resultPoint.x < bin.getDimensions().getLargo())
     {
         Punto newPoint;
         newPoint = Punto::Build(resultPoint.x, punto.y, punto.z);
-        // std::cout << "Added point X: " << newPoint << "\n";
         queue.push(newPoint);
     }
     if (resultPoint.y < bin.getDimensions().getAncho())
     {
         Punto newPoint;
         newPoint = Punto::Build(punto.x, resultPoint.y, punto.z);
-        // std::cout << "Added point: Y" << newPoint << "\n";
         queue.push(newPoint);
     }
     if (resultPoint.z < bin.getDimensions().getAlto())
     {
         Punto newPoint;
         newPoint = Punto::Build(punto.x, punto.y, resultPoint.z);
-        // std::cout << "Added point: Z" << newPoint << "\n";
         queue.push(newPoint);
     }
-    // std::cout << "New points added: " << queue;
-    queue.update();
-    // std::cout << "Points updated: " << queue;
+    // queue.update();
+}
+
+void addItemToBinQueue(PriorityPointQueue &queue, Bin &bin, const Punto &punto, ItemBin item)
+{
+    bin.addItem(item.setPosicion(punto));
+    Punto resultPoint = punto + item.getCurrentDimension();
+    if (resultPoint.x < bin.getDimensions().getLargo())
+    {
+        Punto newPoint;
+        newPoint = Punto::Build(resultPoint.x, punto.y, punto.z);
+        queue.enqueue(newPoint);
+    }
+    if (resultPoint.y < bin.getDimensions().getAncho())
+    {
+        Punto newPoint;
+        newPoint = Punto::Build(punto.x, resultPoint.y, punto.z);
+        queue.enqueue(newPoint);
+    }
+    if (resultPoint.z < bin.getDimensions().getAlto())
+    {
+        Punto newPoint;
+        newPoint = Punto::Build(punto.x, punto.y, resultPoint.z);
+        queue.enqueue(newPoint);
+    }
+    // queue.update();
 }
