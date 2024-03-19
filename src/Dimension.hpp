@@ -3,7 +3,6 @@
 
 #include "../main.hpp"
 #include "Punto.hpp"
-#include <iostream>
 
 class Dim
 {

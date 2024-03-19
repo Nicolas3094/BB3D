@@ -1,19 +1,12 @@
 #ifndef COLA_P
 #define COLA_P
 #include <vector>
-#include "Dimension.hpp"
+#include "../src/Dimension.hpp"
 
-enum DIRECCION
-{
-    X = 1,
-    Y = 2,
-    Z = 3
-};
 class ColaPuntosDBL
 {
 private:
     std::vector<Punto> cola;
-    int x, y, z;
 
     bool condition(Punto, Punto);
     bool condition1(Punto, Punto);
