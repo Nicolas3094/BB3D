@@ -4,3 +4,4 @@
 *.out
 main.out.*
 /build/
+.env
