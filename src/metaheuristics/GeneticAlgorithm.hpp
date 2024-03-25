@@ -32,9 +32,10 @@ private:
     void mutate(Individuo &, int step = -1);
     Individuo crossover(Individuo, Individuo);
 
+    std::vector<Individuo> GeneticAlgorithm::getParents(Poblacion, int);
     std::vector<Individuo> getChildren(Individuo, Individuo);
     double adaptiveMutationProbabiliy(Individuo, Individuo);
-    void mutatePoblation(Poblacion &, int);
+    void mutatePoblation(Poblacion &, int, int);
 
 public:
     GeneticAlgorithm();

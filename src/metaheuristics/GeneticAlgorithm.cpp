@@ -111,7 +111,7 @@ Individuo GeneticAlgorithm::instantiateChild(Individuo parent1, Individuo parent
 
 void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
 {
-    int numberOfDeletedIndividual, initialIndex, id1, id2, i;
+    int numberOfDeletedIndividual, initialIndex, i;
 
     numberOfDeletedIndividual = randomInteger(numberOfIndividuals / 4, numberOfIndividuals / 2);
 
@@ -121,31 +121,28 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
     for (i = initialIndex; i < numberOfIndividuals; i++)
     {
         // Tournament from i = 0 -> initialIndex - 1
-        id1 = tournament(poblation, initialIndex - 1, selectionProbability);
-        id2 = tournament(poblation, initialIndex - 1, selectionProbability);
-
-        while (id1 == id2)
-        {
-            id2 = tournament(poblation, initialIndex - 1, selectionProbability);
-        }
+        std::vector<Individuo> parents = getParents(poblation, initialIndex - 1);
 
         if (uniformUnit() <= crossProability)
         {
-            std::vector<Individuo> children = getChildren(poblation[id1], poblation[id2]);
+            std::vector<Individuo> children = getChildren(parents[0], parents[1]);
 
-            if (!visitedIndividuals[children[0].solution] && visitedIndividuals[children[1].solution])
+            if (!visitedIndividuals[children[0].solution] &&
+                visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[0].solution] = true;
 
                 poblation[i] = children[0];
             }
-            else if (visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
+            else if (visitedIndividuals[children[0].solution] &&
+                     !visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[1].solution] = true;
 
                 poblation[i] = children[1];
             }
-            else if (!visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
+            else if (!visitedIndividuals[children[0].solution] &&
+                     !visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[0].solution] = true;
                 visitedIndividuals[children[1].solution] = true;
@@ -162,42 +159,37 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
         }
     }
 
-    mutatePoblation(poblation, initialIndex - 1);
-
     rankPoblation(poblation);
 }
 
 void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 {
-    int numberOfAddedIndividuals, id1, id2, i;
+    int numberOfAddedIndividuals, i;
 
     numberOfAddedIndividuals = randomInteger(numberOfIndividuals / 4, numberOfIndividuals / 2);
 
     for (i = 0; i < numberOfAddedIndividuals; i++)
     {
-        id1 = tournament(poblation, numberOfIndividuals, selectionProbability);
-        id2 = tournament(poblation, numberOfIndividuals, selectionProbability);
-
-        while (id1 == id2)
-        {
-            id2 = tournament(poblation, numberOfIndividuals, selectionProbability);
-        }
+        std::vector<Individuo> parents = getParents(poblation, numberOfAddedIndividuals);
 
         if (uniformUnit() <= crossProability)
         {
-            std::vector<Individuo> children = getChildren(poblation[id1], poblation[id2]);
+            std::vector<Individuo> children = getChildren(parents[0], parents[1]);
 
-            if (!visitedIndividuals[children[0].solution] && visitedIndividuals[children[1].solution])
+            if (!visitedIndividuals[children[0].solution] &&
+                visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[0].solution] = true;
                 poblation.push_back(children[0]);
             }
-            else if (visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
+            else if (visitedIndividuals[children[0].solution] &&
+                     !visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[1].solution] = true;
                 poblation.push_back(children[1]);
             }
-            else if (!visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
+            else if (!visitedIndividuals[children[0].solution] &&
+                     !visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[0].solution] = true;
                 poblation.push_back(children[0]);
@@ -208,8 +200,6 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
         }
     }
 
-    mutatePoblation(poblation, numberOfIndividuals - 1);
-
     rankPoblation(poblation);
 
     poblation.erase(poblation.begin() + numberOfIndividuals, poblation.end());
@@ -218,11 +208,13 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 Poblacion GeneticAlgorithm::evolve()
 {
     int i;
-    Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals,
+                                                    dataSet.bin,
+                                                    dataSet.totalItems,
+                                                    rotationType);
 
     for (auto &ind : poblation)
     {
-        ind.solution = codificateIndividual(ind);
         visitedIndividuals[ind.solution] = true;
     }
 
@@ -241,11 +233,13 @@ Poblacion GeneticAlgorithm::evolve()
 Poblacion GeneticAlgorithm::evolveWithAdded()
 {
     int i;
-    Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals,
+                                                    dataSet.bin,
+                                                    dataSet.totalItems,
+                                                    rotationType);
 
     for (auto &ind : poblation)
     {
-        ind.solution = codificateIndividual(ind);
         visitedIndividuals[ind.solution] = true;
     }
 
@@ -263,7 +257,11 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 
 bool GeneticAlgorithm::terminateCondition(Poblacion currentPoblation)
 {
-    return currentPoblation[0].getFitness() == 1 || (currentPoblation[0].getFitness() - currentPoblation[numberOfIndividuals - 1].getFitness()) / (currentPoblation[0].getFitness() * currentPoblation[0].getFitness()) <= 0.001;
+    return currentPoblation[0].getFitness() == 1 ||
+           (currentPoblation[0].getFitness() -
+            currentPoblation[numberOfIndividuals - 1].getFitness()) /
+                   (currentPoblation[0].getFitness() * currentPoblation[0].getFitness()) <=
+               0.001;
 }
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
@@ -271,9 +269,9 @@ double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Indivi
     return 1.0 - (individual.getFitness() + otherIndividual.getFitness()) / 2.0;
 }
 
-void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int maxIndex)
+void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int initIndex, int endIndex)
 {
-    for (int i = maxIndex; i == 1; i--)
+    for (int i = endIndex; i == initIndex; i--)
     {
         if (uniformUnit() <= adaptiveMutationProbabiliy(poblation[i], poblation[0]))
         {
@@ -285,11 +283,33 @@ void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int maxIndex)
             }
             else
             {
-                evaluateFitness(poblation[i], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
+                evaluateFitness(poblation[i],
+                                dataSet.totalItems,
+                                dataSet.bin.setRotationWay(rotationType));
                 visitedIndividuals[poblation[i].solution] = true;
             }
         }
     }
+}
+
+std::vector<Individuo> GeneticAlgorithm::getParents(Poblacion poblation, int maxIndexOfPoblation)
+{
+    int indexParent, indexOtherParent;
+
+    std::vector<Individuo> parents(2);
+
+    indexParent = tournament(poblation, maxIndexOfPoblation, selectionProbability);
+    indexOtherParent = tournament(poblation, maxIndexOfPoblation, selectionProbability);
+
+    while (indexParent == indexOtherParent)
+    {
+        indexOtherParent = tournament(poblation, maxIndexOfPoblation, selectionProbability);
+    }
+
+    parents[0] = poblation[indexParent];
+    parents[1] = poblation[indexOtherParent];
+
+    return parents;
 }
 
 std::vector<Individuo> GeneticAlgorithm::getChildren(Individuo parent, Individuo otherParent)
@@ -297,13 +317,12 @@ std::vector<Individuo> GeneticAlgorithm::getChildren(Individuo parent, Individuo
     std::vector<Individuo> children(2);
 
     children[0] = crossover(parent, otherParent);
+    children[1] = crossover(otherParent, parent);
 
     if (uniformUnit() <= adaptiveMutationProbabiliy(parent, otherParent))
     {
         mutate(children[0]);
     }
-
-    children[1] = crossover(otherParent, parent);
 
     if (uniformUnit() <= adaptiveMutationProbabiliy(parent, otherParent))
     {

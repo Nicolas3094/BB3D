@@ -10,6 +10,6 @@ void evaluateFitnessDecodificated(Individuo &, LoadedBins, Bin &);
 DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad);
 Poblacion buildHeuristicPoblation(const int, Bin, LoadedBins);
 void evaluatePoblation(Poblacion &, LoadedBins, Bin);
-Poblacion initialHeuristicPoblation(int numberOfIndividuals, Bin bin, LoadedBins orderItemsById, ROTATION_WAY rotationType);
+Poblacion initialHeuristicPoblation(int, Bin, LoadedBins, ROTATION_WAY);
 
 #endif

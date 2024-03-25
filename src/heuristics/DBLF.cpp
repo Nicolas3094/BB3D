@@ -18,7 +18,8 @@ void DBLFQueue(
     for (int boxId : itemsIdToPack) // O(n)
     {
         // Rotate box accordingly with the rotation codification
-        itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(), getRotationFromId(itemsRotation[countAllele++]));
+        itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(),
+                                            getRotationFromId(itemsRotation[countAllele++]));
 
         rear = queue.getRear();
         while (rear != null) // O(n)

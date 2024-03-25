@@ -66,11 +66,15 @@ Punto Dim::getVector()
 
 bool operator==(Dim &d1, Dim &d2)
 {
-    return (d1.getAlto() == d2.getAlto() && d1.getLargo() == d2.getLargo() && d1.getAncho() == d2.getAncho());
+    return (d1.getAlto() == d2.getAlto() &&
+            d1.getLargo() == d2.getLargo() &&
+            d1.getAncho() == d2.getAncho());
 }
 bool operator!=(Dim &d1, Dim &d2)
 {
-    return !(d1.getAlto() == d2.getAlto() && d1.getLargo() == d2.getLargo() && d1.getAncho() == d2.getAncho());
+    return !(d1.getAlto() == d2.getAlto() &&
+             d1.getLargo() == d2.getLargo() &&
+             d1.getAncho() == d2.getAncho());
 }
 std::ostream &operator<<(std::ostream &COUT, Dim &DAT)
 {

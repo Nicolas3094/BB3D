@@ -8,7 +8,8 @@ int hamming(DoubleGenome gen1, DoubleGenome gen2)
     {
         if (gen1.getDGenome().size() > 0)
         {
-            if (gen1.getGenome()[i] == gen2.getGenome()[i] && gen1.getDGenome()[i] == gen2.getDGenome()[i])
+            if (gen1.getGenome()[i] == gen2.getGenome()[i] &&
+                gen1.getDGenome()[i] == gen2.getDGenome()[i])
             {
                 count += 1;
             }
@@ -418,7 +419,8 @@ DoubleGenome buildSubsequenceGenome(DoubleGenome fullSequence, int init, int end
     return subSequence;
 }
 
-void addSubsequence(DoubleGenome &fullSequence, DoubleGenome subSequence, int indexToInsert, int init, int end)
+void addSubsequence(
+    DoubleGenome &fullSequence, DoubleGenome subSequence, int indexToInsert, int init, int end)
 {
     int n;
 
@@ -426,19 +428,31 @@ void addSubsequence(DoubleGenome &fullSequence, DoubleGenome subSequence, int in
 
     if (indexToInsert < init)
     {
-        fullSequence.getGenome().erase(fullSequence.getGenome().begin() + init, fullSequence.getGenome().begin() + end + 1);
-        fullSequence.getDGenome().erase(fullSequence.getDGenome().begin() + init, fullSequence.getDGenome().begin() + end + 1);
+        fullSequence.getGenome().erase(fullSequence.getGenome().begin() + init,
+                                       fullSequence.getGenome().begin() + end + 1);
+        fullSequence.getDGenome().erase(fullSequence.getDGenome().begin() + init,
+                                        fullSequence.getDGenome().begin() + end + 1);
 
-        fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert, subSequence.getGenome().begin(), subSequence.getGenome().end());
-        fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert, subSequence.getDGenome().begin(), subSequence.getDGenome().end());
+        fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert,
+                                        subSequence.getGenome().begin(),
+                                        subSequence.getGenome().end());
+        fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert,
+                                         subSequence.getDGenome().begin(),
+                                         subSequence.getDGenome().end());
     }
     else if (indexToInsert > end)
     {
-        fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert, subSequence.getGenome().begin(), subSequence.getGenome().end());
-        fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert, subSequence.getDGenome().begin(), subSequence.getDGenome().end());
+        fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert,
+                                        subSequence.getGenome().begin(),
+                                        subSequence.getGenome().end());
+        fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert,
+                                         subSequence.getDGenome().begin(),
+                                         subSequence.getDGenome().end());
 
-        fullSequence.getGenome().erase(fullSequence.getGenome().begin() + init, fullSequence.getGenome().begin() + end + 1);
-        fullSequence.getDGenome().erase(fullSequence.getDGenome().begin() + init, fullSequence.getDGenome().begin() + end + 1);
+        fullSequence.getGenome().erase(fullSequence.getGenome().begin() + init,
+                                       fullSequence.getGenome().begin() + end + 1);
+        fullSequence.getDGenome().erase(fullSequence.getDGenome().begin() + init,
+                                        fullSequence.getDGenome().begin() + end + 1);
     }
     else
     {

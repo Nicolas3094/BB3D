@@ -81,7 +81,8 @@ Poblacion ArtificialBeeColonyAlgorithm::search()
 {
     int numberOfBees, iteration, eliteSite, noneEliteSite, eliteBee, nonEliteBee, restOfSites;
 
-    Poblacion colonyWorker = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    Poblacion colonyWorker =
+        initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
 
     for (iteration = 0; iteration < maxIteration; iteration++)
     {
@@ -125,10 +126,11 @@ void ArtificialBeeColonyAlgorithm::globalSearch(Poblacion &colony, int site)
     Individuo newSite = Individuo::Build()
                             .setGenome(DoubleGenome::Build()
                                            .setGenome(generatePermutation(dataSet.totalItems.size()))
-                                           .setDGenome(generateRandomRepeatedAlalleleChromosome(
-                                               /* NumberCount= */ dataSet.totalItems.size(),
-                                               /* minimum= */ 1,
-                                               /* maximum= */ getIdFromRotationWay(rotationType))));
+                                           .setDGenome(
+                                               generateRandomRepeatedAlalleleChromosome(
+                                                   /* NumberCount= */ dataSet.totalItems.size(),
+                                                   /* minimum= */ 1,
+                                                   /* maximum= */ getIdFromRotationWay(rotationType))));
     evaluateFitness(newSite, dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
     colony[site] = newSite;
 }

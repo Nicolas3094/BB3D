@@ -111,11 +111,17 @@ std::vector<Chromosome> buildCompleteHeuristicChromosomes(LoadedBins allBins, in
 {
     std::vector<Chromosome> chromosomePoblation;
     std::vector<Chromosome> heursiticChromosomePoblation = buildHeuristicChromosomes(allBins);
-    std::vector<Chromosome> randomChromosomePoblation = buildChromosomes(allBins, numberOfChromosomes - heursiticChromosomePoblation.size());
-    chromosomePoblation.reserve(heursiticChromosomePoblation.size() + randomChromosomePoblation.size());
+    std::vector<Chromosome> randomChromosomePoblation =
+        buildChromosomes(allBins, numberOfChromosomes - heursiticChromosomePoblation.size());
+    chromosomePoblation.reserve(heursiticChromosomePoblation.size() +
+                                randomChromosomePoblation.size());
 
-    chromosomePoblation.insert(chromosomePoblation.end(), heursiticChromosomePoblation.begin(), heursiticChromosomePoblation.end());
-    chromosomePoblation.insert(chromosomePoblation.end(), randomChromosomePoblation.begin(), randomChromosomePoblation.end());
+    chromosomePoblation.insert(chromosomePoblation.end(),
+                               heursiticChromosomePoblation.begin(),
+                               heursiticChromosomePoblation.end());
+    chromosomePoblation.insert(chromosomePoblation.end(),
+                               randomChromosomePoblation.begin(),
+                               randomChromosomePoblation.end());
 
     return chromosomePoblation;
 }

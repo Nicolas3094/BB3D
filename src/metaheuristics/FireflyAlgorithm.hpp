@@ -23,7 +23,7 @@ private:
     ROTATION_WAY rotationType;
 
     double lightIntensity(double, double, int);
-    void findMostAttractiveByIndexAndIntensity(Poblacion fireflyPoblation, int currentFirefly, int &bestFireflyIndex, int &bestFireflyIntensity, double gamma);
+    void findMostAttractiveByIndexAndIntensity(Poblacion, int, int &, int &, double);
 
 public:
     FireflyAlgorithm();
