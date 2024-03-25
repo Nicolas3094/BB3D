@@ -84,8 +84,8 @@ void iterGeneticAll()
   {
     rotationType = "6";
   }
-  std::vector<std::string> algorithmsProblems{"P5A2"};
-  std::vector<std::string> mutationNumber{"2", "3"};
+  std::vector<std::string> algorithmsProblems{"P1A2", "P2A2", "P3A2", "P4A2", "P5A2"};
+  std::vector<std::string> mutationNumber{"1", "2", "3"};
 
   for (auto algorithmName : algorithmsProblems)
   {
