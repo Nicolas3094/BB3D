@@ -7,7 +7,8 @@ void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
     std::string codeSolution = "|";
     for (auto item : bin.getLoadedItems())
     {
-        codeSolution += std::to_string(item.getId()) + " " + std::to_string(item.getRotationId()) + "|";
+        codeSolution += std::to_string(item.getId()) + " " +
+                        std::to_string(item.getRotationId()) + "|";
     }
     ind.solution = codeSolution;
 }
@@ -32,7 +33,8 @@ DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad)
 
 Poblacion buildHeuristicPoblation(const int numberPoblation, Bin bin, LoadedBins allItemsBin)
 {
-    std::vector<Chromosome> heuristicPoblationChromosome = buildCompleteHeuristicChromosomes(allItemsBin, numberPoblation);
+    std::vector<Chromosome> heuristicPoblationChromosome =
+        buildCompleteHeuristicChromosomes(allItemsBin, numberPoblation);
     Poblacion heuristicPoblation(numberPoblation);
     for (int i = 0; i < numberPoblation; i++)
     {
@@ -40,10 +42,11 @@ Poblacion buildHeuristicPoblation(const int numberPoblation, Bin bin, LoadedBins
                                     .setGenome(
                                         DoubleGenome::Build()
                                             .setGenome(heuristicPoblationChromosome[i])
-                                            .setDGenome(generateRandomRepeatedAlalleleChromosome(
-                                                /* NumberCount= */ allItemsBin.size(),
-                                                /* minimum= */ 1,
-                                                /* maximum= */ getIdFromRotationWay(bin.getRotationWay()))));
+                                            .setDGenome(
+                                                generateRandomRepeatedAlalleleChromosome(
+                                                    /* NumberCount= */ allItemsBin.size(),
+                                                    /* minimum= */ 1,
+                                                    /* maximum= */ getIdFromRotationWay(bin.getRotationWay()))));
     }
 
     return heuristicPoblation;
@@ -57,9 +60,12 @@ void evaluatePoblation(Poblacion &poblacion, LoadedBins allItemsBin, Bin bin)
     }
 }
 
-Poblacion initialHeuristicPoblation(int numberOfIndividuals, Bin bin, LoadedBins orderItemsById, ROTATION_WAY rotationType)
+Poblacion initialHeuristicPoblation(
+    int numberOfIndividuals, Bin bin, LoadedBins orderItemsById, ROTATION_WAY rotationType)
 {
-    Poblacion heuristicPoblation = buildHeuristicPoblation(numberOfIndividuals, bin.setRotationWay(rotationType), orderItemsById);
+    Poblacion heuristicPoblation = buildHeuristicPoblation(numberOfIndividuals,
+                                                           bin.setRotationWay(rotationType),
+                                                           orderItemsById);
     evaluatePoblation(heuristicPoblation, orderItemsById, bin.setRotationWay(rotationType));
     rankPoblation(heuristicPoblation);
     return heuristicPoblation;

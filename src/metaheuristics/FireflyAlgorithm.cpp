@@ -65,7 +65,10 @@ Poblacion FireflyAlgorithm::search()
 {
     int n, numberFireflies, iteration, firefly, mostAttactiveFirefly, bestFirefly, distance;
     double gamma, bestIntensity, Ii, Ij;
-    Poblacion fireflyPoblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    Poblacion fireflyPoblation = initialHeuristicPoblation(numberOfIndividuals,
+                                                           dataSet.bin,
+                                                           dataSet.totalItems,
+                                                           rotationType);
 
     n = fireflyPoblation[0].getGenome().getGenome().size();
     numberFireflies = fireflyPoblation.size();
@@ -80,7 +83,11 @@ Poblacion FireflyAlgorithm::search()
             bestIntensity = -1.0;
 
             // Find most atrractive firefly
-            findMostAttractiveByIndexAndIntensity(fireflyPoblation, firefly, mostAttactiveFirefly, bestFirefly, gamma);
+            findMostAttractiveByIndexAndIntensity(fireflyPoblation,
+                                                  firefly,
+                                                  mostAttactiveFirefly,
+                                                  bestFirefly,
+                                                  gamma);
 
             for (int k = 0; k < upIndex; k++)
             {
@@ -100,11 +107,15 @@ Poblacion FireflyAlgorithm::search()
                 else
                 {
                     // Se arcercan.
-                    DoubleGenome newFirefly = crossOver(fireflyPoblation[firefly].getGenome(), fireflyPoblation[bestFirefly].getGenome());
+                    DoubleGenome newFirefly = crossOver(fireflyPoblation[firefly].getGenome(),
+                                                        fireflyPoblation[bestFirefly].getGenome());
                     mutationWithType(newFirefly, mutationType);
                     newPositionFirefly.setGenome(newFirefly);
                 }
-                evaluateFitness(newPositionFirefly, this->dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
+                evaluateFitness(
+                    newPositionFirefly,
+                    dataSet.totalItems,
+                    dataSet.bin.setRotationWay(rotationType));
                 if (newPositionFirefly.getFitness() > fireflyPoblation[firefly].getFitness())
                 {
                     fireflyPoblation[firefly] = newPositionFirefly;
@@ -122,7 +133,8 @@ Poblacion FireflyAlgorithm::search()
     return fireflyPoblation;
 }
 
-void FireflyAlgorithm::findMostAttractiveByIndexAndIntensity(Poblacion fireflyPoblation, int currentFirefly, int &bestFireflyIndex, int &bestFireflyIntensity, double gamma)
+void FireflyAlgorithm::findMostAttractiveByIndexAndIntensity(
+    Poblacion fireflyPoblation, int currentFirefly, int &bestFireflyIndex, int &bestFireflyIntensity, double gamma)
 {
     int bestFirefly, distance;
     double Ij, Ii;

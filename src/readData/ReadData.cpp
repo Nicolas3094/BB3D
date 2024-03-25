@@ -23,7 +23,11 @@ vector<DatasetBinBacking> readData(const string path)
             dataSet[countInstance].PSeed = vectorNumber[1];
             break;
         case BIN_DIMENSIONS:
-            dataSet[countInstance].bin.setLargo(vectorNumber[0]).setAncho(vectorNumber[1]).setAlto(vectorNumber[2]);
+            dataSet[countInstance]
+                .bin
+                .setLargo(vectorNumber[0])
+                .setAncho(vectorNumber[1])
+                .setAlto(vectorNumber[2]);
             break;
         case NUMBER_OF_TYPES:
             numberOftypes = vectorNumber[0];
@@ -41,7 +45,8 @@ vector<DatasetBinBacking> readData(const string path)
             {
                 dataSet[countInstance].totalItems.push_back(itemBin.setId(vectorID++));
             }
-            if (dataSet[countInstance].totalItems.size() == totalNumberOfItems && countInstance != totalNumberOfInstances - 1)
+            if (dataSet[countInstance].totalItems.size() == totalNumberOfItems &&
+                countInstance != totalNumberOfInstances - 1)
             {
                 if (numberOftypes != dataSet[countInstance].itemsByTpe.size())
                 {

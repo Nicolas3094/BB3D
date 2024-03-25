@@ -80,7 +80,8 @@ std::string codificateIndividual(Individuo ind)
 
     for (int i = 0; i < ind.getGenome().getGenome().size(); i++)
     {
-        resp += std::to_string(ind.getGenome().getGenome()[i]) + " " + std::to_string(ind.getGenome().getDGenome()[i]) + "|";
+        resp += std::to_string(ind.getGenome().getGenome()[i]) + " " +
+                std::to_string(ind.getGenome().getDGenome()[i]) + "|";
     }
 
     return resp;

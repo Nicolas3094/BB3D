@@ -57,14 +57,16 @@ struct VolumeGreater
 {
     bool operator()(ItemBin lx, ItemBin rx)
     {
-        return lx.getLargo() * lx.getAncho() * lx.getAlto() < rx.getLargo() * rx.getAncho() * rx.getAlto();
+        return lx.getLargo() * lx.getAncho() * lx.getAlto() <
+               rx.getLargo() * rx.getAncho() * rx.getAlto();
     }
 };
 struct VolumeLess
 {
     bool operator()(ItemBin lx, ItemBin rx)
     {
-        return lx.getLargo() * lx.getAncho() * lx.getAlto() > rx.getLargo() * rx.getAncho() * rx.getAlto();
+        return lx.getLargo() * lx.getAncho() * lx.getAlto() >
+               rx.getLargo() * rx.getAncho() * rx.getAlto();
     }
 };
 struct LengthGreater
