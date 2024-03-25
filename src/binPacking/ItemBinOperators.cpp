@@ -135,6 +135,5 @@ void addItemToBinQueue(PriorityPointQueue &queue, Bin &bin, const Punto &punto, 
         newPoint = Punto::Build(punto.x, punto.y, resultPoint.z);
         queue.enqueue(newPoint);
     }
-
     queue.update();
 }
