@@ -77,7 +77,6 @@ void GeneticAlgorithm::mutate(Individuo &individual, int step)
         flipMutationO1(individual.getGenome(), dMutationProbability, rotationType);
     }
     mutationWithType(individual.getGenome(), mutationType, step);
-    individual.solution = codificateIndividual(individual);
 }
 
 // O(n)
@@ -137,24 +136,19 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
             if (!visitedIndividuals[children[0].solution] && visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[0].solution] = true;
-                evaluateFitness(children[0], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
 
                 poblation[i] = children[0];
             }
             else if (visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[1].solution] = true;
-                evaluateFitness(children[1], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
 
                 poblation[i] = children[1];
             }
             else if (!visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
             {
                 visitedIndividuals[children[0].solution] = true;
-                evaluateFitness(children[0], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
-
                 visitedIndividuals[children[1].solution] = true;
-                evaluateFitness(children[1], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
 
                 if (children[0].getFitness() > children[1].getFitness())
                 {
@@ -195,23 +189,19 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 
             if (!visitedIndividuals[children[0].solution] && visitedIndividuals[children[1].solution])
             {
-                evaluateFitness(children[0], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
                 visitedIndividuals[children[0].solution] = true;
                 poblation.push_back(children[0]);
             }
             else if (visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
             {
-                evaluateFitness(children[1], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
                 visitedIndividuals[children[1].solution] = true;
                 poblation.push_back(children[1]);
             }
             else if (!visitedIndividuals[children[0].solution] && !visitedIndividuals[children[1].solution])
             {
-                evaluateFitness(children[0], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
                 visitedIndividuals[children[0].solution] = true;
                 poblation.push_back(children[0]);
 
-                evaluateFitness(children[1], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
                 visitedIndividuals[children[1].solution] = true;
                 poblation.push_back(children[1]);
             }
@@ -273,7 +263,7 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 
 bool GeneticAlgorithm::terminateCondition(Poblacion currentPoblation)
 {
-    return currentPoblation[0].getFitness() == 1 || (currentPoblation[0].getFitness() - currentPoblation[numberOfIndividuals - 1].getFitness()) / (currentPoblation[0].getFitness() * currentPoblation[0].getFitness()) <= 0.01;
+    return currentPoblation[0].getFitness() == 1 || (currentPoblation[0].getFitness() - currentPoblation[numberOfIndividuals - 1].getFitness()) / (currentPoblation[0].getFitness() * currentPoblation[0].getFitness()) <= 0.001;
 }
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
@@ -283,7 +273,7 @@ double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Indivi
 
 void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int maxIndex)
 {
-    for (int i = maxIndex; i == 0; i--)
+    for (int i = maxIndex; i == 1; i--)
     {
         if (uniformUnit() <= adaptiveMutationProbabiliy(poblation[i], poblation[0]))
         {
@@ -319,6 +309,9 @@ std::vector<Individuo> GeneticAlgorithm::getChildren(Individuo parent, Individuo
     {
         mutate(children[1]);
     }
+
+    evaluateFitness(children[0], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
+    evaluateFitness(children[1], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
 
     return children;
 }
