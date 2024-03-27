@@ -15,7 +15,7 @@ bool isABIntersect(Punto Amax, Punto Amin, Punto Bmax, Punto Bmin)
     }
     return true;
 }
-
+// O(n)
 bool isOverlapped(Punto position, ItemBin currentItem, Bin bin)
 {
     for (ItemBin loadedItem : bin.getLoadedItems())
@@ -33,18 +33,20 @@ bool isOverlapped(Punto position, ItemBin currentItem, Bin bin)
     return false;
 }
 
-// Min O(1), Max O(N2), Prom O(N2)
+// Min O(1), Max O(N**2), Prom O(N)
 void iterateByDeepestBottomLeft(Punto &punto, ItemBin item, Bin bin)
 {
     if (bin.getNumberOfLoadedItems() <= 1)
     {
         return;
     }
+    int count = 0;
     // Go first by Deepest - X
     if (punto.x != 0)
     {
         while (!isOverlapped(punto, item, bin))
         {
+            count += 1;
             punto.x -= 1;
             if (punto.x == -1)
             {
@@ -58,6 +60,7 @@ void iterateByDeepestBottomLeft(Punto &punto, ItemBin item, Bin bin)
     {
         while (!isOverlapped(punto, item, bin))
         {
+            count += 1;
             punto.z -= 1;
             if (punto.z == -1)
             {
@@ -72,6 +75,7 @@ void iterateByDeepestBottomLeft(Punto &punto, ItemBin item, Bin bin)
     {
         while (!isOverlapped(punto, item, bin))
         {
+            count += 1;
             punto.y -= 1;
             if (punto.y == -1)
             {
@@ -110,7 +114,9 @@ void addItemToBin(ColaPuntosDBL &queue, Bin &bin, const Punto &punto, ItemBin it
 void addItemToBinQueue(PriorityPointQueue &queue, Bin &bin, const Punto &punto, ItemBin item)
 {
     bin.addItem(item.setPosicion(punto));
+
     Punto resultPoint = punto + item.getCurrentDimension();
+
     if (resultPoint.x < bin.getDimensions().getLargo())
     {
         Punto newPoint;

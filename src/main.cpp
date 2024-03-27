@@ -365,8 +365,8 @@ void genetic()
                                    .setMaxIteration(1000)
                                    .setNumberOfIndividuals(50)
                                    .setCrossProbability(0.75)
-                                   .setDMutationProbability(0.05)
                                    .setSelectionProbability(0.85)
+                                   .setDMutationProbability(0.01)
                                    .setMutationType(MutationType::C2);
   Poblacion bestPob = algorithm.evolve();
   auto stop = std::chrono::high_resolution_clock::now();
@@ -403,9 +403,12 @@ void printResults(std::vector<double> result, std::vector<long int> delays, std:
   {
     mutationType = "C2Mutation";
   }
+
   const string dataPATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/" + alrgorithm + ".csv";
   const string timePATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/t.csv";
+
   ofstream MyFile(dataPATH);
+
   for (auto res : result)
   {
     MyFile << res << "\n";

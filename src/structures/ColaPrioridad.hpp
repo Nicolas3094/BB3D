@@ -1,15 +1,9 @@
 #ifndef COLA_P
 #define COLA_P
-<<<<<<<< HEAD:structures/ColaPrioridad.hpp
-#include <vector>
-#include "../src/Dimension.hpp"
-
-========
 
 #include "../spatial/Dimension.hpp"
 #include <vector>
 
->>>>>>>> 3440efa (newCommit):src/structures/ColaPrioridad.hpp
 class ColaPuntosDBL
 {
 private:
