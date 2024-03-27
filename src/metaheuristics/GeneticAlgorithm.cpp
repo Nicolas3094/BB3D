@@ -157,10 +157,7 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 
 bool GeneticAlgorithm::terminateCondition(Poblacion currentPoblation)
 {
-    return currentPoblation[0].getFitness() == 1 ||
-           (currentPoblation[0].getFitness() - currentPoblation[numberOfIndividuals - 1].getFitness()) /
-                   (currentPoblation[0].getFitness() * currentPoblation[0].getFitness()) <=
-               0.001;
+    return currentPoblation[0].getFitness() == 1;
 }
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
@@ -289,7 +286,7 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
 {
     int numberOfDeletedIndividual, initialIndex, i;
 
-    numberOfDeletedIndividual = randomInteger(numberOfIndividuals / 4, numberOfIndividuals - 1);
+    numberOfDeletedIndividual = randomInteger(numberOfIndividuals / 4, numberOfIndividuals / 2);
 
     initialIndex = numberOfIndividuals - numberOfDeletedIndividual - 1;
 
@@ -311,7 +308,7 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 {
     int numberOfAddedIndividuals, i;
 
-    numberOfAddedIndividuals = randomInteger(numberOfIndividuals / 4, numberOfIndividuals - 1);
+    numberOfAddedIndividuals = randomInteger(numberOfIndividuals / 4, numberOfIndividuals / 2);
 
     for (i = 0; i < numberOfAddedIndividuals; i++)
     {
