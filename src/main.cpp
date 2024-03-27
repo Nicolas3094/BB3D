@@ -127,7 +127,7 @@ void iterGeneticAll()
                                                   .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
                                                   .setMutationType(mutationTyped)
                                                   .setProblem(DATASSET[i]);
-          bestPob = geneticAlgorithm.evolveWithAdded();
+          bestPob = geneticAlgorithm.evolve();
         }
         else if (algorithm == "ABC")
         {
@@ -404,8 +404,8 @@ void printResults(std::vector<double> result, std::vector<long int> delays, std:
     mutationType = "C2Mutation";
   }
 
-  const string dataPATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/" + alrgorithm + ".csv";
-  const string timePATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/t.csv";
+  const string dataPATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/" + alrgorithm + "2.csv";
+  const string timePATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/t2.csv";
 
   ofstream MyFile(dataPATH);
 
