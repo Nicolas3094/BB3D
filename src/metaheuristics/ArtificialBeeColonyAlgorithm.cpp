@@ -126,12 +126,12 @@ Poblacion ArtificialBeeColonyAlgorithm::search(bool isWithReplacement)
     return colonyWorker;
 }
 
-Poblacion ArtificialBeeColonyAlgorithm::searchWithReplacement()
+Poblacion ArtificialBeeColonyAlgorithm::evolveWithReplacement()
 {
     return search(/* isWithReplacement= */ true);
 }
 
-Poblacion ArtificialBeeColonyAlgorithm::searchWithAdded()
+Poblacion ArtificialBeeColonyAlgorithm::evolveWithAdded()
 {
     return search(/* isWithReplacement= */ false);
 }

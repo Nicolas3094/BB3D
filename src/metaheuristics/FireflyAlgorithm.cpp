@@ -188,12 +188,12 @@ double FireflyAlgorithm::lightIntensity(double fitness, double gamma, int distan
     return fitness / (1 + gamma * ((double)distance * distance));
 }
 
-Poblacion FireflyAlgorithm::searchWithReplacement()
+Poblacion FireflyAlgorithm::evolveWithReplacement()
 {
     return search(true);
 }
 
-Poblacion FireflyAlgorithm::searchWithAdded()
+Poblacion FireflyAlgorithm::evolveWithAdded()
 {
     return search(false);
 }

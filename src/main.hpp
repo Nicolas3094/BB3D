@@ -3,6 +3,10 @@
 
 #include <iostream>
 #include <vector>
+#include "metaheuristics/EvolutiveAlgorithm.hpp"
+#include "readData/ReadData.hpp"
+#include "genetic/MutationType.hpp"
+#include "readData/DataSetBPP.hpp"
 
 using namespace std;
 
@@ -17,5 +21,6 @@ void testDblfOneInstance();
 void testRotationsGA(std::string);
 void testInverseMutation();
 std::string getAlgorithmNameFromNumber(std::string);
-
+EvolutiveAlgorithm *getEvolutiveAlgorithm(std::string algorithmName, ROTATION_WAY rotation, MutationType mutation, DatasetBinBacking dataSet);
+MutationType getMutationTypeFromUser(std::string mutationType);
 #endif

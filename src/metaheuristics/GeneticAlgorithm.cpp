@@ -85,6 +85,10 @@ Individuo GeneticAlgorithm::crossover(Individuo parent1, Individuo parent2)
     int n, init, end;
 
     n = parent1.getGenome().getGenome().size();
+    if (n == 0)
+    {
+        throw std::invalid_argument("ERROR: crossover with empty genome.");
+    }
     init = randomInteger(3, (n / 2) - 1);
     end = randomInteger(init + 1, n - 1);
 
