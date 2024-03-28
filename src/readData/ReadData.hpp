@@ -16,5 +16,6 @@ using namespace std;
 vector<DatasetBinBacking> readData(const std::string);
 vector<int> getNumbersFromLines(string);
 vector<vector<int>> getNumberListFile(const string);
-
+vector<double> getFloatNumberListFile(const string);
+vector<long int> getIntegerNumberListFile(const string);
 #endif

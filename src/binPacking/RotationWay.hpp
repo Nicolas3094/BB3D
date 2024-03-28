@@ -1,5 +1,6 @@
 #ifndef ROTATION_WAY_H
 #define ROTATION_WAY_H
+#include <string>
 
 enum ROTATION_WAY
 {
@@ -10,7 +11,7 @@ enum ROTATION_WAY
 
 int getIdFromRotationWay(ROTATION_WAY);
 ROTATION_WAY getRotationWayFromId(int);
-
+std::string getNameFromRotationWay(ROTATION_WAY);
 bool operator==(ROTATION_WAY, ROTATION_WAY);
 bool operator!=(ROTATION_WAY, ROTATION_WAY);
 

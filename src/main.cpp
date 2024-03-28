@@ -44,7 +44,8 @@ void testInverseMutation()
 void iterGeneticAll()
 {
   std::string rotationType, algorithm;
-  std::cout << "Select algorithm:\n[1] Genetic Algorithm\n[2] Artificial Bee Colony Algorithm \n[3] Firefly Algorithm\n";
+
+  std::cout << "Select algorithm:\n[1] Genetic Algorithm\n[2] Artificial Bee Colony Algorithm \n[3] Firefly Algorithm\n\n";
   std::cin >> algorithm;
   std::cout << "Select rotation type:\n[1] ZERO-ROTATION\n[2] 2-ROTATION\n[3] 6-ROTATION\n";
   std::cin >> rotationType;
@@ -59,18 +60,7 @@ void iterGeneticAll()
     return iterGeneticAll();
   }
 
-  if (algorithm == "1")
-  {
-    algorithm = "GA";
-  }
-  else if (algorithm == "2")
-  {
-    algorithm = "ABC";
-  }
-  else
-  {
-    algorithm = "FFA";
-  }
+  algorithm = getAlgorithmNameFromNumber(algorithm);
 
   if (rotationType == "1")
   {
@@ -90,14 +80,15 @@ void iterGeneticAll()
   for (auto algorithmName : algorithmsProblems)
   {
     std::cout << "\nAlgorithm: " << algorithmName << "\n";
-    vector<DatasetBinBacking> DATASSET;
     const string dataPATH = LOCAL_PATH + "/Instance/" + algorithmName + ".csv";
-    DATASSET = readData(dataPATH);
     MutationType mutationTyped;
-    std::vector<double> responses(DATASSET.size());
-    std::vector<long int> durationResponses(DATASSET.size());
+    vector<DatasetBinBacking> DATASSET;
+
+    DATASSET = readData(dataPATH);
+
     for (auto mutationType : mutationNumber)
     {
+
       if (mutationType == "1")
       {
         mutationTyped = MutationType::INVERSE_MUTATION;
@@ -110,10 +101,23 @@ void iterGeneticAll()
       {
         mutationTyped = MutationType::C2;
       }
-      std::cout << "Init " << mutationTyped << "\n";
+      std::cout << "\nInit " << mutationTyped << "\n";
+
+      const string generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) + "/" +
+                                 algorithm + "/" + getNameFromRotationWay(getRotationWayFromId(std::stoi(rotationType))) + "/";
+      const string fitnessDataPath = generalPath + algorithm + ".csv";
+      const string timePATH = generalPath + "t.csv";
+      vector<double> responses = getFloatNumberListFile(fitnessDataPath);
+      vector<long int> durationResponses = getIntegerNumberListFile(fitnessDataPath);
+
       for (int i = 0; i < DATASSET.size(); i++)
       {
-        std::cout << (i + 1) << "-";
+        if (responses[i] != 0)
+        {
+          continue;
+        }
+        std::cout << (i + 1) << "|";
+
         auto start = std::chrono::high_resolution_clock::now();
         Poblacion bestPob;
         if (algorithm == "GA")
@@ -127,7 +131,7 @@ void iterGeneticAll()
                                                   .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
                                                   .setMutationType(mutationTyped)
                                                   .setProblem(DATASSET[i]);
-          bestPob = geneticAlgorithm.evolve();
+          bestPob = geneticAlgorithm.evolveWithAdded();
         }
         else if (algorithm == "ABC")
         {
@@ -159,7 +163,8 @@ void iterGeneticAll()
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
         responses[i] = bestPob[0].getFitness();
         durationResponses[i] = duration.count();
-        printResults(responses, durationResponses, algorithmName, mutationType, algorithm, std::stoi(rotationType));
+
+        printResults(responses, durationResponses, fitnessDataPath, timePATH);
       }
     }
   }
@@ -376,48 +381,39 @@ void genetic()
   print("Duration: " << duration.count() << "ms");
 }
 
-void printResults(std::vector<double> result, std::vector<long int> delays, std::string algorithmName, std::string mutationTypeNumber, std::string alrgorithm, int rotationWay)
+void printResults(std::vector<double> result, std::vector<long int> delays, const string dataPATH, const string timePATH)
 {
-  std::string rotationType, mutationType;
-  if (rotationWay == 0)
-  {
-    rotationType = "ZERO";
-  }
-  else if (rotationWay == 2)
-  {
-    rotationType = "TWO";
-  }
-  else
-  {
-    rotationType = "SIX";
-  }
-  if (mutationTypeNumber == "1")
-  {
-    mutationType = "InverseMutation";
-  }
-  else if (mutationTypeNumber == "2")
-  {
-    mutationType = "C1Mutation";
-  }
-  else
-  {
-    mutationType = "C2Mutation";
-  }
-
-  const string dataPATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/" + alrgorithm + "2.csv";
-  const string timePATH = LOCAL_PATH + "/Results/" + algorithmName + "/" + mutationType + "/" + alrgorithm + "/" + rotationType + "/t2.csv";
-
   ofstream MyFile(dataPATH);
 
   for (auto res : result)
   {
     MyFile << res << "\n";
   }
+
   MyFile.close();
+
   ofstream MyFile2(timePATH);
+
   for (auto res : delays)
   {
     MyFile2 << res << "\n";
   }
+
   MyFile2.close();
+}
+
+std::string getAlgorithmNameFromNumber(std::string number)
+{
+  if (number == "1")
+  {
+    return "GA";
+  }
+  else if (number == "2")
+  {
+    return "ABC";
+  }
+  else
+  {
+    return "FFA";
+  }
 }

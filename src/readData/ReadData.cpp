@@ -111,3 +111,43 @@ vector<int> getNumbersFromLines(string line)
 
     return numbers;
 }
+
+vector<double> getFloatNumberListFile(const string path)
+{
+    string line;
+    ifstream myfile;
+    vector<double> result(100);
+    int i;
+    i = 0;
+    myfile.open(path);
+    if (myfile.is_open())
+    {
+        while (getline(myfile, line))
+        {
+            result[i++] = std::stod(line);
+        }
+        myfile.close();
+    }
+
+    return result;
+}
+
+vector<long int> getIntegerNumberListFile(const string path)
+{
+    string line;
+    ifstream myfile;
+    vector<long int> result(100);
+    int i;
+    i = 0;
+    myfile.open(path);
+    if (myfile.is_open())
+    {
+        while (getline(myfile, line))
+        {
+            result[i++] = std::stoi(line);
+        }
+        myfile.close();
+    }
+
+    return result;
+}
