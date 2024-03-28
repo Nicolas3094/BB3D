@@ -72,6 +72,8 @@ void iterGeneticAll()
   {
     rotationType = "6";
   }
+
+  string generalPath, fitnessDataPath, timePATH;
   std::vector<std::string> algorithmsProblems{"P1A2", "P2A2", "P3A2", "P4A2", "P5A2"};
   std::vector<std::string> mutationNumber{"1", "2", "3"};
   ROTATION_WAY rotation = getRotationWayFromId(std::stoi(rotationType));
@@ -82,9 +84,7 @@ void iterGeneticAll()
     std::cout << "\nAlgorithm: " << algorithmName << "\n";
     const string dataPATH = LOCAL_PATH + "/Instance/" + algorithmName + ".csv";
     MutationType mutationTyped;
-    vector<DatasetBinBacking> DATASSET;
-
-    DATASSET = readData(dataPATH);
+    vector<DatasetBinBacking> DATASSET = readData(dataPATH);
 
     for (auto mutationType : mutationNumber)
     {
@@ -92,10 +92,8 @@ void iterGeneticAll()
 
       mutationTyped = getMutationTypeFromUser(mutationType);
 
-      string generalPath, fitnessDataPath, timePATH;
-
-      generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) + "/" +
-                    algorithm + "/" + getNameFromRotationWay(rotation) + "/";
+      generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) +
+                    "/" + algorithm + "/" + getNameFromRotationWay(rotation) + "/";
       if (isWithReplacement)
       {
         fitnessDataPath = generalPath + algorithm + ".csv";
@@ -393,6 +391,7 @@ std::string getAlgorithmNameFromNumber(std::string number)
   }
 }
 
+/** Gets evolutive algorithm based on the algorithm's name.*/
 EvolutiveAlgorithm *getEvolutiveAlgorithm(std::string algorithm, ROTATION_WAY rotation, MutationType mutation, DatasetBinBacking data)
 {
   if (algorithm == "GA")
@@ -435,6 +434,7 @@ EvolutiveAlgorithm *getEvolutiveAlgorithm(std::string algorithm, ROTATION_WAY ro
   }
 }
 
+/** Gets the mutation type by the user's input.*/
 MutationType getMutationTypeFromUser(std::string mutationType)
 {
   if (mutationType == "1")
