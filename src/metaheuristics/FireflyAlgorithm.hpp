@@ -24,6 +24,7 @@ private:
 
     double lightIntensity(double, double, int);
     void findMostAttractiveByIndexAndIntensity(Poblacion, int, int &, int &, double);
+    Poblacion search(bool);
 
 public:
     FireflyAlgorithm();
@@ -44,7 +45,8 @@ public:
 
     FireflyAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion search();
+    Poblacion searchWithReplacement();
+    Poblacion searchWithAdded();
 };
 
 #endif
