@@ -56,7 +56,7 @@ public:
     GeneticAlgorithm &setProblem(DatasetBinBacking);
 
     Poblacion evolveWithAdded();
-    Poblacion evolve();
+    Poblacion evolveWithReplacement();
 };
 
 #endif

@@ -109,7 +109,7 @@ Individuo GeneticAlgorithm::instantiateChild(Individuo parent1, Individuo parent
     return child;
 }
 
-Poblacion GeneticAlgorithm::evolve()
+Poblacion GeneticAlgorithm::evolveWithReplacement()
 {
     int i;
     Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);

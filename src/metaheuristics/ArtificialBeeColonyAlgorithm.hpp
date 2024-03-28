@@ -24,8 +24,9 @@ private:
     MutationType mutationType;
     ROTATION_WAY rotationType;
 
-    void globalSearch(Poblacion &, int);
-    void neighorhoodSearch(Poblacion &, int);
+    void globalSearch(Poblacion &, int, bool);
+    void neighorhoodSearch(Poblacion &, int, bool);
+    Poblacion search(bool);
 
 public:
     ArtificialBeeColonyAlgorithm();
@@ -50,7 +51,8 @@ public:
 
     ArtificialBeeColonyAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion search();
+    Poblacion searchWithReplacement();
+    Poblacion searchWithAdded();
 };
 
 #endif

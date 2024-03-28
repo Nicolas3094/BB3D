@@ -77,7 +77,7 @@ ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setNumberOfIndividua
     return *this;
 }
 
-Poblacion ArtificialBeeColonyAlgorithm::search()
+Poblacion ArtificialBeeColonyAlgorithm::search(bool isWithReplacement)
 {
     int numberOfBees, iteration, eliteSite, noneEliteSite, eliteBee, nonEliteBee, restOfSites;
 
@@ -91,7 +91,7 @@ Poblacion ArtificialBeeColonyAlgorithm::search()
         {
             for (eliteBee = 0; eliteBee < numberOfEliteBees; eliteBee++)
             {
-                neighorhoodSearch(colonyWorker, eliteSite);
+                neighorhoodSearch(colonyWorker, eliteSite, isWithReplacement);
             }
         }
 
@@ -100,14 +100,19 @@ Poblacion ArtificialBeeColonyAlgorithm::search()
         {
             for (nonEliteBee = 0; nonEliteBee < numberOfNonEliteBees; nonEliteBee++)
             {
-                neighorhoodSearch(colonyWorker, noneEliteSite);
+                neighorhoodSearch(colonyWorker, noneEliteSite, isWithReplacement);
             }
         }
 
         // Random all rest of sites
         for (restOfSites = numberOfSites; restOfSites < colonyWorker.size(); restOfSites++)
         {
-            globalSearch(colonyWorker, restOfSites);
+            globalSearch(colonyWorker, restOfSites, isWithReplacement);
+        }
+
+        if (!isWithReplacement)
+        {
+            colonyWorker.erase(colonyWorker.begin() + numberOfIndividuals, colonyWorker.end());
         }
 
         rankPoblation(colonyWorker);
@@ -121,7 +126,17 @@ Poblacion ArtificialBeeColonyAlgorithm::search()
     return colonyWorker;
 }
 
-void ArtificialBeeColonyAlgorithm::globalSearch(Poblacion &colony, int site)
+Poblacion ArtificialBeeColonyAlgorithm::searchWithReplacement()
+{
+    return search(/* isWithReplacement= */ true);
+}
+
+Poblacion ArtificialBeeColonyAlgorithm::searchWithAdded()
+{
+    return search(/* isWithReplacement= */ false);
+}
+
+void ArtificialBeeColonyAlgorithm::globalSearch(Poblacion &colony, int site, bool isWithReplacement)
 {
     Individuo newSite = Individuo::Build()
                             .setGenome(DoubleGenome::Build()
@@ -131,11 +146,20 @@ void ArtificialBeeColonyAlgorithm::globalSearch(Poblacion &colony, int site)
                                                    /* NumberCount= */ dataSet.totalItems.size(),
                                                    /* minimum= */ 1,
                                                    /* maximum= */ getIdFromRotationWay(rotationType))));
+
     evaluateFitness(newSite, dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
-    colony[site] = newSite;
+
+    if (isWithReplacement)
+    {
+        colony[site] = newSite;
+    }
+    else
+    {
+        colony.push_back(newSite);
+    }
 }
 
-void ArtificialBeeColonyAlgorithm::neighorhoodSearch(Poblacion &colony, int bee)
+void ArtificialBeeColonyAlgorithm::neighorhoodSearch(Poblacion &colony, int bee, bool isWithReplacement)
 {
     DoubleGenome beeGenome = colony[bee].getGenome();
 
@@ -152,6 +176,13 @@ void ArtificialBeeColonyAlgorithm::neighorhoodSearch(Poblacion &colony, int bee)
 
     if (newBee.getFitness() > colony[bee].getFitness())
     {
-        colony[bee] = newBee;
+        if (isWithReplacement)
+        {
+            colony[bee] = newBee;
+        }
+        else
+        {
+            colony.push_back(newBee);
+        }
     }
 }

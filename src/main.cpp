@@ -145,7 +145,7 @@ void iterGeneticAll()
                                                  .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
                                                  .setMutationType(mutationTyped)
                                                  .setProblem(DATASSET[i]);
-          bestPob = abc.search();
+          bestPob = abc.searchWithReplacement();
         }
         else
         {
@@ -156,7 +156,7 @@ void iterGeneticAll()
                                          .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
                                          .setMutationType(mutationTyped)
                                          .setProblem(DATASSET[i]);
-          bestPob = firefly.search();
+          bestPob = firefly.searchWithReplacement();
         }
 
         auto stop = std::chrono::high_resolution_clock::now();
@@ -249,7 +249,7 @@ void testRotationsGA(std::string name)
     auto start = std::chrono::high_resolution_clock::now();
     if (name == "replacement")
     {
-      bestPobRot = geneticAlgorithm.evolve();
+      bestPobRot = geneticAlgorithm.evolveWithAdded();
     }
     else
     {
@@ -373,7 +373,7 @@ void genetic()
                                    .setSelectionProbability(0.85)
                                    .setDMutationProbability(0.01)
                                    .setMutationType(MutationType::C2);
-  Poblacion bestPob = algorithm.evolve();
+  Poblacion bestPob = algorithm.evolveWithAdded();
   auto stop = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
   std::cout << "Initial best fit: " << bestPob[0].getFitness() << "\n";
