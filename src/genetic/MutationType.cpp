@@ -16,3 +16,19 @@ std::ostream &operator<<(std::ostream &COUT, MutationType &type)
     }
     return COUT;
 }
+
+std::string getMutationName(MutationType type)
+{
+    if (type == MutationType::INVERSE_MUTATION)
+    {
+        return "InverseMutation";
+    }
+    else if (type == MutationType::C1)
+    {
+        return "C1Mutation";
+    }
+    else
+    {
+        return "C2Mutation";
+    }
+}

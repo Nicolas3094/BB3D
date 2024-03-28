@@ -1,5 +1,16 @@
 #include "RotationWay.hpp"
-
+std::string getNameFromRotationWay(ROTATION_WAY rotation)
+{
+    switch (rotation)
+    {
+    case SIX_WAY:
+        return "SIX";
+    case TWO_WAY:
+        return "TWO";
+    default:
+        return "ZERO";
+    }
+}
 int getIdFromRotationWay(ROTATION_WAY rotation)
 {
     switch (rotation)
