@@ -6,21 +6,21 @@
 #include "../genetic/GeneticsOperators.hpp"
 #include "../genetic/PermutationOperators.hpp"
 #include "../readData/DataSetBPP.hpp"
+#include "EvolutiveAlgorithm.hpp"
 #include <map>
 
-class GeneticAlgorithm
+class GeneticAlgorithm : public EvolutiveAlgorithm
 {
 private:
     std::map<std::string, bool> visitedIndividuals;
-
     long maxIteration;
+    DatasetBinBacking dataSet;
     long numberOfIndividuals;
+
     double selectionProbability;
     double crossProability;
     double mutationProbaility;
     double dMutationProbability;
-
-    DatasetBinBacking dataSet;
 
     MutationType mutationType;
     ROTATION_WAY rotationType;
@@ -55,8 +55,8 @@ public:
     GeneticAlgorithm &setNumberOfIndividuals(long);
     GeneticAlgorithm &setProblem(DatasetBinBacking);
 
+    Poblacion evolveWithReplacement();
     Poblacion evolveWithAdded();
-    Poblacion evolve();
 };
 
 #endif

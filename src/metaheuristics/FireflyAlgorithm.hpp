@@ -7,8 +7,9 @@
 #include "../genetic/GeneticsOperators.hpp"
 #include "../genetic/PermutationOperators.hpp"
 #include "../readData/DataSetBPP.hpp"
+#include "EvolutiveAlgorithm.hpp"
 
-class FireflyAlgorithm
+class FireflyAlgorithm : public EvolutiveAlgorithm
 {
 private:
     long maxIteration;
@@ -24,6 +25,7 @@ private:
 
     double lightIntensity(double, double, int);
     void findMostAttractiveByIndexAndIntensity(Poblacion, int, int &, int &, double);
+    Poblacion search(bool);
 
 public:
     FireflyAlgorithm();
@@ -44,7 +46,8 @@ public:
 
     FireflyAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion search();
+    Poblacion evolveWithReplacement();
+    Poblacion evolveWithAdded();
 };
 
 #endif

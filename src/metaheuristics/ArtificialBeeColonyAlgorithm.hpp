@@ -6,8 +6,9 @@
 #include "../genetic/GeneticsOperators.hpp"
 #include "../genetic/PermutationOperators.hpp"
 #include "../readData/DataSetBPP.hpp"
+#include "EvolutiveAlgorithm.hpp"
 
-class ArtificialBeeColonyAlgorithm
+class ArtificialBeeColonyAlgorithm : public EvolutiveAlgorithm
 {
 private:
     long maxIteration;
@@ -24,8 +25,9 @@ private:
     MutationType mutationType;
     ROTATION_WAY rotationType;
 
-    void globalSearch(Poblacion &, int);
-    void neighorhoodSearch(Poblacion &, int);
+    void globalSearch(Poblacion &, int, bool);
+    void neighorhoodSearch(Poblacion &, int, bool);
+    Poblacion search(bool);
 
 public:
     ArtificialBeeColonyAlgorithm();
@@ -50,7 +52,8 @@ public:
 
     ArtificialBeeColonyAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion search();
+    Poblacion evolveWithReplacement();
+    Poblacion evolveWithAdded();
 };
 
 #endif

@@ -61,23 +61,22 @@ FireflyAlgorithm &FireflyAlgorithm::setupIndex(int upIndex)
     return *this;
 }
 
-Poblacion FireflyAlgorithm::search()
+Poblacion FireflyAlgorithm::search(bool isWithReplacement)
 {
     int n, numberFireflies, iteration, firefly, mostAttactiveFirefly, bestFirefly, distance;
     double gamma, bestIntensity, Ii, Ij;
+
     Poblacion fireflyPoblation = initialHeuristicPoblation(numberOfIndividuals,
                                                            dataSet.bin,
                                                            dataSet.totalItems,
                                                            rotationType);
-
     n = fireflyPoblation[0].getGenome().getGenome().size();
-    numberFireflies = fireflyPoblation.size();
 
     gamma = 1 / (double)n;
 
     for (iteration = 0; iteration < this->maxIteration; iteration++)
     {
-        for (firefly = 0; firefly < numberFireflies; firefly++)
+        for (firefly = 0; firefly < numberOfIndividuals; firefly++)
         {
             mostAttactiveFirefly = -1;
             bestIntensity = -1.0;
@@ -112,16 +111,31 @@ Poblacion FireflyAlgorithm::search()
                     mutationWithType(newFirefly, mutationType);
                     newPositionFirefly.setGenome(newFirefly);
                 }
+
                 evaluateFitness(
                     newPositionFirefly,
                     dataSet.totalItems,
                     dataSet.bin.setRotationWay(rotationType));
-                if (newPositionFirefly.getFitness() > fireflyPoblation[firefly].getFitness())
+
+                if (isWithReplacement)
                 {
-                    fireflyPoblation[firefly] = newPositionFirefly;
+                    if (newPositionFirefly.getFitness() > fireflyPoblation[firefly].getFitness())
+                    {
+                        fireflyPoblation[firefly] = newPositionFirefly;
+                    }
+                }
+                else
+                {
+                    fireflyPoblation.push_back(newPositionFirefly);
                 }
             }
         }
+
+        if (!isWithReplacement)
+        {
+            fireflyPoblation.erase(fireflyPoblation.begin() + numberOfIndividuals, fireflyPoblation.end());
+        }
+
         rankPoblation(fireflyPoblation);
 
         if (fireflyPoblation[0].getFitness() == 1)
@@ -172,4 +186,14 @@ void FireflyAlgorithm::findMostAttractiveByIndexAndIntensity(
 double FireflyAlgorithm::lightIntensity(double fitness, double gamma, int distance)
 {
     return fitness / (1 + gamma * ((double)distance * distance));
+}
+
+Poblacion FireflyAlgorithm::evolveWithReplacement()
+{
+    return search(true);
+}
+
+Poblacion FireflyAlgorithm::evolveWithAdded()
+{
+    return search(false);
 }

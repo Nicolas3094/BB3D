@@ -269,6 +269,11 @@ void mutateC2(DoubleGenome &gen, int randomStep)
     r = uniformUnit();
     n = gen.getDGenome().size();
     step = randomStep;
+    if (n == 0)
+    {
+        std::cerr << "\nERROR: mutateC2 - Genome has 0 length\n";
+        throw std::invalid_argument("Genome has 0 length");
+    }
 
     if (randomStep == -1)
     {
