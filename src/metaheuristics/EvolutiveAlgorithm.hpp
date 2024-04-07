@@ -4,13 +4,13 @@
 
 #include "../genetic/Individuo.hpp"
 #include "../readData/DataSetBPP.hpp"
+#include <map>
 
 class EvolutiveAlgorithm
 {
 public:
     virtual ~EvolutiveAlgorithm() = 0;
-    virtual Poblacion evolveWithReplacement() = 0;
-    virtual Poblacion evolveWithAdded() = 0;
+    virtual Poblacion evolve() = 0;
 };
 
 #endif

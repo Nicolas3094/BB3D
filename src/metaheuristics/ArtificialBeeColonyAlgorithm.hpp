@@ -11,12 +11,16 @@
 class ArtificialBeeColonyAlgorithm : public EvolutiveAlgorithm
 {
 private:
+    std::map<std::string, bool> visitedIndividuals;
+
     long maxIteration;
     int numberOfIndividuals;
     int numberOfSites;
     int numberOfEliteSites;
     int numberOfEliteBees;
     int numberOfNonEliteBees;
+
+    bool isWithReplacement;
 
     double mutationProbaility;
     double dMutationProbability;
@@ -25,14 +29,16 @@ private:
     MutationType mutationType;
     ROTATION_WAY rotationType;
 
-    void globalSearch(Poblacion &, int, bool);
-    void neighorhoodSearch(Poblacion &, int, bool);
-    Poblacion search(bool);
+    void globalSearch(Poblacion &, int);
+    void neighorhoodSearch(Poblacion &, int);
+    void orderSites(Poblacion &);
 
 public:
     ArtificialBeeColonyAlgorithm();
     ~ArtificialBeeColonyAlgorithm();
     static ArtificialBeeColonyAlgorithm Build();
+
+    ArtificialBeeColonyAlgorithm &setIsWithReplacement(bool);
 
     ArtificialBeeColonyAlgorithm &setMaxIteration(long);
 
@@ -52,8 +58,7 @@ public:
 
     ArtificialBeeColonyAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion evolveWithReplacement();
-    Poblacion evolveWithAdded();
+    Poblacion evolve();
 };
 
 #endif

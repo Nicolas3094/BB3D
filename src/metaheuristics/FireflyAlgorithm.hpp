@@ -12,6 +12,8 @@
 class FireflyAlgorithm : public EvolutiveAlgorithm
 {
 private:
+    std::map<std::string, bool> visitedIndividuals;
+
     long maxIteration;
     int numberOfIndividuals;
     int upIndex;
@@ -19,18 +21,27 @@ private:
     double mutationProbaility;
     double dMutationProbability;
 
+    bool isWithReplacement;
+
     DatasetBinBacking dataSet;
     MutationType mutationType;
     ROTATION_WAY rotationType;
 
     double lightIntensity(double, double, int);
     void findMostAttractiveByIndexAndIntensity(Poblacion, int, int &, int &, double);
-    Poblacion search(bool);
+    Poblacion search();
+    Poblacion searchD();
+
+    DoubleGenome randomMovement(DoubleGenome);
+    void handleFireflyIntoPoblation(Individuo, Poblacion &, int);
+    void orderFireFlyPoblation(Poblacion &);
 
 public:
     FireflyAlgorithm();
     ~FireflyAlgorithm();
     static FireflyAlgorithm Build();
+
+    FireflyAlgorithm &setIsWithReplacement(bool);
 
     FireflyAlgorithm &setMaxIteration(long);
 
@@ -46,8 +57,9 @@ public:
 
     FireflyAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion evolveWithReplacement();
-    Poblacion evolveWithAdded();
+    Individuo &findMostAttractiveFirefly(Poblacion &, Individuo, double);
+
+    Poblacion evolve();
 };
 
 #endif
