@@ -110,7 +110,7 @@ void iterGeneticAll()
 
       for (int i = 0; i < DATASSET.size(); i++)
       {
-        if (durationResponses[i] != 0)
+        if (durationResponses[i] != 0 && responses[i] != 0)
         {
           continue;
         }
