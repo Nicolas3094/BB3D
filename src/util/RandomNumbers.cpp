@@ -25,3 +25,20 @@ int randomInteger(int init, int end)
     }
     return result;
 }
+
+int defaultBinomialDistribution(int n)
+{
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    static std::default_random_engine generator(seed);
+    std::binomial_distribution<> distr(n, n - 1 / n);
+
+    int result = distr(generator);
+    if (result > n)
+    {
+        std::cerr << "\nERROR: randomInteger";
+        std::cerr << "\nresult: " << result << " | "
+                  << "n: " << n << "\n";
+        throw std::invalid_argument("Invalid random integer result.");
+    }
+    return result;
+}

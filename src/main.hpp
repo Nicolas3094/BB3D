@@ -21,6 +21,6 @@ void testDblfOneInstance();
 void testRotationsGA(std::string);
 void testInverseMutation();
 std::string getAlgorithmNameFromNumber(std::string);
-EvolutiveAlgorithm *getEvolutiveAlgorithm(std::string algorithmName, ROTATION_WAY rotation, MutationType mutation, DatasetBinBacking dataSet);
+Poblacion getEvolutiveAlgorithm(std::string algorithmName, ROTATION_WAY rotation, MutationType mutation, DatasetBinBacking dataSet, bool isWithReplacement);
 MutationType getMutationTypeFromUser(std::string mutationType);
 #endif

@@ -9,5 +9,5 @@
 
 double uniformUnit();
 int randomInteger(int, int);
-
+int defaultBinomialDistribution(int n);
 #endif

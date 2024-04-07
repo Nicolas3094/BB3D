@@ -7,7 +7,6 @@
 #include "../genetic/PermutationOperators.hpp"
 #include "../readData/DataSetBPP.hpp"
 #include "EvolutiveAlgorithm.hpp"
-#include <map>
 
 class GeneticAlgorithm : public EvolutiveAlgorithm
 {
@@ -21,6 +20,9 @@ private:
     double crossProability;
     double mutationProbaility;
     double dMutationProbability;
+    double maxDiversityIndex;
+
+    bool isWithReplacement;
 
     MutationType mutationType;
     ROTATION_WAY rotationType;
@@ -40,11 +42,18 @@ private:
     void addChildredToPoblation(Poblacion &, Individuo, Individuo);
     void replacePoblationWithChildren(Poblacion &, Individuo, Individuo, int);
 
+    Poblacion evolveWithReplacement();
+    Poblacion evolveWithAdded();
+
+    double diversityIndex(Poblacion);
+
 public:
     GeneticAlgorithm();
     ~GeneticAlgorithm();
     static GeneticAlgorithm Build();
 
+    GeneticAlgorithm &setMaxDiversityIndex(double);
+    GeneticAlgorithm &setIsWithReplacement(bool);
     GeneticAlgorithm &setSelectionProbability(double);
     GeneticAlgorithm &setCrossProbability(double);
     GeneticAlgorithm &setMutationProbabiliy(double);
@@ -55,8 +64,7 @@ public:
     GeneticAlgorithm &setNumberOfIndividuals(long);
     GeneticAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion evolveWithReplacement();
-    Poblacion evolveWithAdded();
+    Poblacion evolve();
 };
 
 #endif

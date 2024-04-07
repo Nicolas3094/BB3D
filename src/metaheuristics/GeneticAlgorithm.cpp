@@ -1,71 +1,13 @@
 #include "GeneticAlgorithm.hpp"
 
-GeneticAlgorithm::GeneticAlgorithm()
+Poblacion GeneticAlgorithm::evolve()
 {
-    this->maxIteration = 0;
-    this->selectionProbability = 0.0;
-    this->crossProability = 0.0;
-    this->mutationProbaility = 0.0;
-    this->dMutationProbability = 0.01;
-    this->mutationType = MutationType::INVERSE_MUTATION;
-    this->rotationType = ROTATION_WAY::ZERO_WAY;
-}
-GeneticAlgorithm::~GeneticAlgorithm()
-{
-}
+    if (isWithReplacement)
+    {
+        return evolveWithReplacement();
+    }
 
-GeneticAlgorithm GeneticAlgorithm::Build()
-{
-    GeneticAlgorithm g;
-    return g;
-}
-
-GeneticAlgorithm &GeneticAlgorithm::setSelectionProbability(double selectionProbability)
-{
-    this->selectionProbability = selectionProbability;
-    return *this;
-}
-GeneticAlgorithm &GeneticAlgorithm::setCrossProbability(double crossProability)
-{
-    this->crossProability = crossProability;
-    return *this;
-}
-GeneticAlgorithm &GeneticAlgorithm::setMutationProbabiliy(double mutationProbaility)
-{
-    this->mutationProbaility = mutationProbaility;
-    return *this;
-}
-GeneticAlgorithm &GeneticAlgorithm::setDMutationProbability(double dMutationProbability)
-{
-    this->dMutationProbability = dMutationProbability;
-    return *this;
-}
-
-GeneticAlgorithm &GeneticAlgorithm::setMutationType(MutationType mutationType)
-{
-    this->mutationType = mutationType;
-    return *this;
-}
-
-GeneticAlgorithm &GeneticAlgorithm::setRotationType(ROTATION_WAY rotationType)
-{
-    this->rotationType = rotationType;
-    return *this;
-}
-GeneticAlgorithm &GeneticAlgorithm::setMaxIteration(long maxIteration)
-{
-    this->maxIteration = maxIteration;
-    return *this;
-}
-GeneticAlgorithm &GeneticAlgorithm::setProblem(DatasetBinBacking dataset)
-{
-    this->dataSet = dataset;
-    return *this;
-}
-GeneticAlgorithm &GeneticAlgorithm::setNumberOfIndividuals(long numberOfIndividuals)
-{
-    this->numberOfIndividuals = numberOfIndividuals;
-    return *this;
+    return evolveWithAdded();
 }
 
 // O(n)
@@ -161,7 +103,17 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 
 bool GeneticAlgorithm::terminateCondition(Poblacion currentPoblation)
 {
-    return currentPoblation[0].getFitness() == 1;
+    return currentPoblation[0].getFitness() == 1 || diversityIndex(currentPoblation) < maxDiversityIndex;
+}
+
+double GeneticAlgorithm::diversityIndex(Poblacion currentPoblation)
+{
+    double bestFitness, worstFitness;
+
+    bestFitness = currentPoblation[0].getFitness();
+    worstFitness = currentPoblation[numberOfIndividuals - 1].getFitness();
+
+    return (bestFitness - worstFitness) / (bestFitness * bestFitness);
 }
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
@@ -262,13 +214,19 @@ void GeneticAlgorithm::replacePoblationWithChildren(
     {
         visitedIndividuals[child.solution] = true;
 
-        poblation[atIndex] = child;
+        if (poblation[atIndex].getFitness() < child.getFitness())
+        {
+            poblation[atIndex] = child;
+        }
     }
     else if (visitedIndividuals[child.solution] && !visitedIndividuals[secondChild.solution])
     {
         visitedIndividuals[secondChild.solution] = true;
 
-        poblation[atIndex] = secondChild;
+        if (poblation[atIndex].getFitness() < child.getFitness())
+        {
+            poblation[atIndex] = secondChild;
+        }
     }
     else if (!visitedIndividuals[child.solution] && !visitedIndividuals[secondChild.solution])
     {
@@ -277,11 +235,17 @@ void GeneticAlgorithm::replacePoblationWithChildren(
 
         if (child.getFitness() > secondChild.getFitness())
         {
-            poblation[atIndex] = child;
+            if (poblation[atIndex].getFitness() < child.getFitness())
+            {
+                poblation[atIndex] = child;
+            }
         }
         else
         {
-            poblation[atIndex] = secondChild;
+            if (poblation[atIndex].getFitness() < child.getFitness())
+            {
+                poblation[atIndex] = secondChild;
+            }
         }
     }
 }
@@ -290,13 +254,16 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
 {
     int numberOfDeletedIndividual, initialIndex, i;
 
-    numberOfDeletedIndividual = randomInteger(numberOfIndividuals / 4, numberOfIndividuals / 2);
+    numberOfDeletedIndividual = defaultBinomialDistribution(numberOfIndividuals);
 
-    initialIndex = numberOfIndividuals - numberOfDeletedIndividual - 1;
+    initialIndex = numberOfIndividuals - numberOfDeletedIndividual + 1;
+
+    Poblacion oldPoblation = poblation;
 
     for (i = initialIndex; i < numberOfIndividuals; i++)
     {
-        std::vector<Individuo> parents = getParents(poblation, initialIndex - 1);
+
+        std::vector<Individuo> parents = getParents(oldPoblation, numberOfIndividuals - 1);
 
         if (uniformUnit() <= crossProability)
         {
@@ -312,7 +279,7 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 {
     int numberOfAddedIndividuals, i;
 
-    numberOfAddedIndividuals = randomInteger(numberOfIndividuals / 4, numberOfIndividuals / 2);
+    numberOfAddedIndividuals = defaultBinomialDistribution(numberOfIndividuals);
 
     for (i = 0; i < numberOfAddedIndividuals; i++)
     {
@@ -328,4 +295,85 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
     rankPoblation(poblation);
 
     poblation.erase(poblation.begin() + numberOfIndividuals, poblation.end());
+}
+
+GeneticAlgorithm::GeneticAlgorithm()
+{
+    this->maxIteration = 0;
+    this->selectionProbability = 0.0;
+    this->crossProability = 0.0;
+    this->mutationProbaility = 0.0;
+    this->dMutationProbability = 0.01;
+    this->mutationType = MutationType::INVERSE_MUTATION;
+    this->rotationType = ROTATION_WAY::ZERO_WAY;
+    this->maxDiversityIndex = 0.001;
+}
+GeneticAlgorithm::~GeneticAlgorithm()
+{
+}
+
+GeneticAlgorithm GeneticAlgorithm::Build()
+{
+    GeneticAlgorithm g;
+    return g;
+}
+
+GeneticAlgorithm &GeneticAlgorithm::setMaxDiversityIndex(double maxDiversityIndex)
+{
+    this->maxDiversityIndex = maxDiversityIndex;
+    return *this;
+}
+
+GeneticAlgorithm &GeneticAlgorithm::setIsWithReplacement(bool isWithReplacement)
+{
+    this->isWithReplacement = isWithReplacement;
+    return *this;
+}
+
+GeneticAlgorithm &GeneticAlgorithm::setSelectionProbability(double selectionProbability)
+{
+    this->selectionProbability = selectionProbability;
+    return *this;
+}
+GeneticAlgorithm &GeneticAlgorithm::setCrossProbability(double crossProability)
+{
+    this->crossProability = crossProability;
+    return *this;
+}
+GeneticAlgorithm &GeneticAlgorithm::setMutationProbabiliy(double mutationProbaility)
+{
+    this->mutationProbaility = mutationProbaility;
+    return *this;
+}
+GeneticAlgorithm &GeneticAlgorithm::setDMutationProbability(double dMutationProbability)
+{
+    this->dMutationProbability = dMutationProbability;
+    return *this;
+}
+
+GeneticAlgorithm &GeneticAlgorithm::setMutationType(MutationType mutationType)
+{
+    this->mutationType = mutationType;
+    return *this;
+}
+
+GeneticAlgorithm &GeneticAlgorithm::setRotationType(ROTATION_WAY rotationType)
+{
+    this->rotationType = rotationType;
+    return *this;
+}
+GeneticAlgorithm &GeneticAlgorithm::setMaxIteration(long maxIteration)
+{
+    this->maxIteration = maxIteration;
+    return *this;
+}
+GeneticAlgorithm &GeneticAlgorithm::setProblem(DatasetBinBacking dataset)
+{
+    this->dataSet = dataset;
+    return *this;
+}
+GeneticAlgorithm &GeneticAlgorithm::setNumberOfIndividuals(long numberOfIndividuals)
+{
+    this->numberOfIndividuals = numberOfIndividuals;
+    return *this;
 }
