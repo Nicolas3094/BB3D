@@ -3,13 +3,11 @@
 #include <chrono>
 #include "genetic/FitnessOperators.hpp"
 #include "genetic/GeneticsOperators.hpp"
-#include "genetic/PermutationOperators.hpp"
 #include "metaheuristics/GeneticAlgorithm.hpp"
 #include "metaheuristics/ArtificialBeeColonyAlgorithm.hpp"
 #include "metaheuristics/FireflyAlgorithm.hpp"
 #include "structures/PriorityPointQueue.hpp"
 #include "structures/ColaPrioridad.hpp"
-#include "readData/ReadData.hpp"
 #include "readData/Env.hpp"
 
 std::string LOCAL_PATH = getEnv("LOCAL_PATH");
@@ -74,39 +72,39 @@ void iterGeneticAll()
   {
     rotationType = "6";
   }
+
+  string generalPath, fitnessDataPath, timePATH;
   std::vector<std::string> algorithmsProblems{"P1A2", "P2A2", "P3A2", "P4A2", "P5A2"};
   std::vector<std::string> mutationNumber{"1", "2", "3"};
+  ROTATION_WAY rotation = getRotationWayFromId(std::stoi(rotationType));
+  bool isWithReplacement = false;
 
   for (auto algorithmName : algorithmsProblems)
   {
     std::cout << "\nAlgorithm: " << algorithmName << "\n";
     const string dataPATH = LOCAL_PATH + "/Instance/" + algorithmName + ".csv";
     MutationType mutationTyped;
-    vector<DatasetBinBacking> DATASSET;
-
-    DATASSET = readData(dataPATH);
+    vector<DatasetBinBacking> DATASSET = readData(dataPATH);
 
     for (auto mutationType : mutationNumber)
     {
+      std::cout << "\nInit " << mutationTyped << "\n";
 
-      if (mutationType == "1")
+      mutationTyped = getMutationTypeFromUser(mutationType);
+
+      generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) +
+                    "/" + algorithm + "/" + getNameFromRotationWay(rotation) + "/";
+      if (isWithReplacement)
       {
-        mutationTyped = MutationType::INVERSE_MUTATION;
-      }
-      else if (mutationType == "2")
-      {
-        mutationTyped = MutationType::C1;
+        fitnessDataPath = generalPath + algorithm + ".csv";
+        timePATH = generalPath + "t.csv";
       }
       else
       {
-        mutationTyped = MutationType::C2;
+        fitnessDataPath = generalPath + algorithm + "2.csv";
+        timePATH = generalPath + "t2.csv";
       }
-      std::cout << "\nInit " << mutationTyped << "\n";
 
-      const string generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) + "/" +
-                                 algorithm + "/" + getNameFromRotationWay(getRotationWayFromId(std::stoi(rotationType))) + "/";
-      const string fitnessDataPath = generalPath + algorithm + "2.csv";
-      const string timePATH = generalPath + "t2.csv";
       vector<double> responses = getFloatNumberListFile(fitnessDataPath);
       vector<long int> durationResponses = getIntegerNumberListFile(timePATH);
 
@@ -116,57 +114,30 @@ void iterGeneticAll()
         {
           continue;
         }
-        long int value = durationResponses[i];
+        std::cout << (i + 1) << "|";
+        Poblacion bestPob;
+        EvolutiveAlgorithm *evolutive;
 
-        std::cout << i << " ";
+        evolutive = getEvolutiveAlgorithm(algorithm, rotation, mutationTyped, DATASSET[i]);
 
         auto start = std::chrono::high_resolution_clock::now();
-        Poblacion bestPob;
-        if (algorithm == "GA")
+        if (isWithReplacement)
         {
-          GeneticAlgorithm geneticAlgorithm = GeneticAlgorithm::Build()
-                                                  .setMaxIteration(1000)
-                                                  .setNumberOfIndividuals(50)
-                                                  .setCrossProbability(0.75)
-                                                  .setSelectionProbability(0.85)
-                                                  .setDMutationProbability(0.05)
-                                                  .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
-                                                  .setMutationType(mutationTyped)
-                                                  .setProblem(DATASSET[i]);
-          bestPob = geneticAlgorithm.evolveWithAdded();
-        }
-        else if (algorithm == "ABC")
-        {
-          ArtificialBeeColonyAlgorithm abc = ArtificialBeeColonyAlgorithm::Build()
-                                                 .setMaxIteration(1000)
-                                                 .setNumberOfIndividuals(20)
-                                                 .setNumberOfSites(11)
-                                                 .setNumberOfEliteSites(8)
-                                                 .setNumberOfEliteBees(4)
-                                                 .setNumberOfNonEliteBees(3)
-                                                 .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
-                                                 .setMutationType(mutationTyped)
-                                                 .setProblem(DATASSET[i]);
-          bestPob = abc.searchWithReplacement();
+          bestPob = evolutive->evolveWithReplacement();
         }
         else
         {
-          FireflyAlgorithm firefly = FireflyAlgorithm::Build()
-                                         .setMaxIteration(1000)
-                                         .setNumberOfIndividuals(25)
-                                         .setupIndex(2)
-                                         .setRotationType(getRotationWayFromId(std::stoi(rotationType)))
-                                         .setMutationType(mutationTyped)
-                                         .setProblem(DATASSET[i]);
-          bestPob = firefly.searchWithReplacement();
+          bestPob = evolutive->evolveWithAdded();
         }
-
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
         responses[i] = bestPob[0].getFitness();
         durationResponses[i] = duration.count();
 
         printResults(responses, durationResponses, fitnessDataPath, timePATH);
+
+        delete evolutive;
       }
     }
   }
@@ -417,5 +388,65 @@ std::string getAlgorithmNameFromNumber(std::string number)
   else
   {
     return "FFA";
+  }
+}
+
+/** Gets evolutive algorithm based on the algorithm's name.*/
+EvolutiveAlgorithm *getEvolutiveAlgorithm(std::string algorithm, ROTATION_WAY rotation, MutationType mutation, DatasetBinBacking data)
+{
+  if (algorithm == "GA")
+  {
+    GeneticAlgorithm *genetic = new GeneticAlgorithm();
+    genetic->setMaxIteration(1000)
+        .setNumberOfIndividuals(50)
+        .setCrossProbability(0.75)
+        .setSelectionProbability(0.85)
+        .setDMutationProbability(0.05)
+        .setRotationType(rotation)
+        .setMutationType(mutation)
+        .setProblem(data);
+    return genetic;
+  }
+  else if (algorithm == "ABC")
+  {
+    ArtificialBeeColonyAlgorithm *abc = new ArtificialBeeColonyAlgorithm();
+    abc->setMaxIteration(1000)
+        .setNumberOfIndividuals(20)
+        .setNumberOfSites(11)
+        .setNumberOfEliteSites(8)
+        .setNumberOfEliteBees(4)
+        .setNumberOfNonEliteBees(3)
+        .setRotationType(rotation)
+        .setMutationType(mutation)
+        .setProblem(data);
+    return abc;
+  }
+  else
+  {
+    FireflyAlgorithm *ffa = new FireflyAlgorithm();
+    ffa->setMaxIteration(1000)
+        .setNumberOfIndividuals(25)
+        .setupIndex(2)
+        .setRotationType(rotation)
+        .setMutationType(mutation)
+        .setProblem(data);
+    return ffa;
+  }
+}
+
+/** Gets the mutation type by the user's input.*/
+MutationType getMutationTypeFromUser(std::string mutationType)
+{
+  if (mutationType == "1")
+  {
+    return MutationType::INVERSE_MUTATION;
+  }
+  else if (mutationType == "2")
+  {
+    return MutationType::C1;
+  }
+  else
+  {
+    return MutationType::C2;
   }
 }

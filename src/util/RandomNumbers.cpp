@@ -18,7 +18,8 @@ int randomInteger(int init, int end)
     int result = distr(generator);
     if (result < init || result > end)
     {
-        std::cout << "result: " << result << " | "
+        std::cerr << "\nERROR: randomInteger";
+        std::cerr << "\nresult: " << result << " | "
                   << "min: " << init << " end: " << end << "\n";
         throw std::invalid_argument("Invalid random integer result.");
     }

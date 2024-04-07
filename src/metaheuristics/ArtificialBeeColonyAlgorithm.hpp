@@ -6,8 +6,9 @@
 #include "../genetic/GeneticsOperators.hpp"
 #include "../genetic/PermutationOperators.hpp"
 #include "../readData/DataSetBPP.hpp"
+#include "EvolutiveAlgorithm.hpp"
 
-class ArtificialBeeColonyAlgorithm
+class ArtificialBeeColonyAlgorithm : public EvolutiveAlgorithm
 {
 private:
     long maxIteration;
@@ -51,8 +52,8 @@ public:
 
     ArtificialBeeColonyAlgorithm &setProblem(DatasetBinBacking);
 
-    Poblacion searchWithReplacement();
-    Poblacion searchWithAdded();
+    Poblacion evolveWithReplacement();
+    Poblacion evolveWithAdded();
 };
 
 #endif
