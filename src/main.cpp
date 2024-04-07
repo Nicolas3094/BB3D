@@ -106,11 +106,11 @@ void iterGeneticAll()
       }
 
       vector<double> responses = getFloatNumberListFile(fitnessDataPath);
-      vector<long int> durationResponses = getIntegerNumberListFile(fitnessDataPath);
+      vector<long int> durationResponses = getIntegerNumberListFile(timePATH);
 
       for (int i = 0; i < DATASSET.size(); i++)
       {
-        if (responses[i] != 0)
+        if (durationResponses[i] != 0)
         {
           continue;
         }
