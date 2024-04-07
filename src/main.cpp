@@ -105,14 +105,14 @@ void iterGeneticAll()
 
       const string generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) + "/" +
                                  algorithm + "/" + getNameFromRotationWay(getRotationWayFromId(std::stoi(rotationType))) + "/";
-      const string fitnessDataPath = generalPath + algorithm + "2.csv";
-      const string timePATH = generalPath + "t2.csv";
+      const string fitnessDataPath = generalPath + algorithm + ".csv";
+      const string timePATH = generalPath + "t.csv";
       vector<double> responses = getFloatNumberListFile(fitnessDataPath);
       vector<long int> durationResponses = getIntegerNumberListFile(timePATH);
 
       for (int i = 0; i < DATASSET.size(); i++)
       {
-        if (durationResponses[i] != 0)
+        if (durationResponses[i] != 0 && responses[i] != 0)
         {
           continue;
         }
