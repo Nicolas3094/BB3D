@@ -29,7 +29,7 @@ int main()
   // testInverseMutation();
   //
   std::cin.get();
-  // system("pause");
+  system("pause");
 }
 
 void testInverseMutation()
@@ -42,7 +42,8 @@ void testInverseMutation()
 void iterGeneticAll()
 {
 
-  std::string rotationType, algorithm, problem, mut, name;
+  std::string rotationType, algorithm, problem, mut, name, isReplace;
+  bool isWithReplacement;
 
   std::cout << "Select algorithm: [1] Genetic Algorithm [2] Artificial Bee Colony Algorithm [3] Firefly Algorithm\n\n";
   std::cin >> algorithm;
@@ -53,7 +54,13 @@ void iterGeneticAll()
   std::cout << "Select mutation: [1] Inverse Mutation [2] Group 1 [3] Group 2\n\n";
   std::cin >> mut;
 
+  std::cout << "With Replace: [1] Yes [2] No\n\n";
+  std::cin >> isReplace;
+
+  isWithReplacement = isReplace == "1";
+
   rotationType = "3";
+
   if (algorithm != "1" && algorithm != "2" && algorithm != "3")
   {
     std::cout << "\nSelect valid algorithm.\n";
@@ -94,73 +101,105 @@ void iterGeneticAll()
 
   string generalPath, fitnessDataPath, timePATH;
   std::vector<std::string> algorithmsProblems{"P1A2", "P2A2", "P3A2", "P4A2", "P5A2"};
-  std::vector<std::string> mutationNumber{mut};
-  ROTATION_WAY rotation = getRotationWayFromId(std::stoi(rotationType));
+  std::vector<std::string> mutationNumber{"1", "2", "3"};
+  std::vector<MutationType> mutations{MutationType::INVERSE_MUTATION, MutationType::C1, MutationType::C2};
+  std::vector<ROTATION_WAY> rotations{getRotationWayFromId(1), getRotationWayFromId(2), getRotationWayFromId(3)};
 
-  bool isWithReplacement = false;
+  std::cout << "Metaheuristics: " << name << "\n";
 
-  std::cout << "Metaheuristics: " << name;
-  for (auto algorithmName : algorithmsProblems)
+  for (ROTATION_WAY rotation : rotations)
   {
 
-    std::cout << "\n\nAlgorithm: " << algorithmName << " - ";
+    std::cout << "\nRotation: " << rotation << "\n";
 
-    const string dataPATH = LOCAL_PATH + "/Instance/" + algorithmName + ".csv";
-    MutationType mutationTyped;
-    vector<DatasetBinBacking> DATASSET = readData(dataPATH);
-
-    for (auto mutationType : mutationNumber)
+    for (auto algorithmName : algorithmsProblems)
     {
-      mutationTyped = getMutationTypeFromUser(mutationType);
 
-      std::cout << mutationTyped << "\n";
+      const string dataPATH = LOCAL_PATH + "/Instance/" + algorithmName + ".csv";
+      MutationType mutationTyped;
+      vector<DatasetBinBacking> DATASSET = readData(dataPATH);
 
-      generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) +
-                    "/" + algorithm + "/" + getNameFromRotationWay(rotation) + "/";
-      if (isWithReplacement)
+      for (MutationType mutationTyped : mutations)
       {
-        fitnessDataPath = generalPath + algorithm + ".csv";
-        timePATH = generalPath + "t.csv";
-      }
-      else
-      {
-        fitnessDataPath = generalPath + algorithm + "2.csv";
-        timePATH = generalPath + "t2.csv";
-      }
+        std::cout << "\n\nAlgorithm: " << algorithmName << " - " << mutationTyped << "\n";
 
-      vector<double> responses = getFloatNumberListFile(fitnessDataPath);
-      vector<long int> durationResponses = getIntegerNumberListFile(timePATH);
-
-      for (int i = 0; i < DATASSET.size(); i++)
-      {
-        if (durationResponses[i] != 0 && responses[i] != 0)
+        generalPath = LOCAL_PATH + "/Results/" + algorithmName + "/" + getMutationName(mutationTyped) +
+                      "/" + algorithm + "/" + getNameFromRotationWay(rotation) + "/";
+        if (isWithReplacement)
         {
-          continue;
+          if (algorithm == "GA")
+          {
+            fitnessDataPath = generalPath + algorithm + "Bin.csv";
+            timePATH = generalPath + "tBin.csv";
+          }
+          else
+          {
+            fitnessDataPath = generalPath + algorithm + ".csv";
+            timePATH = generalPath + "t.csv";
+          }
+        }
+        else
+        {
+
+          if (algorithm == "GA")
+          {
+            fitnessDataPath = generalPath + algorithm + "2Bin.csv";
+            timePATH = generalPath + "t2Bin.csv";
+          }
+          else
+          {
+            fitnessDataPath = generalPath + algorithm + "2.csv";
+            timePATH = generalPath + "t2.csv";
+          }
         }
 
-        std::cout << (i + 1) << "|";
+        vector<double> responses = getFloatNumberListFile(fitnessDataPath);
+        vector<long int> durationResponses = getIntegerNumberListFile(timePATH);
 
-        Poblacion bestPob;
-        // Set -1 to inform it is being attended
-        responses[i] = -1;
-        durationResponses[i] = -1;
+        for (int i = 0; i < DATASSET.size(); i++)
+        {
 
-        // Print it
-        printResults(responses, durationResponses, fitnessDataPath, timePATH);
+          std::cout << responses[i] << "|";
 
-        auto start = std::chrono::high_resolution_clock::now();
-        bestPob = getEvolutiveAlgorithm(algorithm, rotation, mutationTyped, DATASSET[i], isWithReplacement);
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+          if (responses[i] < 0 || durationResponses[i] < 0)
+          {
+            std::cout << "\n\nenter\n";
+            responses[i] = 0;
+            durationResponses[i] = 0;
+            printResults(responses, durationResponses, fitnessDataPath, timePATH);
+          }
 
-        // update data
-        responses = getFloatNumberListFile(fitnessDataPath);
-        durationResponses = getIntegerNumberListFile(timePATH);
+          continue;
 
-        responses[i] = bestPob[0].getFitness();
-        durationResponses[i] = duration.count();
+          if (durationResponses[i] != 0 && responses[i] != 0)
+          {
+            continue;
+          }
 
-        printResults(responses, durationResponses, fitnessDataPath, timePATH);
+          std::cout << (i + 1) << "|";
+
+          Poblacion bestPob;
+          // Set -1 to inform it is being attended
+          responses[i] = -1;
+          durationResponses[i] = -1;
+
+          // Print it
+          printResults(responses, durationResponses, fitnessDataPath, timePATH);
+
+          auto start = std::chrono::high_resolution_clock::now();
+          bestPob = getEvolutiveAlgorithm(algorithm, rotation, mutationTyped, DATASSET[i], isWithReplacement);
+          auto stop = std::chrono::high_resolution_clock::now();
+          auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+          // update data
+          responses = getFloatNumberListFile(fitnessDataPath);
+          durationResponses = getIntegerNumberListFile(timePATH);
+
+          responses[i] = bestPob[0].getFitness();
+          durationResponses[i] = duration.count();
+
+          printResults(responses, durationResponses, fitnessDataPath, timePATH);
+        }
       }
     }
   }
