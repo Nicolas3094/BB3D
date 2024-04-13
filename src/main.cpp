@@ -17,8 +17,6 @@ int main()
 
   try
   {
-    // testRotationsGA("replacement");
-    // testRotationsGA("added");
     iterGeneticAll();
   }
 
@@ -26,8 +24,6 @@ int main()
   {
     cerr << ex.what() << "\n";
   }
-  // testInverseMutation();
-  //
   std::cin.get();
   // system("pause");
 }
@@ -61,7 +57,7 @@ void iterGeneticAll()
       /* algorithmOption= */ algorithmOption,
       /* rotationType= */ "3",
       /* algorithnName= */ name,
-      /* replace= */ replace,
+      /* replace= */ isReplace,
       /* isWithReplacement= */ isWithReplacement);
 
   vector<string> ALGORITHMS{
@@ -137,9 +133,7 @@ void iterGeneticAll()
 void handleUserInputs(
     string &algorithmOption, string &rotationType, string algorithnName, string replace, bool &isWithReplacement)
 {
-  isWithReplacement = isReplace == "1";
-
-  rotationType = "3";
+  isWithReplacement = replace == "1";
 
   if (algorithmOption != "1" && algorithmOption != "2" && algorithmOption != "3")
   {
