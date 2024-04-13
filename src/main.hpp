@@ -10,17 +10,19 @@
 
 using namespace std;
 
-#define print(x) std::cout << x << "\n"
+#define print(x) cout << x << "\n"
 
 void testDblf();
 void genetic();
 void evaluatePoblationTime();
 void iterGeneticAll();
-void printResults(std::vector<double>, std::vector<long int>, const string, const string);
+void printResults(vector<double>, std::vector<long int>, const string, const string);
 void testDblfOneInstance();
 void testRotationsGA(std::string);
 void testInverseMutation();
-std::string getAlgorithmNameFromNumber(std::string);
-Poblacion getEvolutiveAlgorithm(std::string algorithmName, ROTATION_WAY rotation, MutationType mutation, DatasetBinBacking dataSet, bool isWithReplacement);
-MutationType getMutationTypeFromUser(std::string mutationType);
+void handlePaths(bool, string, string, MutationType, ROTATION_WAY, string &, string &);
+void handleUserInputs(string &, string &, string, string, bool &);
+string getAlgorithmNameFromNumber(string);
+Poblacion getEvolutiveAlgorithm(string, ROTATION_WAY, MutationType, DatasetBinBacking, bool);
+MutationType getMutationTypeFromUser(string mutationType);
 #endif
