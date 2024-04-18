@@ -60,7 +60,7 @@ void iterGeneticAll()
       /* replace= */ isReplace,
       /* isWithReplacement= */ isWithReplacement);
 
-  vector<string> ALGORITHMS{getAlgorithmNameFromNumber("1")};
+  vector<string> ALGORITHMS{getAlgorithmNameFromNumber("2"), getAlgorithmNameFromNumber("3")};
   vector<string> PROBLEMS{"P1A2", "P2A2", "P3A2", "P4A2", "P5A2"};
   vector<MutationType> MUTATIONS{
       getMutationTypeFromUser("1"), getMutationTypeFromUser("2"), getMutationTypeFromUser("3")};
