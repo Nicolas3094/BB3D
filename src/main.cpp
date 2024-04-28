@@ -60,11 +60,11 @@ void iterGeneticAll()
       /* replace= */ isReplace,
       /* isWithReplacement= */ isWithReplacement);
 
-  vector<string> ALGORITHMS{getAlgorithmNameFromNumber("1")};
+  vector<string> ALGORITHMS{getAlgorithmNameFromNumber("1"), getAlgorithmNameFromNumber("2"), getAlgorithmNameFromNumber("3")};
   vector<string> PROBLEMS{"P1A2", "P2A2", "P3A2", "P4A2", "P5A2"};
   vector<MutationType> MUTATIONS{
       getMutationTypeFromUser("1"), getMutationTypeFromUser("2"), getMutationTypeFromUser("3")};
-  vector<ROTATION_WAY> ROTATIONS{ROTATION_WAY::ZERO_WAY, ROTATION_WAY::TWO_WAY};
+  vector<ROTATION_WAY> ROTATIONS{ROTATION_WAY::ZERO_WAY, ROTATION_WAY::TWO_WAY, ROTATION_WAY::SIX_WAY};
 
   for (string algorithm : ALGORITHMS)
   {
