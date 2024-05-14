@@ -41,18 +41,21 @@ void iterGeneticAll()
   string rotationType, algorithmOption, problem, mut, name, isReplace, generalPath, fitnessDataPath, timePATH;
   bool isWithReplacement;
 
-  std::cout << "Select algorithm: [1] Genetic Algorithm [2] Artificial Bee Colony Algorithm [3] Firefly Algorithm\n\n";
-  std::cin >> algorithmOption;
+  // std::cout << "Select algorithm: [1] Genetic Algorithm [2] Artificial Bee Colony Algorithm [3] Firefly Algorithm\n\n";
+  // std::cin >> algorithmOption;
+
   // std::cout << "Select rotation type:\n[1] ZERO-ROTATION\n[2] 2-ROTATION\n[3] 6-ROTATION\n";
   // std::cin >> rotationType;
+
   // std::cout << "Select problem:\n[1] P4A2 \n[2] P5A2\n\n";
   // std::cin >> problem;
-  std::cout << "Select mutation: [1] Inverse Mutation [2] Group 1 [3] Group 2\n\n";
-  std::cin >> mut;
+
+  // std::cout << "Select mutation: [1] Inverse Mutation [2] Group 1 [3] Group 2\n\n";
+  // std::cin >> mut;
 
   std::cout << "With Replace: [1] Yes [2] No\n\n";
   std::cin >> isReplace;
-  rotationType = "1";
+
   handleUserInputs(
       /* algorithmOption= */ algorithmOption,
       /* rotationType= */ rotationType,
@@ -69,12 +72,15 @@ void iterGeneticAll()
   for (string algorithm : ALGORITHMS)
   {
     cout << "\nMetaheuristics: " << algorithm << "\n";
+
     for (ROTATION_WAY rotation : ROTATIONS)
     {
       cout << "\nRotation: " << rotation << "\n";
+
       for (auto problemName : PROBLEMS)
       {
         vector<DatasetBinBacking> DATASSET = readData(LOCAL_PATH + "/Instance/" + problemName + ".csv");
+
         for (MutationType mutationTyped : MUTATIONS)
         {
           cout << "\n\nAlgorithm: " << problemName << " - " << mutationTyped << "\n";
@@ -134,7 +140,7 @@ void handleUserInputs(
 {
   isWithReplacement = replace == "1";
 
-  if (algorithmOption != "1" && algorithmOption != "2" && algorithmOption != "3")
+  /*if (algorithmOption != "1" && algorithmOption != "2" && algorithmOption != "3")
   {
     cout << "\nSelect valid algorithm.\n";
     return iterGeneticAll();
@@ -143,7 +149,7 @@ void handleUserInputs(
   {
     cout << "\nSelect valid rotationType.\n";
     return iterGeneticAll();
-  }
+  }*/
   if (algorithmOption == "1")
   {
     algorithnName = "Genetic Algoritm";
