@@ -124,6 +124,8 @@ vector<double> getFloatNumberListFile(const string path)
     {
         while (getline(myfile, line))
         {
+            if (i >= result.size())
+                break;
             result[i++] = std::stod(line);
         }
         myfile.close();
@@ -144,6 +146,8 @@ vector<long int> getIntegerNumberListFile(const string path)
     {
         while (getline(myfile, line))
         {
+            if (i >= result.size())
+                break;
             result[i++] = std::stoi(line);
         }
         myfile.close();
