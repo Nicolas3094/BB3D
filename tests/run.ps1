@@ -52,6 +52,16 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Evolution regression compilation failed.' }
     & $evolutionBinary
     if ($LASTEXITCODE -ne 0) { throw "Evolution regression tests failed: exit code $LASTEXITCODE" }
+    New-Item -ItemType Directory -Force (Join-Path $root 'build/infrastructure-tests') | Out-Null
+    $infrastructureBinary = Join-Path $PSScriptRoot 'infrastructure_tests.exe'
+    $infrastructureSources = @(Join-Path $PSScriptRoot 'InfrastructureTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -ne 'main.cpp' } | ForEach-Object { $_.FullName })
+    & $Compiler -std=c++14 -fno-elide-constructors $infrastructureSources -o $infrastructureBinary
+    if ($LASTEXITCODE -ne 0) { throw 'Infrastructure test compilation failed.' }
+    Push-Location $root
+    try {
+        & $infrastructureBinary
+        if ($LASTEXITCODE -ne 0) { throw "Infrastructure tests failed: exit code $LASTEXITCODE" }
+    } finally { Pop-Location }
 }
 finally {
     $env:PATH = $previousPath

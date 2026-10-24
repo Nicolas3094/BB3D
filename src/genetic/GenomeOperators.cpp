@@ -1,18 +1,25 @@
 #include "GenomeOperators.hpp"
 #include <chrono>
+#include <unordered_set>
+#include "../util/RandomNumbers.hpp"
+
+namespace
+{
+void validateIds(const LoadedBins &items)
+{
+    std::unordered_set<int> ids;
+    for (const auto &item : items)
+        if (item.getId() <= 0 || !ids.insert(item.getId()).second)
+            throw std::invalid_argument("Genome item IDs must be positive and unique.");
+}
+}
 
 // Function to return the next random number
 int getNum(std::vector<int> &v)
 {
-    // Size of the vector
-    int n = v.size();
-
-    // Generate a random number
-    srand(time(NULL));
-
-    // Make sure the number is within
-    // the index range
-    int index = rand() % n;
+    if (v.empty()) throw std::invalid_argument("Cannot draw from an empty vector.");
+    int n = static_cast<int>(v.size());
+    int index = randomInteger(0, n - 1);
 
     // Get random number from the vector
     int num = v[index];
@@ -27,6 +34,7 @@ int getNum(std::vector<int> &v)
 // Function to generate n non-repeating random numbers
 Chromosome generatePermutation(int n)
 {
+    if (n < 0) throw std::invalid_argument("Permutation size must be non-negative.");
     Chromosome chromosome(n);
     static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     static std::default_random_engine gen(seed);
@@ -41,16 +49,28 @@ Chromosome generatePermutation(int n)
 
 LoadedBins decodeChromosome(Chromosome chromosome, LoadedBins allOrderByIdItems)
 {
+    validateIds(allOrderByIdItems);
+    for (size_t i = 0; i < allOrderByIdItems.size(); ++i)
+        if (allOrderByIdItems[i].getId() != static_cast<int>(i + 1))
+            throw std::invalid_argument("Decoder data must be indexed by IDs 1..N.");
+    std::vector<bool> used(allOrderByIdItems.size(), false);
+    for (int id : chromosome)
+    {
+        if (id <= 0 || static_cast<size_t>(id) > allOrderByIdItems.size() || used[id - 1])
+            throw std::invalid_argument("Decoder IDs must be in range and unique.");
+        used[id - 1] = true;
+    }
     LoadedBins bins(chromosome.size());
     for (int i = 0; i < chromosome.size(); i++)
     {
-        bins[i] = allOrderByIdItems[chromosome[i]];
+        bins[i] = allOrderByIdItems[chromosome[i] - 1];
     }
     return bins;
 }
 
 Chromosome codeChromosome(LoadedBins idItemsToPacked)
 {
+    validateIds(idItemsToPacked);
     Chromosome chromosome(idItemsToPacked.size());
     for (int i = 0; i < idItemsToPacked.size(); i++)
     {
@@ -109,10 +129,15 @@ std::vector<Chromosome> buildHeuristicChromosomes(LoadedBins allItemBins, bool r
 
 std::vector<Chromosome> buildCompleteHeuristicChromosomes(LoadedBins allBins, int numberOfChromosomes)
 {
+    if (numberOfChromosomes < 0) throw std::invalid_argument("Population size must be non-negative.");
+    validateIds(allBins);
+    if (numberOfChromosomes == 0) return {};
     std::vector<Chromosome> chromosomePoblation;
     std::vector<Chromosome> heursiticChromosomePoblation = buildHeuristicChromosomes(allBins);
+    if (heursiticChromosomePoblation.size() > static_cast<size_t>(numberOfChromosomes))
+        heursiticChromosomePoblation.resize(numberOfChromosomes);
     std::vector<Chromosome> randomChromosomePoblation =
-        buildChromosomes(allBins, numberOfChromosomes - heursiticChromosomePoblation.size());
+        buildChromosomes(allBins, numberOfChromosomes - static_cast<int>(heursiticChromosomePoblation.size()));
     chromosomePoblation.reserve(heursiticChromosomePoblation.size() +
                                 randomChromosomePoblation.size());
 
@@ -128,11 +153,14 @@ std::vector<Chromosome> buildCompleteHeuristicChromosomes(LoadedBins allBins, in
 
 std::vector<Chromosome> buildChromosomes(LoadedBins allBins, int numberOfChromosomes)
 {
+    if (numberOfChromosomes < 0) throw std::invalid_argument("Population size must be non-negative.");
+    const Chromosome ids = codeChromosome(allBins);
+    static std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::vector<Chromosome> chromosomePoblation(numberOfChromosomes);
-    int longOfChromosome = allBins.size();
     for (int i = 0; i < numberOfChromosomes; i++)
     {
-        chromosomePoblation[i] = generatePermutation(longOfChromosome);
+        chromosomePoblation[i] = ids;
+        std::shuffle(chromosomePoblation[i].begin(), chromosomePoblation[i].end(), generator);
     }
 
     return chromosomePoblation;
@@ -140,6 +168,8 @@ std::vector<Chromosome> buildChromosomes(LoadedBins allBins, int numberOfChromos
 
 Chromosome generateRandomRepeatedAlalleleChromosome(int NumberCount, int minimum, int maximum)
 {
+    if (NumberCount < 0 || maximum < 0 || (maximum != 0 && minimum > maximum))
+        throw std::invalid_argument("Invalid allele count or random range.");
     Chromosome values(NumberCount);
     if (maximum == 0)
     {

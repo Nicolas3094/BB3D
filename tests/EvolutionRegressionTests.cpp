@@ -187,24 +187,25 @@ void checkGA()
         require(unitCalls == 3, "Zero crossover probability produced children");
     }
     unitValue = 0.5;
-    for (int count : {0,1,2,3})
+    for (int count : {0,1})
     {
         GeneticAlgorithm invalid;
         invalid.setNumberOfIndividuals(count);
         rejects([&] { invalid.evolve(); });
     }
     for (int size : {1,2,3,4})
+    for (int count : {2,3,4})
     {
         DatasetBinBacking problem{}; problem.bin = container();
         for (int id = 1; id <= size; ++id) problem.totalItems.push_back(box(id));
         for (bool replacement : {false,true})
         {
             GeneticAlgorithm small;
-            small.setProblem(problem).setNumberOfIndividuals(4).setMaxIteration(1)
+            small.setProblem(problem).setNumberOfIndividuals(count).setMaxIteration(1)
                 .setCrossProbability(1).setSelectionProbability(1).setIsWithReplacement(replacement);
             binomialResult = 1; randomCalls = 0;
             auto result = small.evolve();
-            require(result.size() == 4 && std::abs(result[0].getFitness() - size / 512.0) < 1e-12,
+            require(result.size() == static_cast<size_t>(count) && std::abs(result[0].getFitness() - size / 512.0) < 1e-12,
                     "GA failed with small chromosomes or addition/replacement mode");
         }
     }

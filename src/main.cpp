@@ -9,6 +9,7 @@
 #include "structures/PriorityPointQueue.hpp"
 #include "structures/ColaPrioridad.hpp"
 #include "readData/Env.hpp"
+#include "readData/ExperimentResults.hpp"
 
 std::string LOCAL_PATH = getEnv("LOCAL_PATH");
 
@@ -23,6 +24,7 @@ int main()
   catch (const std::exception &ex)
   {
     cerr << ex.what() << "\n";
+    return 1;
   }
   std::cin.get();
   // system("pause");
@@ -96,13 +98,12 @@ void iterGeneticAll()
                 rotation,
                 /* fitnessDataPath= */ fitnessDataPath,
                 /* timePATH= */ timePATH);
-            vector<double> responses = getFloatNumberListFile(fitnessDataPath);
-            vector<long int> durationResponses = getIntegerNumberListFile(timePATH);
+            ExperimentResults results = loadExperimentResults(fitnessDataPath, timePATH, DATASSET.size());
 
             for (int i = 0; i < DATASSET.size(); i++)
             {
 
-              if (durationResponses[i] != 0 && responses[i] != 0)
+              if (isExperimentComplete(results[i]))
               {
                 continue;
               }
@@ -112,11 +113,10 @@ void iterGeneticAll()
               Poblacion bestPob;
 
               // Set -1 to inform it is being attended
-              responses[i] = -1;
-              durationResponses[i] = -1;
+              results[i] = {-1, -1, ExperimentStatus::Running};
 
               // Print it
-              printResults(responses, durationResponses, fitnessDataPath, timePATH);
+              saveExperimentResults(results, fitnessDataPath, timePATH);
 
               auto start = chrono::high_resolution_clock::now();
               bestPob = getEvolutiveAlgorithm(algorithm, rotation, mutationTyped, DATASSET[i], isWithReplacement);
@@ -124,13 +124,10 @@ void iterGeneticAll()
               auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
               // update data
-              responses = getFloatNumberListFile(fitnessDataPath);
-              durationResponses = getIntegerNumberListFile(timePATH);
-
-              responses[i] = bestPob[0].getFitness();
-              durationResponses[i] = duration.count();
-
-              printResults(responses, durationResponses, fitnessDataPath, timePATH);
+              results = loadExperimentResults(fitnessDataPath, timePATH, DATASSET.size());
+              if (bestPob.empty()) throw std::runtime_error("Algorithm returned an empty population.");
+              results[i] = {bestPob[0].getFitness(), duration.count(), ExperimentStatus::Complete};
+              saveExperimentResults(results, fitnessDataPath, timePATH);
             }
           }
         }
@@ -429,27 +426,6 @@ void genetic()
   std::cout << "Initial best fit: " << bestPob[0].getFitness() << "\n";
   std::cout << "Initial worst fit: " << bestPob[bestPob.size() - 1].getFitness() << "\n";
   print("Duration: " << duration.count() << "ms");
-}
-
-void printResults(std::vector<double> result, std::vector<long int> delays, const string dataPATH, const string timePATH)
-{
-  ofstream MyFile(dataPATH);
-
-  for (auto res : result)
-  {
-    MyFile << res << "\n";
-  }
-
-  MyFile.close();
-
-  ofstream MyFile2(timePATH);
-
-  for (auto res : delays)
-  {
-    MyFile2 << res << "\n";
-  }
-
-  MyFile2.close();
 }
 
 std::string getAlgorithmNameFromNumber(std::string number)

@@ -16,7 +16,6 @@ void testDblf();
 void genetic();
 void evaluatePoblationTime();
 void iterGeneticAll();
-void printResults(vector<double>, std::vector<long int>, const string, const string);
 void testDblfOneInstance();
 void testRotationsGA(std::string);
 void testInverseMutation();

@@ -62,7 +62,7 @@ public:
     GeneticAlgorithm &setMutationType(MutationType);
     GeneticAlgorithm &setRotationType(ROTATION_WAY);
     GeneticAlgorithm &setMaxIteration(long);
-    // Current heuristic initialization requires at least four individuals.
+    // Parent selection requires at least two individuals.
     GeneticAlgorithm &setNumberOfIndividuals(long);
     GeneticAlgorithm &setProblem(DatasetBinBacking);
 

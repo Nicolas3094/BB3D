@@ -19,6 +19,11 @@ private:
 public:
     PriorityPointQueue();
     ~PriorityPointQueue();
+    PriorityPointQueue(const PriorityPointQueue &);
+    PriorityPointQueue &operator=(const PriorityPointQueue &);
+    PriorityPointQueue(PriorityPointQueue &&) noexcept;
+    PriorityPointQueue &operator=(PriorityPointQueue &&) noexcept;
+    void swap(PriorityPointQueue &) noexcept;
 
     static PriorityPointQueue Build();
 
@@ -30,6 +35,7 @@ public:
     int getSize();
     bool isEmpty();
     void removeNode(Node<Punto> *);
+    // currentNode must belong to this queue; insertion updates its size.
     void addNodeBeforeAt(Node<Punto> *, Punto);
 };
 

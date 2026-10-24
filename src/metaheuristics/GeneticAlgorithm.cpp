@@ -4,8 +4,8 @@
 
 Poblacion GeneticAlgorithm::evolve()
 {
-    if (numberOfIndividuals < 4 || numberOfIndividuals > std::numeric_limits<int>::max() || maxIteration < 0)
-        throw std::invalid_argument("GA requires at least four individuals and non-negative iterations.");
+    if (numberOfIndividuals < 2 || numberOfIndividuals > std::numeric_limits<int>::max() || maxIteration < 0)
+        throw std::invalid_argument("GA requires at least two individuals and non-negative iterations.");
     for (double probability : {selectionProbability, crossProability, mutationProbaility, dMutationProbability})
         if (!std::isfinite(probability) || probability < 0.0 || probability > 1.0)
             throw std::invalid_argument("GA probabilities must be finite and in [0,1].");

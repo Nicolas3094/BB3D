@@ -9,6 +9,7 @@
 #include "../binPacking/Bin.hpp"
 #include "DataSetBPP.hpp"
 #include <stdexcept>
+#include <cstdint>
 #include "VectorFile.hpp"
 
 using namespace std;
@@ -17,5 +18,6 @@ vector<DatasetBinBacking> readData(const std::string);
 vector<int> getNumbersFromLines(string);
 vector<vector<int>> getNumberListFile(const string);
 vector<double> getFloatNumberListFile(const string);
-vector<long int> getIntegerNumberListFile(const string);
+// Result readers return all rows; missing result files return an empty vector.
+vector<std::int64_t> getIntegerNumberListFile(const string);
 #endif

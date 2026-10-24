@@ -1,0 +1,171 @@
+#include "ExperimentResults.hpp"
+#include "ReadData.hpp"
+#include <atomic>
+#include <algorithm>
+#include <cerrno>
+#include <cmath>
+#include <cstdio>
+#include <fstream>
+#include <iomanip>
+#include <limits>
+#include <locale>
+#include <sstream>
+#include <stdexcept>
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
+#endif
+
+namespace
+{
+void validate(const ExperimentResult &result)
+{
+    if (result.status == ExperimentStatus::Complete)
+    {
+        if (!std::isfinite(result.fitness) || result.fitness < 0 || result.fitness > 1 || result.milliseconds < 0)
+            throw std::invalid_argument("Completed experiment has invalid fitness or duration.");
+    }
+    else if (result.status == ExperimentStatus::Running)
+    {
+        if (result.fitness != -1 || result.milliseconds != -1)
+            throw std::invalid_argument("Running experiment must use the -1 marker.");
+    }
+    else if (result.status != ExperimentStatus::Pending || result.fitness != 0 || result.milliseconds != 0)
+        throw std::invalid_argument("Invalid pending experiment or status.");
+}
+void ensureParents(const std::string &path)
+{
+    for (size_t i = 0; i < path.size(); ++i)
+    {
+        if (path[i] != '/' && path[i] != '\\') continue;
+        const std::string prefix = path.substr(0, i);
+        if (prefix.empty() || (prefix.size() == 2 && prefix[1] == ':')) continue;
+#ifdef _WIN32
+        const int result = _mkdir(prefix.c_str());
+#else
+        const int result = mkdir(prefix.c_str(), 0777);
+#endif
+        if (result != 0 && errno != EEXIST) throw std::runtime_error("Cannot create result directory: " + prefix);
+    }
+}
+void writeAtomic(const std::string &path, const std::string &content)
+{
+    ensureParents(path);
+    static std::atomic<unsigned long long> sequence{0};
+#ifdef _WIN32
+    const auto process = GetCurrentProcessId();
+#else
+    const auto process = getpid();
+#endif
+    const std::string temporary = path + ".tmp." + std::to_string(process) + "." + std::to_string(sequence++);
+    try
+    {
+        std::ofstream output(temporary, std::ios::binary | std::ios::trunc);
+        if (!output) throw std::runtime_error("Cannot create temporary results file: " + path);
+        output << content; output.flush();
+        if (!output) throw std::runtime_error("Cannot write results file: " + path);
+        output.close();
+        if (output.fail()) throw std::runtime_error("Cannot close results file: " + path);
+#ifdef _WIN32
+        HANDLE file = CreateFileA(temporary.c_str(), GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (file == INVALID_HANDLE_VALUE) throw std::runtime_error("Cannot flush results file: " + path);
+        const bool flushed = FlushFileBuffers(file) != 0;
+        CloseHandle(file);
+        if (!flushed) throw std::runtime_error("Cannot flush results file: " + path);
+        if (!MoveFileExA(temporary.c_str(), path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
+            throw std::runtime_error("Cannot atomically replace results file: " + path);
+#else
+        const int file = open(temporary.c_str(), O_WRONLY);
+        if (file < 0) throw std::runtime_error("Cannot flush results file: " + path);
+        const bool flushed = fsync(file) == 0;
+        close(file);
+        if (!flushed || std::rename(temporary.c_str(), path.c_str()) != 0)
+            throw std::runtime_error("Cannot atomically replace results file: " + path);
+#endif
+    }
+    catch (...) { std::remove(temporary.c_str()); throw; }
+}
+void validatePaths(const std::string &fitnessPath, const std::string &timePath)
+{
+    if (fitnessPath.empty() || timePath.empty() || fitnessPath == timePath || fitnessPath + ".checkpoint" == timePath)
+        throw std::invalid_argument("Fitness, time and checkpoint files must be distinct.");
+}
+}
+
+bool isExperimentComplete(const ExperimentResult &result)
+{
+    return result.status == ExperimentStatus::Complete && std::isfinite(result.fitness) &&
+        result.fitness >= 0 && result.fitness <= 1 && result.milliseconds >= 0;
+}
+
+ExperimentResults loadExperimentResults(const std::string &fitnessPath, const std::string &timePath, size_t count)
+{
+    validatePaths(fitnessPath, timePath);
+    errno = 0;
+    std::ifstream checkpoint(fitnessPath + ".checkpoint");
+    if (checkpoint.is_open())
+    {
+        std::string line;
+        if (!std::getline(checkpoint, line) || line != "BB3D_RESULTS_V1")
+            throw std::invalid_argument("Invalid experiment checkpoint header: " + fitnessPath);
+        ExperimentResults results;
+        while (std::getline(checkpoint, line))
+        {
+            if (std::count(line.begin(), line.end(), ',') != 2)
+                throw std::invalid_argument("Invalid experiment checkpoint columns: " + fitnessPath);
+            std::replace(line.begin(), line.end(), ',', ' ');
+            std::istringstream input(line); input.imbue(std::locale::classic());
+            int status; ExperimentResult result; std::string extra;
+            if (!(input >> status >> result.fitness >> result.milliseconds) || (input >> extra) || status < 0 || status > 2)
+                throw std::invalid_argument("Invalid experiment checkpoint row: " + fitnessPath);
+            result.status = static_cast<ExperimentStatus>(status);
+            validate(result); results.push_back(result);
+        }
+        if (checkpoint.bad()) throw std::runtime_error("Cannot read experiment checkpoint: " + fitnessPath);
+        if (results.size() != count) throw std::invalid_argument("Checkpoint size differs from the dataset instance count.");
+        return results;
+    }
+    if (errno != ENOENT) throw std::runtime_error("Cannot open experiment checkpoint: " + fitnessPath);
+    const auto fitness = getFloatNumberListFile(fitnessPath);
+    const auto times = getIntegerNumberListFile(timePath);
+    if (fitness.size() > count || times.size() > count) throw std::invalid_argument("Legacy results exceed the dataset instance count.");
+    for (double value : fitness)
+        if (value != -1 && (value < 0 || value > 1)) throw std::invalid_argument("Invalid legacy fitness value.");
+    for (auto value : times)
+        if (value < -1) throw std::invalid_argument("Invalid legacy duration value.");
+    ExperimentResults results(count);
+    for (size_t i = 0; i < count && i < fitness.size() && i < times.size(); ++i)
+    {
+        if (fitness[i] == -1 || times[i] == -1) results[i] = {-1, -1, ExperimentStatus::Running};
+        else if (fitness[i] > 0 || times[i] > 0) results[i] = {fitness[i], times[i], ExperimentStatus::Complete};
+        // Legacy (0,0) has no explicit completion flag: retry once, then persist status.
+    }
+    return results;
+}
+
+void saveExperimentResults(const ExperimentResults &results, const std::string &fitnessPath, const std::string &timePath)
+{
+    validatePaths(fitnessPath, timePath);
+    for (const auto &result : results) validate(result);
+    std::ostringstream checkpoint, fitness, times;
+    checkpoint.imbue(std::locale::classic()); fitness.imbue(std::locale::classic()); times.imbue(std::locale::classic());
+    checkpoint << "BB3D_RESULTS_V1\n" << std::setprecision(std::numeric_limits<double>::max_digits10);
+    fitness << std::setprecision(std::numeric_limits<double>::max_digits10);
+    for (const auto &result : results)
+    {
+        checkpoint << static_cast<int>(result.status) << ',' << result.fitness << ',' << result.milliseconds << '\n';
+        fitness << result.fitness << '\n'; times << result.milliseconds << '\n';
+    }
+    // The single authoritative checkpoint is committed before compatibility exports.
+    // A crash between the two CSV exports cannot mix fitness and duration on resume.
+    writeAtomic(fitnessPath + ".checkpoint", checkpoint.str());
+    writeAtomic(fitnessPath, fitness.str());
+    writeAtomic(timePath, times.str());
+}

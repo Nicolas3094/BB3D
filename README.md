@@ -83,3 +83,29 @@ launch.json
   ]
 }
 ```
+
+# Lectura y recuperación de experimentos
+
+Los datasets admiten espacios, tabulaciones y líneas vacías. Se validan sus
+cantidades, identificadores, dimensiones y permisos de rotación, incluida la
+última instancia. Un dataset ausente o incompleto produce un error explícito.
+Los archivos de resultados admiten cualquier número de instancias y los tiempos
+se almacenan en milisegundos de 64 bits.
+
+Cada archivo de fitness tiene un archivo adicional `.checkpoint`, que conserva
+juntos el fitness, el tiempo y el estado de cada experimento mediante reemplazo
+atómico. Este archivo es la fuente para reanudar; los dos CSV son exportaciones
+compatibles. Si una ejecución se interrumpe, se vuelve a intentar. Un resultado
+completado con fitness o tiempo cero permanece completado. Los resultados antiguos
+se importan si no existe checkpoint; el par antiguo `(0,0)` se vuelve a ejecutar
+una vez porque no permite distinguir una ejecución completada de una pendiente.
+Conserva el checkpoint junto a sus CSV al mover resultados. El guardado está
+pensado para un único proceso escritor por conjunto de resultados.
+
+Para ejecutar las pruebas sin instalar dependencias adicionales:
+
+```powershell
+./tests/run.ps1 -Compiler C:/mingw64/bin/g++.exe
+```
+
+Las pruebas de infraestructura escriben únicamente en `build/infrastructure-tests`.

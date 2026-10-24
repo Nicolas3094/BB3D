@@ -1,4 +1,6 @@
 #include "PriorityPointQueue.hpp"
+#include <utility>
+#include <stdexcept>
 
 PriorityPointQueue::PriorityPointQueue()
 {
@@ -9,6 +11,49 @@ PriorityPointQueue::PriorityPointQueue()
 PriorityPointQueue::~PriorityPointQueue()
 {
     clear();
+}
+
+PriorityPointQueue::PriorityPointQueue(const PriorityPointQueue &other) : size(0), rear(nullptr)
+{
+    Node<Punto> *tail = nullptr;
+    try
+    {
+        for (auto *source = other.rear; source; source = source->next)
+        {
+            auto *node = new Node<Punto>(source->data);
+            node->previous = tail;
+            if (tail) tail->next = node; else rear = node;
+            tail = node;
+            ++size;
+        }
+    }
+    catch (...) { clear(); throw; }
+}
+
+PriorityPointQueue &PriorityPointQueue::operator=(const PriorityPointQueue &other)
+{
+    if (this != &other) { PriorityPointQueue copy(other); swap(copy); }
+    return *this;
+}
+
+PriorityPointQueue::PriorityPointQueue(PriorityPointQueue &&other) noexcept : size(other.size), rear(other.rear)
+{
+    other.size = 0; other.rear = nullptr;
+}
+
+PriorityPointQueue &PriorityPointQueue::operator=(PriorityPointQueue &&other) noexcept
+{
+    if (this != &other)
+    {
+        clear(); size = other.size; rear = other.rear;
+        other.size = 0; other.rear = nullptr;
+    }
+    return *this;
+}
+
+void PriorityPointQueue::swap(PriorityPointQueue &other) noexcept
+{
+    std::swap(size, other.size); std::swap(rear, other.rear);
 }
 
 PriorityPointQueue PriorityPointQueue::Build()
@@ -24,15 +69,7 @@ Node<Punto> *PriorityPointQueue::getRear()
 
 void PriorityPointQueue::pop()
 {
-    if (isEmpty())
-    {
-        return;
-    }
-    Node<Punto> *tmp;
-    tmp = rear;
-    rear = tmp->next;
-
-    delete tmp;
+    removeNode(rear);
 }
 
 void PriorityPointQueue::clear()
@@ -71,7 +108,6 @@ void PriorityPointQueue::enqueue(Punto pt)
         if (condition(pt, currentNode->data))
         {
             addNodeBeforeAt(currentNode, pt);
-            size++;
             return;
         }
         previousNode = currentNode;
@@ -89,6 +125,7 @@ void PriorityPointQueue::enqueue(Punto pt)
 // ... prevNode  <-> newNode <-> currentNode ...
 void PriorityPointQueue::addNodeBeforeAt(Node<Punto> *currentNode, Punto point)
 {
+    if (!currentNode) throw std::invalid_argument("Cannot insert before a null queue node.");
     Node<Punto> *newNode, *previousNode;
     newNode = new Node<Punto>(point);
 
@@ -108,6 +145,7 @@ void PriorityPointQueue::addNodeBeforeAt(Node<Punto> *currentNode, Punto point)
         currentNode->previous = newNode;           // prevNode <- newNod <-> currentNode && prevNode -> currentNode
         previousNode->next = newNode;              // prevNode <-> newNod <-> currentNode
     }
+    ++size;
 }
 void PriorityPointQueue::update()
 {
@@ -134,44 +172,13 @@ void PriorityPointQueue::update()
 
 void PriorityPointQueue::removeNode(Node<Punto> *node)
 {
-    // lets erase node
-    // <-> prevNode <-> node <-> nextNode <->
-    Node<Punto> *tmp, *prevNode, *nextNode;
-    tmp = node;
-
-    prevNode = node->previous;
-    nextNode = node->next;
-
-    // Case: REAR <-> node  <-> HEAD
-    if (prevNode == REAR && nextNode == HEAD)
-    {
-        rear = null;
-        delete rear;
-    }
-    // Case: REAR -> node <-> nextNode <-> ..
-    else if (prevNode == REAR && nextNode != null)
-    {
-        // Result: REAR <-> nextNode <->
-        nextNode->previous = REAR;
-        rear = nextNode;
-    }
-    // Case: ... <-> prevNode <-> node <-> HEAD.
-    else if (prevNode != null && nextNode == HEAD)
-    {
-        // Result: ... <-> prevNode <-> HEAD.
-        prevNode->next = null;
-    }
-    // Case: ... <-> prevNode <-> node <-> nextNode <-> ..
-    else
-    {
-        // ... <-> prevNode <-> nextNode <-> ...
-        prevNode->next = nextNode;
-        nextNode->previous = prevNode;
-    }
-
-    size--;
-
+    if (!node) return;
+    auto *previous = node->previous;
+    auto *next = node->next;
+    if (previous) previous->next = next; else rear = next;
+    if (next) next->previous = previous;
     delete node;
+    --size;
 }
 
 int PriorityPointQueue::getSize()
