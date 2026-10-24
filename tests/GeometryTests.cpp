@@ -170,7 +170,7 @@ void checkRestrictedOrientations()
 
 void checkMutationIntegration()
 {
-    DatasetBinBacking problem;
+    DatasetBinBacking problem{};
     problem.bin = Bin::Build().setLargo(4).setAncho(4).setAlto(4).setRotationWay(ROTATION_WAY::SIX_WAY);
     for (int id = 1; id <= 8; ++id) problem.totalItems.push_back(cube(id, 1, Punto::Build(0,0,0)));
     auto verify = [](Poblacion population) {
@@ -185,10 +185,13 @@ void checkMutationIntegration()
     };
     for (MutationType type : {MutationType::C1, MutationType::C2})
     {
-        GeneticAlgorithm ga;
-        ga.setProblem(problem).setNumberOfIndividuals(6).setMaxIteration(2).setRotationType(ROTATION_WAY::SIX_WAY)
-            .setMutationType(type).setIsWithReplacement(true).setCrossProbability(1.0).setSelectionProbability(0.8);
-        verify(ga.evolve());
+        for (bool replacement : {false,true})
+        {
+            GeneticAlgorithm ga;
+            ga.setProblem(problem).setNumberOfIndividuals(6).setMaxIteration(2).setRotationType(ROTATION_WAY::SIX_WAY)
+                .setMutationType(type).setIsWithReplacement(replacement).setCrossProbability(1.0).setSelectionProbability(0.8);
+            verify(ga.evolve());
+        }
         ArtificialBeeColonyAlgorithm abc;
         abc.setProblem(problem).setNumberOfIndividuals(6).setMaxIteration(2).setRotationType(ROTATION_WAY::SIX_WAY)
             .setMutationType(type).setIsWithReplacement(true).setNumberOfSites(3).setNumberOfEliteSites(1)

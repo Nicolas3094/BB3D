@@ -1,5 +1,7 @@
 #include "PermutationOperators.hpp"
 #include <map>
+#include <unordered_set>
+#include <limits>
 
 int hamming(DoubleGenome gen1, DoubleGenome gen2)
 {
@@ -29,6 +31,24 @@ int hamming(DoubleGenome gen1, DoubleGenome gen2)
 
 DoubleGenome crossOx(DoubleGenome gen1, DoubleGenome gen2, int i, int j)
 {
+    const size_t size = gen1.getGenome().size();
+    if (size == 0 || size > static_cast<size_t>(std::numeric_limits<int>::max()) ||
+        gen2.getGenome().size() != size || gen1.getDGenome().size() != size || gen2.getDGenome().size() != size)
+        throw std::invalid_argument("Crossover requires matching non-empty item and rotation chromosomes.");
+    if (i < 0 || j < i || static_cast<size_t>(j) >= size)
+        throw std::invalid_argument("Crossover cut indices are outside the chromosome.");
+    std::unordered_set<int> firstIds, secondIds;
+    for (size_t index = 0; index < size; ++index)
+    {
+        const int first = gen1.getGenome()[index], second = gen2.getGenome()[index];
+        if (first <= 0 || second <= 0 || !firstIds.insert(first).second || !secondIds.insert(second).second)
+            throw std::invalid_argument("Crossover parents must contain positive, unique item IDs.");
+        const int firstRotation = gen1.getDGenome()[index], secondRotation = gen2.getDGenome()[index];
+        if (firstRotation < 0 || firstRotation > 6 || secondRotation < 0 || secondRotation > 6)
+            throw std::invalid_argument("Crossover parents contain an invalid rotation code.");
+    }
+    if (firstIds != secondIds)
+        throw std::invalid_argument("Crossover parents must contain the same item IDs.");
     int n = gen1.getGenome().size();
     Chromosome resultant(n);
     Chromosome resultantRot(n);
@@ -93,6 +113,9 @@ void swapPointValue(DoubleGenome &gen, int i, int value)
 
 void inverseMutation(DoubleGenome &gen, int i, int j)
 {
+    if (gen.getGenome().size() != gen.getDGenome().size() || i < 0 || j < i ||
+        static_cast<size_t>(j) > gen.getGenome().size())
+        throw std::invalid_argument("Inversion requires matching chromosomes and a valid half-open range.");
     std::reverse(gen.getGenome().begin() + i, gen.getGenome().begin() + j);
     std::reverse(gen.getDGenome().begin() + i, gen.getDGenome().begin() + j);
 }
@@ -272,30 +295,14 @@ void mutateC2(DoubleGenome &gen, int randomStep)
 
 void mutateInversion(DoubleGenome &gen, int randomStep)
 {
-    // std::cout << "Mutate inversion\n";
-    int n, step, i, j;
-    n = gen.getDGenome().size();
-    step = randomStep;
-    if (randomStep == -1)
-    {
-        step = randomInteger(1, n - 2);
-    }
-    else if (randomStep <= 2)
-    {
-        step = 2;
-    }
-    i = randomInteger(1, static_cast<int>(std::floor(n / 2)));
-    // std::cout << "i " << i << ", j " << j << "\n";
-
-    if (i + step > n - 1)
-    {
-        j = n - 1;
-    }
-    else
-    {
-        j = i + step - 1;
-    }
-    inverseMutation(gen, i, j);
+    if (gen.getGenome().size() != gen.getDGenome().size() || randomStep < -1)
+        throw std::invalid_argument("Inversion requires matching chromosomes and step >= -1.");
+    const int n = static_cast<int>(gen.getGenome().size());
+    if (n < 2) return;
+    const int length = randomStep == -1 ? randomInteger(2, n)
+        : std::min(n, std::max(2, randomStep));
+    const int start = randomInteger(0, n - length);
+    inverseMutation(gen, start, start + length); // End iterator is exclusive.
 }
 
 void addRangeToChromosome(Chromosome &chromosome, Chromosome chromosmeToAdd, int init, int end)

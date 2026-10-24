@@ -1,6 +1,7 @@
 #include "GeneticsOperators.hpp"
 #include "PermutationOperators.hpp"
 #include <cmath>
+#include <limits>
 
 void mutationWithType(DoubleGenome &gen, MutationType type, int step)
 {
@@ -74,48 +75,35 @@ void flipMutationO1(DoubleGenome &gen, double probability, ROTATION_WAY rotation
 
 DoubleGenome crossOver(DoubleGenome gen1, DoubleGenome gen2)
 {
-    int n, start, end;
-    n = gen1.getDGenome().size();
-    start = randomInteger(3, static_cast<int>(std::floor(n / 2)));
-    end = randomInteger(start + 1, n - 1);
-
+    if (gen1.getGenome().empty() || gen1.getGenome().size() > static_cast<size_t>(std::numeric_limits<int>::max()) ||
+        gen1.getGenome().size() != gen2.getGenome().size() ||
+        gen1.getGenome().size() != gen1.getDGenome().size() || gen2.getGenome().size() != gen2.getDGenome().size())
+        throw std::invalid_argument("Crossover requires matching non-empty chromosomes.");
+    const int n = static_cast<int>(gen1.getGenome().size());
+    const int start = n == 1 ? 0 : randomInteger(0, n - 2);
+    const int end = n == 1 ? 0 : randomInteger(start + 1, n - 1);
     return crossOx(gen1, gen2, start, end);
 }
 
-int tournament(Poblacion poblation, int n, double probability)
+int tournament(const Poblacion &poblation, int n, double probability, int excludedIndex)
 {
-    long i1, i2;
-    double r;
-    i1 = randomInteger(0, n - 1);
-    i2 = randomInteger(0, n - 1);
-    r = uniformUnit();
-    while (i1 == i2)
-    {
-        i2 = randomInteger(0, n - 1);
-    }
-
-    if (r <= probability)
-    {
-        if (poblation[i1].getFitness() > poblation[i2].getFitness())
-        {
-            return i1;
-        }
-        else
-        {
-            return i2;
-        }
-    }
-    else
-    {
-        if (poblation[i1].getFitness() > poblation[i2].getFitness())
-        {
-            return i2;
-        }
-        else
-        {
-            return i1;
-        }
-    }
+    if (n < 1 || static_cast<size_t>(n) > poblation.size() || excludedIndex < -1 || excludedIndex >= n ||
+        !std::isfinite(probability) || probability < 0.0 || probability > 1.0)
+        throw std::invalid_argument("Tournament requires a valid population prefix, exclusion and probability.");
+    const int eligible = n - (excludedIndex >= 0 ? 1 : 0);
+    if (eligible == 0) throw std::invalid_argument("Tournament has no eligible candidates.");
+    const auto originalIndex = [excludedIndex](int index) {
+        return excludedIndex >= 0 && index >= excludedIndex ? index + 1 : index;
+    };
+    if (eligible == 1) return originalIndex(0);
+    const int first = randomInteger(0, eligible - 1);
+    int second = randomInteger(0, eligible - 2);
+    if (second >= first) ++second;
+    const int i1 = originalIndex(first), i2 = originalIndex(second);
+    const bool firstIsBetter = poblation[i1].getFitness() > poblation[i2].getFitness();
+    const int better = firstIsBetter ? i1 : i2;
+    const int worse = firstIsBetter ? i2 : i1;
+    return uniformUnit() < probability ? better : worse;
 }
 
 int rouletteWheel(Poblacion poblation)

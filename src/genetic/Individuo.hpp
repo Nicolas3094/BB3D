@@ -22,7 +22,7 @@ public:
 
     static Individuo Build();
 
-    double getFitness();
+    double getFitness() const;
     DoubleGenome &getGenome();
 };
 

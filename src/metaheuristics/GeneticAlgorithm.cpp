@@ -1,7 +1,17 @@
 #include "GeneticAlgorithm.hpp"
+#include <cmath>
+#include <limits>
 
 Poblacion GeneticAlgorithm::evolve()
 {
+    if (numberOfIndividuals < 4 || numberOfIndividuals > std::numeric_limits<int>::max() || maxIteration < 0)
+        throw std::invalid_argument("GA requires at least four individuals and non-negative iterations.");
+    for (double probability : {selectionProbability, crossProability, mutationProbaility, dMutationProbability})
+        if (!std::isfinite(probability) || probability < 0.0 || probability > 1.0)
+            throw std::invalid_argument("GA probabilities must be finite and in [0,1].");
+    if (!std::isfinite(maxDiversityIndex) || maxDiversityIndex < 0.0)
+        throw std::invalid_argument("GA diversity threshold must be finite and non-negative.");
+    visitedIndividuals.clear();
     if (isWithReplacement)
     {
         return evolveWithReplacement();
@@ -24,20 +34,8 @@ void GeneticAlgorithm::mutate(Individuo &individual, int step)
 // O(n)
 Individuo GeneticAlgorithm::crossover(Individuo parent1, Individuo parent2)
 {
-    int n, init, end;
-
-    n = parent1.getGenome().getGenome().size();
-    if (n == 0)
-    {
-        throw std::invalid_argument("ERROR: crossover with empty genome.");
-    }
-    // A singleton has only one possible segment. Otherwise use two distinct
-    // valid indices across the entire chromosome, including small genomes.
-    init = n == 1 ? 0 : randomInteger(0, n - 2);
-    end = n == 1 ? 0 : randomInteger(init + 1, n - 1);
-
     return Individuo::Build()
-        .setGenome(crossOx(parent1.getGenome(), parent2.getGenome(), init, end))
+        .setGenome(crossOver(parent1.getGenome(), parent2.getGenome()))
         .setFitness(0.0);
 }
 
@@ -105,17 +103,19 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 
 bool GeneticAlgorithm::terminateCondition(Poblacion currentPoblation)
 {
+    if (currentPoblation.empty()) throw std::invalid_argument("GA population cannot be empty.");
     return currentPoblation[0].getFitness() == 1 || diversityIndex(currentPoblation) < maxDiversityIndex;
 }
 
 double GeneticAlgorithm::diversityIndex(Poblacion currentPoblation)
 {
-    double bestFitness, worstFitness;
-
-    bestFitness = currentPoblation[0].getFitness();
-    worstFitness = currentPoblation[numberOfIndividuals - 1].getFitness();
-
-    return (bestFitness - worstFitness) / (bestFitness * bestFitness);
+    if (currentPoblation.empty()) throw std::invalid_argument("GA population cannot be empty.");
+    const double bestFitness = currentPoblation.front().getFitness();
+    const double worstFitness = currentPoblation.back().getFitness();
+    if (!std::isfinite(bestFitness) || !std::isfinite(worstFitness) || worstFitness < 0.0 || bestFitness < worstFitness)
+        throw std::invalid_argument("GA diversity requires sorted non-negative finite fitness.");
+    if (bestFitness == 0.0) return 0.0;
+    return ((bestFitness - worstFitness) / bestFitness) / bestFitness;
 }
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
@@ -127,7 +127,7 @@ void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int initIndex, int 
 {
     for (int i = endIndex; i >= initIndex; i--)
     {
-        if (uniformUnit() <= adaptiveMutationProbabiliy(poblation[i], poblation[0]))
+        if (uniformUnit() < adaptiveMutationProbabiliy(poblation[i], poblation[0]))
         {
             mutate(poblation[i]);
 
@@ -144,24 +144,13 @@ void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int initIndex, int 
     }
 }
 
-std::vector<Individuo> GeneticAlgorithm::getParents(Poblacion poblation, int maxIndexOfPoblation)
+std::vector<Individuo> GeneticAlgorithm::getParents(const Poblacion &poblation, int eligibleCount)
 {
-    int indexParent, indexOtherParent;
-
-    std::vector<Individuo> parents(2);
-
-    indexParent = tournament(poblation, maxIndexOfPoblation, selectionProbability);
-    indexOtherParent = tournament(poblation, maxIndexOfPoblation, selectionProbability);
-
-    while (indexParent == indexOtherParent)
-    {
-        indexOtherParent = tournament(poblation, maxIndexOfPoblation, selectionProbability);
-    }
-
-    parents[0] = poblation[indexParent];
-    parents[1] = poblation[indexOtherParent];
-
-    return parents;
+    if (eligibleCount < 2 || static_cast<size_t>(eligibleCount) > poblation.size())
+        throw std::invalid_argument("GA requires at least two eligible parents.");
+    const int first = tournament(poblation, eligibleCount, selectionProbability);
+    const int second = tournament(poblation, eligibleCount, selectionProbability, first);
+    return {poblation[first], poblation[second]};
 }
 
 std::vector<Individuo> GeneticAlgorithm::getChildren(Individuo parent, Individuo otherParent)
@@ -171,12 +160,12 @@ std::vector<Individuo> GeneticAlgorithm::getChildren(Individuo parent, Individuo
     children[0] = crossover(parent, otherParent);
     children[1] = crossover(otherParent, parent);
 
-    if (uniformUnit() <= adaptiveMutationProbabiliy(parent, otherParent))
+    if (uniformUnit() < adaptiveMutationProbabiliy(parent, otherParent))
     {
         mutate(children[0]);
     }
 
-    if (uniformUnit() <= adaptiveMutationProbabiliy(parent, otherParent))
+    if (uniformUnit() < adaptiveMutationProbabiliy(parent, otherParent))
     {
         mutate(children[1]);
     }
@@ -254,20 +243,22 @@ void GeneticAlgorithm::replacePoblationWithChildren(
 
 void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
 {
+    if (poblation.size() != static_cast<size_t>(numberOfIndividuals) || poblation.size() < 2)
+        throw std::invalid_argument("GA generation has an invalid population size.");
     int numberOfDeletedIndividual, initialIndex, i;
 
     numberOfDeletedIndividual = defaultBinomialDistribution(numberOfIndividuals);
 
-    initialIndex = numberOfIndividuals - numberOfDeletedIndividual + 1;
+    initialIndex = numberOfIndividuals - numberOfDeletedIndividual;
 
     Poblacion oldPoblation = poblation;
 
     for (i = initialIndex; i < numberOfIndividuals; i++)
     {
 
-        std::vector<Individuo> parents = getParents(oldPoblation, numberOfIndividuals - 1);
+        std::vector<Individuo> parents = getParents(oldPoblation, static_cast<int>(oldPoblation.size()));
 
-        if (uniformUnit() <= crossProability)
+        if (uniformUnit() < crossProability)
         {
             Poblacion childrenPoblation = getChildren(parents[0], parents[1]);
             replacePoblationWithChildren(poblation, childrenPoblation[0], childrenPoblation[1], i);
@@ -279,15 +270,18 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
 
 void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 {
+    if (poblation.size() != static_cast<size_t>(numberOfIndividuals) || poblation.size() < 2)
+        throw std::invalid_argument("GA generation has an invalid population size.");
     int numberOfAddedIndividuals, i;
+    const int parentCount = static_cast<int>(poblation.size());
 
     numberOfAddedIndividuals = defaultBinomialDistribution(numberOfIndividuals);
 
     for (i = 0; i < numberOfAddedIndividuals; i++)
     {
-        std::vector<Individuo> parents = getParents(poblation, numberOfAddedIndividuals);
+        std::vector<Individuo> parents = getParents(poblation, parentCount);
 
-        if (uniformUnit() <= crossProability)
+        if (uniformUnit() < crossProability)
         {
             Poblacion childrenPoblation = getChildren(parents[0], parents[1]);
             addChildredToPoblation(poblation, childrenPoblation[0], childrenPoblation[1]);
@@ -301,6 +295,8 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 
 GeneticAlgorithm::GeneticAlgorithm()
 {
+    this->numberOfIndividuals = 0;
+    this->isWithReplacement = true;
     this->maxIteration = 0;
     this->selectionProbability = 0.0;
     this->crossProability = 0.0;

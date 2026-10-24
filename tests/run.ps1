@@ -46,6 +46,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Mutation regression compilation failed.' }
     & $regressionBinary
     if ($LASTEXITCODE -ne 0) { throw "Mutation regression tests failed: exit code $LASTEXITCODE" }
+    $evolutionBinary = Join-Path $PSScriptRoot 'evolution_regression_tests.exe'
+    $evolutionSources = @(Join-Path $PSScriptRoot 'EvolutionRegressionTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp') } | ForEach-Object { $_.FullName })
+    & $Compiler -std=c++14 $evolutionSources -o $evolutionBinary
+    if ($LASTEXITCODE -ne 0) { throw 'Evolution regression compilation failed.' }
+    & $evolutionBinary
+    if ($LASTEXITCODE -ne 0) { throw "Evolution regression tests failed: exit code $LASTEXITCODE" }
 }
 finally {
     $env:PATH = $previousPath

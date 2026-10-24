@@ -1,6 +1,8 @@
 #include "DBLFValidation.hpp"
 #include <stdexcept>
 #include <unordered_set>
+#include <array>
+#include <algorithm>
 
 namespace
 {
@@ -13,6 +15,8 @@ void validateDBLFInput(const Bin &bin, const LoadedBins &items)
     if (dimensions.getLargo() <= 0 || dimensions.getAncho() <= 0 || dimensions.getAlto() <= 0)
         throw std::invalid_argument("DBLF: container dimensions must be positive.");
     dimensions.getVolumen(); // Reject int64 overflow before packing changes the bin.
+    if (!bin.getLoadedItems().empty() || bin.getNumberOfLoadedItems() != 0 || bin.getLoadedVolume() != 0)
+        throw std::invalid_argument("DBLF starts a new packing and requires an empty container.");
     switch (bin.getRotationWay())
     {
     case ROTATION_WAY::ZERO_WAY:
@@ -31,6 +35,12 @@ void validateDBLFInput(const Bin &bin, const LoadedBins &items)
             current.x <= 0 || current.y <= 0 || current.z <= 0)
             throw std::invalid_argument("DBLF: item dimensions must be positive.");
         original.getVolumen();
+        std::array<int,3> originalSides{{original.getLargo(), original.getAncho(), original.getAlto()}};
+        std::array<int,3> currentSides{{current.x, current.y, current.z}};
+        std::sort(originalSides.begin(), originalSides.end());
+        std::sort(currentSides.begin(), currentSides.end());
+        if (originalSides != currentSides)
+            throw std::invalid_argument("DBLF: current dimensions must be a permutation of original dimensions.");
         const Punto rotations = item.getRotations();
         if (!binary(rotations.x) || !binary(rotations.y) || !binary(rotations.z))
             throw std::invalid_argument("DBLF: rotation permissions must be 0 or 1.");

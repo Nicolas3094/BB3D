@@ -12,6 +12,7 @@
 // Rotation genes remain aligned with their original item positions.
 // Malformed IDs, dimensions, rotation genes or chromosome lengths throw
 // invalid_argument before changing the bin. Unique subsets of input IDs are allowed.
+// Start with an empty bin; this API does not continue an existing packing.
 void DBLF(Bin &, Chromosome, Chromosome, LoadedBins, bool print = false);
 void DBLF(Bin &, LoadedBins);
 void DBLFQueue(Bin &, Chromosome, Chromosome, LoadedBins);

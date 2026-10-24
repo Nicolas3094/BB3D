@@ -35,7 +35,7 @@ private:
     void mutate(Individuo &, int step = -1);
     Individuo crossover(Individuo, Individuo);
 
-    std::vector<Individuo> getParents(Poblacion, int);
+    std::vector<Individuo> getParents(const Poblacion &, int);
     std::vector<Individuo> getChildren(Individuo, Individuo);
     double adaptiveMutationProbabiliy(Individuo, Individuo);
     void mutatePoblation(Poblacion &, int, int);
@@ -62,6 +62,7 @@ public:
     GeneticAlgorithm &setMutationType(MutationType);
     GeneticAlgorithm &setRotationType(ROTATION_WAY);
     GeneticAlgorithm &setMaxIteration(long);
+    // Current heuristic initialization requires at least four individuals.
     GeneticAlgorithm &setNumberOfIndividuals(long);
     GeneticAlgorithm &setProblem(DatasetBinBacking);
 

@@ -24,7 +24,7 @@ Individuo &Individuo::setGenome(DoubleGenome genome)
     return *this;
 }
 
-double Individuo::getFitness()
+double Individuo::getFitness() const
 {
     return this->fitness;
 }

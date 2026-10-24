@@ -221,6 +221,7 @@ Individuo *FireflyAlgorithm::findMostAttractiveFirefly(
     int distance;
 
     Individuo *mostAttractive = nullptr;
+    double bestIntensity = -1.0;
 
     for (Individuo &firefly : fireflyPoblation)
     {
@@ -236,19 +237,13 @@ Individuo *FireflyAlgorithm::findMostAttractiveFirefly(
             continue;
         }
 
-        if (lightIntensityCurrentFireFly)
-
-            if (mostAttractive == nullptr)
-            {
-                mostAttractive = &firefly;
-            }
-            else
-            {
-                if (lightIntensity(mostAttractive->getFitness(), gamma, distance) < lightIntensityFirefly)
-                {
-                    mostAttractive = &firefly;
-                }
-            }
+        // Retain the previous candidate's actual intensity at its own distance.
+        // Zero current intensity is valid and must still allow improvement.
+        if (lightIntensityFirefly > bestIntensity)
+        {
+            mostAttractive = &firefly;
+            bestIntensity = lightIntensityFirefly;
+        }
     }
 
     return mostAttractive;
