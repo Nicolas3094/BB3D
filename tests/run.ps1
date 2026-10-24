@@ -11,19 +11,19 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Tests failed: exit code $LASTEXITCODE" }
     # Link the core with controlled RNG inputs; exclude application and search drivers.
     $mutationBinary = Join-Path $PSScriptRoot 'flip_mutation_tests.exe'
-    $mutationSources = @(Join-Path $PSScriptRoot 'FlipMutationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp','ExperimentConfiguration.cpp','CommandLine.cpp','ExperimentRunner.cpp') -and $_.Directory.Name -ne 'metaheuristics' } | ForEach-Object { $_.FullName })
+    $mutationSources = @(Join-Path $PSScriptRoot 'FlipMutationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp','ExperimentConfiguration.cpp','CommandLine.cpp','ExperimentRunner.cpp','BRExperimentMenu.cpp','BRExperimentSession.cpp') -and $_.Directory.Name -ne 'metaheuristics' } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $mutationSources -o $mutationBinary
     if ($LASTEXITCODE -ne 0) { throw 'Mutation test compilation failed.' }
     & $mutationBinary
     if ($LASTEXITCODE -ne 0) { throw "Mutation tests failed: exit code $LASTEXITCODE" }
     $populationBinary = Join-Path $PSScriptRoot 'mutate_poblation_tests.exe'
-    $populationSources = @(Join-Path $PSScriptRoot 'MutatePoblationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -ne 'main.cpp' -and $_.Name -ne 'RandomNumbers.cpp' -and $_.Name -ne 'ExperimentRunner.cpp' } | ForEach-Object { $_.FullName })
+    $populationSources = @(Join-Path $PSScriptRoot 'MutatePoblationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -ne 'main.cpp' -and $_.Name -ne 'RandomNumbers.cpp' -and $_.Name -ne 'ExperimentRunner.cpp' -and $_.Name -ne 'BRExperimentSession.cpp' } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $populationSources -o $populationBinary
     if ($LASTEXITCODE -ne 0) { throw 'Population test compilation failed.' }
     & $populationBinary
     if ($LASTEXITCODE -ne 0) { throw "Population tests failed: exit code $LASTEXITCODE" }
     $fireflyBinary = Join-Path $PSScriptRoot 'firefly_search_tests.exe'
-    $fireflySources = @(Join-Path $PSScriptRoot 'FireflySearchTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp', 'FitnessOperators.cpp', 'GeneticsOperators.cpp', 'GeneticAlgorithm.cpp', 'ArtificialBeeColonyAlgorithm.cpp','ExperimentConfiguration.cpp','CommandLine.cpp','ExperimentRunner.cpp') } | ForEach-Object { $_.FullName })
+    $fireflySources = @(Join-Path $PSScriptRoot 'FireflySearchTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp', 'FitnessOperators.cpp', 'GeneticsOperators.cpp', 'GeneticAlgorithm.cpp', 'ArtificialBeeColonyAlgorithm.cpp','ExperimentConfiguration.cpp','CommandLine.cpp','ExperimentRunner.cpp','BRExperimentMenu.cpp','BRExperimentSession.cpp') } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $fireflySources -o $fireflyBinary
     if ($LASTEXITCODE -ne 0) { throw 'Firefly test compilation failed.' }
     & $fireflyBinary
@@ -41,19 +41,19 @@ try {
     & $inputBinary
     if ($LASTEXITCODE -ne 0) { throw "DBLF input tests failed: exit code $LASTEXITCODE" }
     $regressionBinary = Join-Path $PSScriptRoot 'mutation_regression_tests.exe'
-    $regressionSources = @(Join-Path $PSScriptRoot 'MutationRegressionTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp','ExperimentRunner.cpp') } | ForEach-Object { $_.FullName })
+    $regressionSources = @(Join-Path $PSScriptRoot 'MutationRegressionTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp','ExperimentRunner.cpp','BRExperimentSession.cpp') } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $regressionSources -o $regressionBinary
     if ($LASTEXITCODE -ne 0) { throw 'Mutation regression compilation failed.' }
     & $regressionBinary
     if ($LASTEXITCODE -ne 0) { throw "Mutation regression tests failed: exit code $LASTEXITCODE" }
     $evolutionBinary = Join-Path $PSScriptRoot 'evolution_regression_tests.exe'
-    $evolutionSources = @(Join-Path $PSScriptRoot 'EvolutionRegressionTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp','ExperimentRunner.cpp') } | ForEach-Object { $_.FullName })
+    $evolutionSources = @(Join-Path $PSScriptRoot 'EvolutionRegressionTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp','ExperimentRunner.cpp','BRExperimentSession.cpp') } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $evolutionSources -o $evolutionBinary
     if ($LASTEXITCODE -ne 0) { throw 'Evolution regression compilation failed.' }
     & $evolutionBinary
     if ($LASTEXITCODE -ne 0) { throw "Evolution regression tests failed: exit code $LASTEXITCODE" }
     $safetyBinary = Join-Path $PSScriptRoot 'search_safety_tests.exe'
-    $safetySources = @(Join-Path $PSScriptRoot 'SearchSafetyTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp','ExperimentRunner.cpp') } | ForEach-Object { $_.FullName })
+    $safetySources = @(Join-Path $PSScriptRoot 'SearchSafetyTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp','ExperimentRunner.cpp','BRExperimentSession.cpp') } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $safetySources -o $safetyBinary
     if ($LASTEXITCODE -ne 0) { throw 'Search safety test compilation failed.' }
     & $safetyBinary
@@ -89,10 +89,17 @@ try {
     try {& $brBinary;if($LASTEXITCODE -ne 0) {throw 'BR reader tests failed'}}
     finally {Pop-Location}
     $application=Join-Path $PSScriptRoot 'project_build_check.exe'
+    $menuBinary=Join-Path $PSScriptRoot 'br_menu_tests.exe'
+    $menuSources=@(Join-Path $PSScriptRoot 'BRMenuTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
+    & $Compiler -std=c++14 $menuSources -o $menuBinary
+    if($LASTEXITCODE -ne 0) {throw 'BR menu compilation failed'}
+    Push-Location $root
+    try {& $menuBinary;if($LASTEXITCODE -ne 0) {throw 'BR menu tests failed'}} finally {Pop-Location}
     $applicationSources=@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | ForEach-Object FullName)
     & $Compiler -std=c++14 $applicationSources -o $application
     if($LASTEXITCODE -ne 0) {throw 'Application compilation failed'}
     & (Join-Path $PSScriptRoot 'smoke-cli.ps1') -Binary $application
+    & (Join-Path $PSScriptRoot 'smoke-menu.ps1') -Binary $application
 }
 finally {
     $env:PATH = $previousPath

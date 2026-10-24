@@ -11,6 +11,7 @@
 #include <locale>
 #include <sstream>
 #include <stdexcept>
+#include <ctime>
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -103,6 +104,27 @@ bool isExperimentComplete(const ExperimentResult &result)
 {
     return result.status == ExperimentStatus::Complete && std::isfinite(result.fitness) &&
         result.fitness >= 0 && result.fitness <= 1 && result.milliseconds >= 0;
+}
+
+void saveResultText(const std::string &path,const std::string &text) {writeAtomic(path,text);}
+
+std::string createResultSessionDirectory(const std::string &base,const std::string &label) {
+    if(base.empty() || label.empty() || label.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")!=std::string::npos)
+        throw std::invalid_argument("Session label must contain only letters, digits, underscores or hyphens.");
+    const auto now=std::time(nullptr);const auto local=std::localtime(&now);
+    if(!local) throw std::runtime_error("Cannot determine session date.");
+    std::ostringstream stamp;stamp<<std::put_time(local,"%Y%m%d-%H%M%S");
+    ensureParents(base+"/.session");
+    for(unsigned long long suffix=0;;++suffix) {
+        const auto path=base+"/"+label+"-"+stamp.str()+(suffix?"-"+std::to_string(suffix):"");
+#ifdef _WIN32
+        const int result=_mkdir(path.c_str());
+#else
+        const int result=mkdir(path.c_str(),0777);
+#endif
+        if(result==0) return path;
+        if(errno!=EEXIST) throw std::runtime_error("Cannot create session directory: "+path);
+    }
 }
 
 std::string experimentFingerprint(const std::string &bytes)

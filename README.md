@@ -169,8 +169,9 @@ del tiempo y pico del conjunto de trabajo del proceso medido por Windows.
 
 ## Ejecución y pruebas automatizadas
 
-Sin argumentos, `main.exe` muestra ayuda y termina. Ya no inicia el lote completo
-ni espera una pulsación al terminar. Ejemplo corto sin depender de `.env`:
+Sin argumentos, `main.exe` abre el menu interactivo exclusivo de BR. `--help`
+muestra la ayuda sin ejecutar pruebas. El modo por argumentos no espera entrada
+interactiva al terminar. Ejemplo corto sin depender de `.env`:
 
 ```powershell
 ./main.exe --root . --algorithm all --dataset P1A2 --instances 1 --population 4 --iterations 2 --rounds 2 --seed 123 --output build/example-results
@@ -211,7 +212,7 @@ mediciones y comprobar igualdad exacta de resultados:
 ./tests/benchmark-cache.ps1
 ```
 
-`tests/run.ps1` ejecuta los trece binarios de pruebas, compila la aplicación y
+`tests/run.ps1` ejecuta los catorce binarios de pruebas, compila la aplicación y
 prueba la CLI con los tres algoritmos, dos rondas y reanudación. GitHub Actions
 ejecuta ese mismo script en Windows y Linux para cada push y pull request; su
 definición está en `.github/workflows/tests.yml`. Las dependencias de CI se instalan
@@ -256,3 +257,49 @@ de 0/1; sus errores incluyen fuente y línea. El límite de expansión predeterm
 es un millón de cajas por problema, configurable en el constructor y acotado por
 los IDs enteros que utiliza el proyecto. No preasigna memoria según una cabecera
 sin validar. Las pruebas contrastan los 1900 problemas originales de BR0–BR18.
+
+## Menu BR y sesiones de resultados
+
+```powershell
+./main.exe
+# O con raiz y base de resultados explicitas:
+./main.exe --menu --root . --output Results/BR
+```
+
+El menu permite elegir BR0–BR18 o todos los archivos BR; un problema, un rango
+de posiciones o todos; GA, ABC, Firefly o comparar los tres; inversion, C1, C2 o
+todos los metodos; orientaciones 0/2/6; reemplazo; y candidatos DBLF. Tambien pide
+poblacion, iteraciones, rondas, semilla y un nombre de sesion. Los parametros
+avanzados incluyen probabilidades, parada por diversidad/estancamiento, sitios y
+abejas de ABC, movimientos Firefly y cache opcional. Antes de ejecutar muestra
+la seleccion y el numero de ejecuciones; `salir`, fin de entrada o cancelar no
+crean resultados. Al terminar se puede iniciar otra sesion desde el mismo menu.
+
+La raiz se toma de `--root`, de la carpeta actual si contiene `Instance/BR/BR0.txt`,
+o de `LOCAL_PATH` en `.env`. Cada sesion confirmada crea una carpeta nueva:
+
+```text
+Results/BR/<nombre>-<fecha>-<hora>/
+  configuracion.txt
+  resultados.csv
+  resumen.md
+  BR0/GA/...-fitness.csv
+  BR0/GA/...-time.csv
+  BR0/GA/...-fitness.csv.checkpoint
+```
+
+`resumen.md` contiene una seccion por archivo, algoritmo, rotaciones, mutacion y
+modo de reemplazo: ocupacion media/mejor/peor, tiempos y cantidad de ejecuciones.
+`resultados.csv` identifica cada problema, ronda, semilla de datos y de ejecucion,
+fitness, ocupacion porcentual, duracion, reanudacion y checkpoint. La configuracion
+incluye el comando completo para reanudar y regenerar los informes. Cada sesion
+tiene una carpeta exclusiva, incluso si se repite el nombre en el mismo segundo.
+Los archivos se reemplazan de forma atomica. Si ocurre un error controlado, el
+resumen indica que la sesion se interrumpio y los checkpoints conservan el avance.
+
+El comando de reanudacion utiliza `--report --output <carpeta-de-la-sesion>` y no
+crea otra sesion. Para seleccionar un rango por argumentos se usa
+`--first-instance <posicion-inicial> --instances <cantidad>`; las posiciones son
+de base 1. `--dataset BR` selecciona BR0–BR18; `--dataset all` conserva P1–P5 para
+la automatizacion anterior. En el menu, `--output` es la carpeta base de sesiones;
+en la CLI normal o con `--report`, es la carpeta exacta de resultados.

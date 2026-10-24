@@ -1,0 +1,4 @@
+dataset,problema,id,algoritmo,rotaciones,mutacion,reemplazo,ronda,semilla_dataset,semilla_ejecucion,fitness,ocupacion_porcentaje,tiempo_ms,reanudado,checkpoint
+"BR0",1,1,"GA",6,"inversion",1,1,2502505,7940525698099393725,0.37644343796963869,37.644343796963867,8,0,"./Results/BR/verificacion-menu-20261024-135146/BR0/GA/124fc78409faf8c2-fitness.csv.checkpoint"
+"BR0",1,1,"ABC",6,"inversion",1,1,2502505,7940525698099393725,0.3518927789716188,35.18927789716188,17,0,"./Results/BR/verificacion-menu-20261024-135146/BR0/ABC/66627ff1f478c8c1-fitness.csv.checkpoint"
+"BR0",1,1,"FFA",6,"inversion",1,1,2502505,7940525698099393725,0.37644343796963869,37.644343796963867,21,0,"./Results/BR/verificacion-menu-20261024-135146/BR0/FFA/4b76159ba7a27650-fitness.csv.checkpoint"

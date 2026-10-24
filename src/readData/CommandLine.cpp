@@ -16,12 +16,14 @@ double probability(const std::string &text) {
 }
 }
 CommandLineOptions parseCommandLine(const std::vector<std::string> &arguments) {
-    CommandLineOptions o;if(arguments.empty()) {o.help=true;return o;}
+    CommandLineOptions o;if(arguments.empty()) {o.interactive=true;return o;}
     std::unordered_set<std::string> seen;
     for(size_t i=0;i<arguments.size();++i) {
         const auto &flag=arguments[i];
         if(!seen.insert(flag).second) throw std::invalid_argument("Repeated option: "+flag);
         if(flag=="--help") {o.help=true;continue;}
+        if(flag=="--menu") {o.interactive=true;continue;}
+        if(flag=="--report") {o.sessionReport=true;continue;}
         if(flag=="--batch") {o.algorithm="all";o.dataset="all";o.rotation="all";o.mutation="all";o.replacement="both";continue;}
         if(i+1>=arguments.size()) throw std::invalid_argument("Option requires a value: "+flag);
         const auto &value=arguments[++i];
@@ -37,6 +39,7 @@ CommandLineOptions parseCommandLine(const std::vector<std::string> &arguments) {
         else if(flag=="--iterations") o.iterations=integer(value);
         else if(flag=="--rounds") {o.rounds=integer(value);if(o.rounds==0) throw std::invalid_argument("Rounds must be positive.");}
         else if(flag=="--instances") o.instances=integer(value);
+        else if(flag=="--first-instance") {o.firstInstance=integer(value);if(o.firstInstance==0) throw std::invalid_argument("First instance must be positive.");}
         else if(flag=="--sites") o.sites=integer(value);
         else if(flag=="--elite-sites") o.eliteSites=integer(value);
         else if(flag=="--elite-bees") o.eliteBees=integer(value);
@@ -82,15 +85,16 @@ ExperimentConfiguration CommandLineOptions::configuration(const std::string &nam
     return c;
 }
 std::string commandLineHelp() {
-    return "BB3D experiments (no arguments: help)\n"
-      "--algorithm GA|ABC|FFA|all  --dataset P1A2..P5A2|BR0..BR18|all|FILE\n"
+    return "BB3D experiments (no arguments: interactive BR menu; --menu also opens it)\n"
+      "--algorithm GA|ABC|FFA|all  --dataset P1A2..P5A2|BR0..BR18|BR (all BR)|all|FILE\n"
       "--root DIRECTORY (otherwise LOCAL_PATH in .env)  --output DIRECTORY\n"
-      "--population N --iterations N --rounds N --instances N (0: all) --seed N\n"
+      "--population N --iterations N --rounds N --instances N (0: all) --first-instance N --seed N\n"
       "--rotation 0|2|6|all --mutation inverse|c1|c2|all --replacement true|false|both\n"
       "--selection P --crossover P --mutation-probability adaptive|P --rotation-mutation P\n"
       "--patience N (0: disable stagnation stop) --diversity P --movements N\n"
       "--sites N --elite-sites N --elite-bees N --non-elite-bees N\n"
       "--candidates legacy|projected|best --cache-entries N (default 0: disabled)\n"
       "--cache-mib N (payload budget; 0 disables cache)\n"
+      "--report regenerates a BR session report in the explicit --output directory\n"
       "--batch (all algorithms, datasets, rotations, mutations and replacement modes)\n";
 }

@@ -1,4 +1,6 @@
 #include "main.hpp"
+#include "BRExperimentMenu.hpp"
+#include "BRExperimentSession.hpp"
 
 #include <chrono>
 #include "genetic/FitnessOperators.hpp"
@@ -23,12 +25,33 @@ int main(int argc,char **argv)
 {
   try {
     auto options=parseCommandLine(std::vector<std::string>(argv+1,argv+argc));
-    if(options.help) { std::cout<<commandLineHelp(); return 0; }
-    if(options.root.empty()) options.root=getEnv("LOCAL_PATH");
-    LOCAL_PATH=options.root; configuredSeed=options.seed; configuredCandidates=options.candidates;
-    runExperiments(options);
+    if(options.help) {std::cout<<commandLineHelp();return 0;}
+    if(options.root.empty()) {
+      std::ifstream local("Instance/BR/BR0.txt");
+      options.root=options.interactive && local.good()?".":getEnv("LOCAL_PATH");
+    }
+    LOCAL_PATH=options.root;configuredSeed=options.seed;configuredCandidates=options.candidates;
+    if(options.interactive) {
+      for(;;) {
+        const auto selection=BRExperimentMenu().choose(std::cin,std::cout,options);
+        if(!selection.confirmed)return 0;
+        const auto directory=BRExperimentSession().execute(selection);
+        std::cout<<"\nResultados guardados en: "<<directory<<"\nInforme: "<<directory<<"/resumen.md\nCSV: "<<directory<<"/resultados.csv\n";
+        for(;;) {
+          std::cout<<"Otra sesion BR? 1=si, 0=salir [0]: "<<std::flush;
+          std::string answer;if(!std::getline(std::cin,answer))return 0;
+          if(answer=="1")break;
+          if(answer.empty() || answer=="0" || answer=="salir")return 0;
+          std::cout<<"Seleccion invalida.\n";
+        }
+      }
+    }
+    if(options.sessionReport) {
+      const auto directory=BRExperimentSession().resume(options);
+      std::cout<<"Informe BR guardado en: "<<directory<<"/resumen.md\n";
+    } else runExperiments(options);
     return 0;
-  } catch(const std::exception &error) { std::cerr<<error.what()<<'\n';return 1; }
+  } catch(const std::exception &error) {std::cerr<<error.what()<<'\n';return 1;}
 }
 void testInverseMutation()
 {

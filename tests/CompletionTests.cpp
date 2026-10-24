@@ -93,7 +93,7 @@ void cacheTests() {
     configureFitnessCache(0,0);
 }
 void cli() {
-    require(parseCommandLine({}).help && parseCommandLine({"--help"}).help,"Help requires configuration");
+    require(parseCommandLine({}).interactive && parseCommandLine({"--menu"}).interactive && parseCommandLine({"--help"}).help,"Menu/help selection is incorrect");
     require(parseCommandLine({}).cacheEntries==0,"Cache must remain opt-in after profiling");
     auto o=parseCommandLine({"--algorithm","all","--dataset","P5A2","--population","4","--iterations","2","--rounds","3","--cache-entries","0","--patience","7"});
     auto c=o.configuration("ABC",ROTATION_WAY::SIX_WAY,MutationType::C1,false);

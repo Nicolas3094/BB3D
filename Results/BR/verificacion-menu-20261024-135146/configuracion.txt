@@ -1,0 +1,17 @@
+Sesion de pruebas BR
+Dataset: BR0
+Algoritmo: all
+Primer problema: 1
+Cantidad: 1
+Mutacion: inverse
+Orientaciones: 6
+Reemplazo: true
+Poblacion: 4
+Candidatos DBLF: legacy
+Iteraciones: 2
+Rondas: 1
+Semilla raiz: 123
+Resultados: ./Results/BR/verificacion-menu-20261024-135146
+
+Comando para reanudar desde la carpeta del proyecto (PowerShell):
+& './main.exe' --report --root '.' --output './Results/BR/verificacion-menu-20261024-135146' --algorithm 'all' --dataset 'BR0' --rotation '6' --mutation 'inverse' --replacement 'true' --iterations 2 --rounds 1 --first-instance 1 --instances 1 --seed 123 --population 4 --elite-bees 4 --non-elite-bees 3 --movements 2 --selection 0.84999999999999998 --crossover 0.75 --diversity 0.001 --patience 25 --mutation-probability adaptive --candidates 'legacy' --cache-entries 0 --cache-mib 16

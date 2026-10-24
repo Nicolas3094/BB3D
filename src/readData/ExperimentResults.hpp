@@ -19,6 +19,8 @@ using ExperimentResults = std::vector<ExperimentResult>;
 bool isExperimentComplete(const ExperimentResult &);
 std::string experimentFingerprint(const std::string &bytes);
 std::string datasetFingerprint(const std::string &path);
+std::string createResultSessionDirectory(const std::string &base,const std::string &label);
+void saveResultText(const std::string &path,const std::string &text);
 ExperimentResults loadExperimentResults(const std::string &fitnessPath, const std::string &timePath, std::size_t count, const std::string &identity="");
 void saveExperimentResults(const ExperimentResults &, const std::string &fitnessPath, const std::string &timePath, const std::string &identity="");
 #endif
