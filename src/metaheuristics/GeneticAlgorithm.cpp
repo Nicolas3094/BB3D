@@ -31,8 +31,10 @@ Individuo GeneticAlgorithm::crossover(Individuo parent1, Individuo parent2)
     {
         throw std::invalid_argument("ERROR: crossover with empty genome.");
     }
-    init = randomInteger(3, (n / 2) - 1);
-    end = randomInteger(init + 1, n - 1);
+    // A singleton has only one possible segment. Otherwise use two distinct
+    // valid indices across the entire chromosome, including small genomes.
+    init = n == 1 ? 0 : randomInteger(0, n - 2);
+    end = n == 1 ? 0 : randomInteger(init + 1, n - 1);
 
     return Individuo::Build()
         .setGenome(crossOx(parent1.getGenome(), parent2.getGenome(), init, end))
@@ -123,7 +125,7 @@ double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Indivi
 
 void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int initIndex, int endIndex)
 {
-    for (int i = endIndex; i == initIndex; i--)
+    for (int i = endIndex; i >= initIndex; i--)
     {
         if (uniformUnit() <= adaptiveMutationProbabiliy(poblation[i], poblation[0]))
         {
@@ -223,7 +225,7 @@ void GeneticAlgorithm::replacePoblationWithChildren(
     {
         visitedIndividuals[secondChild.solution] = true;
 
-        if (poblation[atIndex].getFitness() < child.getFitness())
+        if (poblation[atIndex].getFitness() < secondChild.getFitness())
         {
             poblation[atIndex] = secondChild;
         }
@@ -242,7 +244,7 @@ void GeneticAlgorithm::replacePoblationWithChildren(
         }
         else
         {
-            if (poblation[atIndex].getFitness() < child.getFitness())
+            if (poblation[atIndex].getFitness() < secondChild.getFitness())
             {
                 poblation[atIndex] = secondChild;
             }

@@ -65,6 +65,7 @@ void flipMutationO1(DoubleGenome &gen, double probability, ROTATION_WAY rotation
         {
             newAllele = randomInteger(1, getIdFromRotationWay(rotation));
         }
+        gen.getDGenome()[indexToChange] = newAllele;
     }
 }
 

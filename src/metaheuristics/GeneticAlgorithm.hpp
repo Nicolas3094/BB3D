@@ -11,6 +11,7 @@
 class GeneticAlgorithm : public EvolutiveAlgorithm
 {
 private:
+    friend struct GeneticAlgorithmTestAccess;
     std::map<std::string, bool> visitedIndividuals;
     long maxIteration;
     DatasetBinBacking dataSet;

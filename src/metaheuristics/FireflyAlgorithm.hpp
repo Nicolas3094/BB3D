@@ -28,7 +28,7 @@ private:
     ROTATION_WAY rotationType;
 
     double lightIntensity(double, double, int);
-    void findMostAttractiveByIndexAndIntensity(Poblacion, int, int &, int &, double);
+    void findMostAttractiveByIndexAndIntensity(Poblacion, int, int &, double &, double);
     Poblacion search();
     Poblacion searchD();
 

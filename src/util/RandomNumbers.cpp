@@ -28,9 +28,18 @@ int randomInteger(int init, int end)
 
 int defaultBinomialDistribution(int n)
 {
+    if (n < 0)
+    {
+        throw std::invalid_argument("Binomial trial count must be non-negative.");
+    }
+    if (n == 0)
+    {
+        return 0;
+    }
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     static std::default_random_engine generator(seed);
-    std::binomial_distribution<> distr(n, n - 1 / n);
+    const double probability = (n - 1.0) / n;
+    std::binomial_distribution<> distr(n, probability);
 
     int result = distr(generator);
     if (result > n)
