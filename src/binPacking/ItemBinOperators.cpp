@@ -34,57 +34,51 @@ bool isOverlapped(Punto position, const ItemBin &currentItem, const Bin &bin)
     return false;
 }
 
-// O(k * D): k loaded items and D unit steps across X, Z and Y.
+// O(k) time and O(1) auxiliary space for k loaded items; independent of travel distance.
+// Precondition: point is non-negative and the item does not overlap loaded items.
 void iterateByDeepestBottomLeft(Punto &punto, const ItemBin &item, const Bin &bin)
 {
+    // Preserve the existing DBLF behavior for the first two items.
     if (bin.getNumberOfLoadedItems() <= 1)
     {
         return;
     }
-    int count = 0;
-    // Go first by Deepest - X
-    if (punto.x != 0)
-    {
-        while (!isOverlapped(punto, item, bin))
-        {
-            count += 1;
-            punto.x -= 1;
-            if (punto.x == -1)
-            {
-                break;
-            }
-        }
-        punto.x += 1;
-    }
-    // Go Second by Bottom - Z
-    if (punto.z != 0)
-    {
-        while (!isOverlapped(punto, item, bin))
-        {
-            count += 1;
-            punto.z -= 1;
-            if (punto.z == -1)
-            {
-                break;
-            }
-        }
-        punto.z += 1;
-    }
+    const Punto dimension = item.getCurrentDimension();
+    int position[3] = {punto.x, punto.y, punto.z};
+    const int extent[3] = {dimension.x, dimension.y, dimension.z};
 
-    // Go Thirsd by With - Y
-    if (punto.y != 0)
+    // Move toward each wall in Deepest (X), Bottom (Z), Left (Y) order.
+    for (int axis : {0, 2, 1})
     {
-        while (!isOverlapped(punto, item, bin))
+        if (position[axis] == 0) continue;
+        int contact = 0; // The wall is the default stopping surface.
+        for (const ItemBin &obstacle : bin.getLoadedItems())
         {
-            count += 1;
-            punto.y -= 1;
-            if (punto.y == -1)
+            const Punto origin = obstacle.getPunto();
+            const Punto end = origin + obstacle.getCurrentDimension();
+            const int minimum[3] = {origin.x, origin.y, origin.z};
+            const int maximum[3] = {end.x, end.y, end.z};
+            // Only obstacles behind the current position can block this movement.
+            if (maximum[axis] > position[axis]) continue;
+            bool projectionsOverlap = true;
+            for (int other = 0; other < 3; ++other)
             {
-                break;
+                if (other == axis) continue;
+                if (position[other] >= maximum[other] ||
+                    position[other] + extent[other] <= minimum[other])
+                {
+                    projectionsOverlap = false;
+                    break;
+                }
+            }
+            if (projectionsOverlap && maximum[axis] > contact)
+            {
+                contact = maximum[axis];
             }
         }
-        punto.y += 1;
+        position[axis] = contact;
     }
+    punto = Punto::Build(position[0], position[1], position[2]);
 }
 
 void addItemToBin(ColaPuntosDBL &queue, Bin &bin, const Punto &punto, ItemBin item)

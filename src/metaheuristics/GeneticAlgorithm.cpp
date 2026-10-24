@@ -41,7 +41,7 @@ Individuo GeneticAlgorithm::crossover(Individuo parent1, Individuo parent2)
         .setFitness(0.0);
 }
 
-// O(n**4)
+// O(n^3): dominated by DBLF fitness evaluation for n items.
 Individuo GeneticAlgorithm::instantiateChild(Individuo parent1, Individuo parent2)
 {
 

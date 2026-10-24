@@ -123,7 +123,8 @@ void PriorityPointQueue::update()
         node = node->next;
         Punto q = node->data;
         Punto qprev = prevNode->data;
-        if ((qprev.x == q.x && qprev.z == q.z) || (qprev.x < q.x && qprev.y == q.y && qprev.z == q.z))
+        // A shared coordinate is not a geometric dominance proof.
+        if (qprev == q)
         {
             removeNode(node);
             node = prevNode;

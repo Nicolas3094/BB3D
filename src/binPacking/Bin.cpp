@@ -4,6 +4,7 @@ Bin::~Bin() {}
 
 Bin::Bin()
 {
+    this->rotation = ROTATION_WAY::ZERO_WAY;
     this->dimensions = Dim::Build().setAlto(0).setAncho(0).setLargo(0);
     this->numberOfLoadedItems = 0;
     this->loadedVolume = 0;
@@ -81,7 +82,7 @@ std::vector<int> Bin::getIdItems()
     return ids;
 }
 
-ROTATION_WAY Bin::getRotationWay()
+ROTATION_WAY Bin::getRotationWay() const
 {
     return this->rotation;
 }

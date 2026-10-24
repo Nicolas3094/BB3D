@@ -42,10 +42,10 @@ public:
     int getLargo();
     int getAncho();
     int getAlto();
-    Dim getDimension();
+    Dim getDimension() const;
     long getVolumen();
     Punto getPunto() const;
-    Punto getRotations();
+    Punto getRotations() const;
     ROTATION_WAY getRotation();
 
     bool isValidOrientation();

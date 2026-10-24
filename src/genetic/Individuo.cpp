@@ -1,4 +1,5 @@
 #include "Individuo.hpp"
+#include "../heuristics/DBLFValidation.hpp"
 
 Individuo::Individuo()
 {
@@ -42,6 +43,7 @@ std::ostream &operator<<(std::ostream &COUT, Individuo &ind)
 
 LoadedBins decodificateIndividual(Individuo indivudual, LoadedBins dataSet, Bin bin)
 {
+    validateDBLFInput(bin, indivudual.getGenome().getGenome(), indivudual.getGenome().getDGenome(), dataSet);
     int genomeSize = indivudual.getGenome().getGenome().size();
     LoadedBins itemsToPack(genomeSize);
     for (int i = 0; i < genomeSize; i++)

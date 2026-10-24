@@ -2,6 +2,8 @@
 
 ItemBin::ItemBin()
 {
+    this->id = 0;
+    this->tipo = 0;
     this->dimension = Dim::Build().setAlto(0).setAncho(0).setLargo(0);
     this->rotation = ROTATION_WAY::ZERO_WAY;
     this->currentDimension = Punto::Build(0, 0, 0);
@@ -98,7 +100,7 @@ int ItemBin::getAlto()
     return this->currentDimension.z;
 }
 
-Punto ItemBin::getRotations()
+Punto ItemBin::getRotations() const
 {
     return this->rotations;
 }
@@ -113,7 +115,7 @@ Punto ItemBin::getPunto() const
     return this->posicion;
 }
 
-Dim ItemBin::getDimension()
+Dim ItemBin::getDimension() const
 {
     return dimension;
 }

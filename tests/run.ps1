@@ -34,6 +34,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Geometry test compilation failed.' }
     & $geometryBinary
     if ($LASTEXITCODE -ne 0) { throw "Geometry tests failed: exit code $LASTEXITCODE" }
+    $inputBinary = Join-Path $PSScriptRoot 'dblf_input_tests.exe'
+    $inputSources = @(Join-Path $PSScriptRoot 'DBLFInputTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -ne 'main.cpp' } | ForEach-Object { $_.FullName })
+    & $Compiler -std=c++14 $inputSources -o $inputBinary
+    if ($LASTEXITCODE -ne 0) { throw 'DBLF input test compilation failed.' }
+    & $inputBinary
+    if ($LASTEXITCODE -ne 0) { throw "DBLF input tests failed: exit code $LASTEXITCODE" }
 }
 finally {
     $env:PATH = $previousPath

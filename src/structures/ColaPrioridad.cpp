@@ -1,4 +1,5 @@
 #include "ColaPrioridad.hpp"
+#include <algorithm>
 
 ColaPuntosDBL::ColaPuntosDBL()
 {
@@ -74,15 +75,8 @@ void ColaPuntosDBL::remove(int index)
 
 void ColaPuntosDBL::update()
 {
-    for (int i = this->cola.size() - 1; i > 0; i--)
-    {
-        Punto q = cola[i - 1];
-        Punto qprev = cola[i];
-        if ((qprev.x == q.x && qprev.z == q.z) || (qprev.x < q.x && qprev.y == q.y && qprev.z == q.z))
-        {
-            cola.erase(cola.begin() + i - 1);
-        }
-    }
+    // Sorted by push(): only identical points are interchangeable without geometry.
+    cola.erase(std::unique(cola.begin(), cola.end()), cola.end());
 }
 
 void ColaPuntosDBL::printQ()

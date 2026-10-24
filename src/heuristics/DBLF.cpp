@@ -1,7 +1,12 @@
 #include "DBLF.hpp"
+#include "DBLFValidation.hpp"
 /** Deepest Bottom Left Fill with PriorityQueue
  *
- * Currently, this has a time complexity of O(n**4) mean
+ * Worst-case O(n^3) for n input items and an initially empty bin:
+ * O(n) candidate points per item, O(n) overlap checks per candidate,
+ * and O(n) contact compaction after a feasible candidate is found.
+ * The vector-backed DBLF below has the same bound (including queue updates).
+ * The previous unit-step compaction added O(n^2 * D), where D bounds travel.
  */
 void DBLFQueue(
     Bin &bin,
@@ -9,6 +14,7 @@ void DBLFQueue(
     Chromosome itemsRotation,
     LoadedBins itemDataOrderById)
 {
+    validateDBLFInput(bin, itemsIdToPack, itemsRotation, itemDataOrderById);
     int countAllele = 0;
     PriorityPointQueue queue;
     Node<Punto> *rear;
@@ -20,6 +26,10 @@ void DBLFQueue(
         // Rotate box accordingly with the rotation codification
         itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(),
                                             getRotationFromId(itemsRotation[countAllele++]));
+        if (!itemDataOrderById[boxId - 1].isValidOrientation())
+        {
+            continue;
+        }
 
         rear = queue.getRear();
         while (rear != null) // O(n)
@@ -33,7 +43,7 @@ void DBLFQueue(
                 {
                     queue.removeNode(rear);
 
-                    iterateByDeepestBottomLeft(currentPoint, itemDataOrderById[boxId - 1], bin); // Pron: O(N)
+                    iterateByDeepestBottomLeft(currentPoint, itemDataOrderById[boxId - 1], bin); // O(n)
 
                     addItemToBinQueue(queue, bin, currentPoint, itemDataOrderById[boxId - 1]);
 
@@ -55,6 +65,7 @@ void DBLF(
     LoadedBins itemDataOrderById,
     bool print)
 {
+    validateDBLFInput(bin, itemsIdToPack, itemsRotation, itemDataOrderById);
     ColaPuntosDBL queue = ColaPuntosDBL::Build();
     queue.push(Punto::Build(0, 0, 0));
     int countAllele = 0;
@@ -62,6 +73,10 @@ void DBLF(
     {
         ROTATION_MODE rotation = getRotationFromId(itemsRotation[countAllele++]);
         itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(), rotation);
+        if (!itemDataOrderById[boxId - 1].isValidOrientation())
+        {
+            continue;
+        }
         for (int j = queue.size() - 1; j >= 0; j--)
         {
             Punto currenPoint = queue[j];
@@ -85,12 +100,17 @@ void DBLF(
     Bin &bin,
     LoadedBins itemsToPack)
 {
+    validateDBLFInput(bin, itemsToPack);
     ROTATION_WAY rotationWay = bin.getRotationWay();
     ColaPuntosDBL queue = ColaPuntosDBL::Build();
     queue.push(Punto::Build(0, 0, 0));
 
     for (ItemBin &item : itemsToPack)
     {
+        if (!item.isValidOrientation())
+        {
+            continue;
+        }
         std::cout << "Box: " << item.getId() << "\n";
         std::cout << "Available points: " << queue;
         for (int j = queue.size() - 1; j >= 0; j--)

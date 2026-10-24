@@ -38,7 +38,7 @@ public:
     const LoadedBins &getLoadedItems() const;
     std::vector<Punto> getPostitionOfItems();
     std::vector<int> getIdItems();
-    ROTATION_WAY getRotationWay();
+    ROTATION_WAY getRotationWay() const;
 };
 
 std::ostream &operator<<(std::ostream &, const LoadedBins &);
