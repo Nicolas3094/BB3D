@@ -1,4 +1,5 @@
 #include "ReadData.hpp"
+#include "BRInstanceReader.hpp"
 #include <cerrno>
 #include <cmath>
 #include <limits>
@@ -34,6 +35,20 @@ template<typename T> std::vector<T> readResultNumbers(const std::string &path)
 
 vector<DatasetBinBacking> readData(const string path)
 {
+    // Dispatch by the header, not by extension: BR files have a single count.
+    std::ifstream probe(path);
+    if (!probe) throw std::runtime_error("Cannot open dataset: " + path);
+    std::string line;
+    bool first = true;
+    while (std::getline(probe,line)) {
+        if(first && line.compare(0,3,"\xEF\xBB\xBF")==0) line.erase(0,3);
+        first=false;
+        const auto header=getNumbersFromLines(line);
+        if(header.empty()) continue;
+        if(header.size()==1) return BRInstanceReader().read(path);
+        break;
+    }
+    if(probe.bad()) throw std::runtime_error("Cannot read dataset: " + path);
     const auto rows = getNumberListFile(path);
     if (rows.empty() || rows[0].size() != 2) malformed("missing instance/item count header: " + path);
     const int instances = rows[0][0], expectedItems = rows[0][1];

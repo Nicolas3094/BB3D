@@ -211,9 +211,48 @@ mediciones y comprobar igualdad exacta de resultados:
 ./tests/benchmark-cache.ps1
 ```
 
-`tests/run.ps1` ejecuta los doce binarios de pruebas, compila la aplicación y
+`tests/run.ps1` ejecuta los trece binarios de pruebas, compila la aplicación y
 prueba la CLI con los tres algoritmos, dos rondas y reanudación. GitHub Actions
 ejecuta ese mismo script en Windows y Linux para cada push y pull request; su
 definición está en `.github/workflows/tests.yml`. Las dependencias de CI se instalan
 únicamente en el runner temporal. No se requieren instalaciones locales nuevas.
 Todas las mediciones de duración usan `std::chrono::steady_clock`.
+
+## Lectura de instancias BR
+
+`src/readData/BRInstanceReader.hpp` expone una clase para el formato original
+de `Instance/BR/BR0.txt` a `BR18.txt`. Su cabecera contiene solo el número de
+problemas. Cada problema declara ID y semilla, dimensiones del contenedor,
+número de tipos y una fila por tipo con este orden:
+
+```text
+tipo largo permisoX ancho permisoY alto permisoZ cantidad
+```
+
+La cantidad está en la última columna y puede variar entre problemas. El lector
+conserva ID, semilla y tipos originales; expande las cantidades en `totalItems`
+con IDs consecutivos desde 1 para cada problema. Los permisos se conservan sin
+suponer que todas las orientaciones sean válidas.
+
+```cpp
+#include "readData/BRInstanceReader.hpp"
+
+BRInstanceReader reader;
+auto problems = reader.read("Instance/BR/BR0.txt");
+// También admite std::istream para probar o leer otra fuente.
+```
+
+`readData(path)` detecta automáticamente BR por su cabecera y delega en esta
+clase. La CLI admite `--dataset BR0` hasta `BR18`, o una ruta `.txt`:
+
+```powershell
+./main.exe --root . --algorithm GA --dataset BR0 --instances 1 --population 4 --iterations 2 --rotation 6 --seed 123
+```
+
+`--dataset all` conserva la selección P1–P5. El lector BR acepta espacios,
+tabulaciones, líneas vacías, CRLF y BOM UTF-8. Rechaza registros truncados o
+sobrantes, IDs duplicados, dimensiones/cantidades inválidas y permisos distintos
+de 0/1; sus errores incluyen fuente y línea. El límite de expansión predeterminado
+es un millón de cajas por problema, configurable en el constructor y acotado por
+los IDs enteros que utiliza el proyecto. No preasigna memoria según una cabecera
+sin validar. Las pruebas contrastan los 1900 problemas originales de BR0–BR18.

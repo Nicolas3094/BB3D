@@ -16,12 +16,13 @@ void runExperiments(const CommandLineOptions &o) {
     // Validate every selected algorithm before any result file is written.
     for(const auto &algorithm:algorithms) o.configuration(algorithm,rotations.front(),mutations.front(),replacements.front());
     for(const auto &name:names) {
-        const bool file=name.find_first_of("/\\")!=std::string::npos || (name.size()>=4 && name.substr(name.size()-4)==".csv");
-        const std::string path=file?name:o.root+"/Instance/"+name+".csv";
+        const bool file=name.find_first_of("/\\")!=std::string::npos || (name.size()>=4 && (name.substr(name.size()-4)==".csv" || name.substr(name.size()-4)==".txt"));
+        const bool br=name.size()>2 && name.substr(0,2)=="BR" && name.find_first_not_of("0123456789",2)==std::string::npos;
+        const std::string path=file?name:(br?o.root+"/Instance/BR/"+name+".txt":o.root+"/Instance/"+name+".csv");
         const auto datasets=readData(path);const auto hash=datasetFingerprint(path);
         const auto limit=o.instances==0?datasets.size():std::min(datasets.size(),static_cast<size_t>(o.instances));
         std::string stem=path.substr(path.find_last_of("/\\")==std::string::npos?0:path.find_last_of("/\\")+1);
-        if(stem.size()>4 && stem.substr(stem.size()-4)==".csv") stem.resize(stem.size()-4);
+        if(stem.size()>4 && (stem.substr(stem.size()-4)==".csv" || stem.substr(stem.size()-4)==".txt")) stem.resize(stem.size()-4);
         for(const auto &algorithm:algorithms) for(auto rotation:rotations) for(auto mutation:mutations) for(bool replacement:replacements)
         for(int round=0;round<o.rounds;++round) {
             const auto config=o.configuration(algorithm,rotation,mutation,replacement);

@@ -81,6 +81,13 @@ try {
     if($LASTEXITCODE -ne 0) {throw 'Completion test compilation failed'}
     & $completionBinary
     if($LASTEXITCODE -ne 0) {throw 'Completion tests failed'}
+    $brBinary=Join-Path $PSScriptRoot 'br_reader_tests.exe'
+    $brSources=@(Join-Path $PSScriptRoot 'BRReaderTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
+    & $Compiler -std=c++14 $brSources -o $brBinary
+    if($LASTEXITCODE -ne 0) {throw 'BR reader test compilation failed'}
+    Push-Location $root
+    try {& $brBinary;if($LASTEXITCODE -ne 0) {throw 'BR reader tests failed'}}
+    finally {Pop-Location}
     $application=Join-Path $PSScriptRoot 'project_build_check.exe'
     $applicationSources=@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | ForEach-Object FullName)
     & $Compiler -std=c++14 $applicationSources -o $application

@@ -83,7 +83,7 @@ ExperimentConfiguration CommandLineOptions::configuration(const std::string &nam
 }
 std::string commandLineHelp() {
     return "BB3D experiments (no arguments: help)\n"
-      "--algorithm GA|ABC|FFA|all  --dataset P1A2|P2A2|P3A2|P4A2|P5A2|all|FILE\n"
+      "--algorithm GA|ABC|FFA|all  --dataset P1A2..P5A2|BR0..BR18|all|FILE\n"
       "--root DIRECTORY (otherwise LOCAL_PATH in .env)  --output DIRECTORY\n"
       "--population N --iterations N --rounds N --instances N (0: all) --seed N\n"
       "--rotation 0|2|6|all --mutation inverse|c1|c2|all --replacement true|false|both\n"

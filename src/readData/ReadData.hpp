@@ -14,6 +14,7 @@
 
 using namespace std;
 
+// Auto-detects P1-P5 (two header integers) or original BR (one header integer).
 vector<DatasetBinBacking> readData(const std::string);
 vector<int> getNumbersFromLines(string);
 vector<vector<int>> getNumberListFile(const string);

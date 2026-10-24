@@ -17,5 +17,11 @@ try {
     $different=@(& $executable @arguments --candidates best)
     if($LASTEXITCODE -ne 0 -or @($different | Where-Object {$_ -match 'fitness='}).Count -ne 6) {throw 'Candidate change reused old checkpoints'}
     if(@(Get-ChildItem $output -Recurse -Filter '*.checkpoint').Count -ne 12) {throw 'Candidate policy was not included in identity'}
-    Write-Output 'PASS: CLI runs GA/ABC/FFA, two rounds, resumes, separates policies and exits without input'
+    $brArguments=@('--root',$root,'--output',$output,'--algorithm','GA','--dataset','BR0','--instances','1','--population','2','--iterations','0','--seed','123')
+    $br=@(& $executable @brArguments)
+    if($LASTEXITCODE -ne 0 -or @($br | Where-Object {$_ -match 'fitness='}).Count -ne 1) {throw 'CLI cannot read a named BR instance'}
+    $brArguments[$brArguments.IndexOf('BR0')]=Join-Path $root 'Instance/BR/BR0.txt'
+    $brPath=@(& $executable @brArguments)
+    if($LASTEXITCODE -ne 0 -or @($brPath | Where-Object {$_ -match 'resumed=complete'}).Count -ne 1) {throw 'BR path/name aliases did not share the correct experiment identity'}
+    Write-Output 'PASS: CLI runs GA/ABC/FFA, two rounds, resumes, separates policies, reads BR by name/path and exits without input'
 } finally {Pop-Location}
