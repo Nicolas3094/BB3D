@@ -12,6 +12,7 @@
 class FireflyAlgorithm : public EvolutiveAlgorithm
 {
 private:
+    friend struct FireflyAlgorithmTestAccess;
     std::map<std::string, bool> visitedIndividuals;
 
     long maxIteration;
@@ -57,7 +58,8 @@ public:
 
     FireflyAlgorithm &setProblem(DatasetBinBacking);
 
-    Individuo &findMostAttractiveFirefly(Poblacion &, Individuo, double);
+    // Borrowed pointer into the population, or nullptr when no target exists.
+    Individuo *findMostAttractiveFirefly(Poblacion &, Individuo, double);
 
     Poblacion evolve();
 };

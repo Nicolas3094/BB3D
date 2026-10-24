@@ -119,9 +119,8 @@ DoubleGenome FireflyAlgorithm::randomMovement(DoubleGenome currentFireflyGenome)
 
 Poblacion FireflyAlgorithm::searchD()
 {
-    int n, numberFireflies, iteration, fireflyIndex;
-    double gamma, bestIntensity, Ii, Ij;
-    Individuo *mostAttactiveFirefly;
+    int n, iteration, fireflyIndex;
+    double gamma;
 
     Poblacion fireflyPoblation =
         initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
@@ -140,14 +139,23 @@ Poblacion FireflyAlgorithm::searchD()
         for (fireflyIndex = 0; fireflyIndex < numberOfIndividuals; fireflyIndex++)
         {
 
-            *mostAttactiveFirefly = findMostAttractiveFirefly(fireflyPoblation, fireflyPoblation[fireflyIndex], gamma);
+            Individuo *mostAttactiveFirefly =
+                findMostAttractiveFirefly(fireflyPoblation, fireflyPoblation[fireflyIndex], gamma);
+            const bool hasTarget = mostAttactiveFirefly != nullptr;
+            // Adding children may reallocate the population. Keep an owned genome
+            // before entering the loop rather than retaining a pointer into it.
+            DoubleGenome targetGenome;
+            if (hasTarget)
+            {
+                targetGenome = mostAttactiveFirefly->getGenome();
+            }
 
             for (int k = 0; k < upIndex; k++)
             {
                 Individuo newPositionFirefly;
 
                 // If there is no most attractive firefly, just move randomly.
-                if (mostAttactiveFirefly == nullptr)
+                if (!hasTarget)
                 {
                     newPositionFirefly.setGenome(randomMovement(fireflyPoblation[fireflyIndex].getGenome()));
                 }
@@ -156,7 +164,7 @@ Poblacion FireflyAlgorithm::searchD()
                 {
                     newPositionFirefly.setGenome(
                         randomMovement(
-                            crossOver(fireflyPoblation[fireflyIndex].getGenome(), mostAttactiveFirefly->getGenome())));
+                            crossOver(fireflyPoblation[fireflyIndex].getGenome(), targetGenome)));
                 }
 
                 evaluateFitness(newPositionFirefly, dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
@@ -206,7 +214,7 @@ void FireflyAlgorithm::orderFireFlyPoblation(Poblacion &fireflyPoblation)
     }
 }
 
-Individuo &FireflyAlgorithm::findMostAttractiveFirefly(
+Individuo *FireflyAlgorithm::findMostAttractiveFirefly(
     Poblacion &fireflyPoblation, Individuo currentFirefly, double gamma)
 {
     double lightIntensityCurrentFireFly, lightIntensityFirefly;
@@ -243,7 +251,7 @@ Individuo &FireflyAlgorithm::findMostAttractiveFirefly(
             }
     }
 
-    return *mostAttractive;
+    return mostAttractive;
 }
 
 double FireflyAlgorithm::lightIntensity(double fitness, double gamma, int distance)

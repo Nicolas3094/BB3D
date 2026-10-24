@@ -1,9 +1,11 @@
 #include "../src/genetic/GeneticsOperators.hpp"
 #include <stdexcept>
+#include <limits>
 
 // Controlled random inputs: p=0.6 selects exactly one allele because
 // 0.5 <= 0.6 and 0.5 > 0.6*0.6. Select the last index and rotation.
-double uniformUnit() { return 0.5; }
+double randomUnit = 0.5;
+double uniformUnit() { return randomUnit; }
 int randomInteger(int minimum, int maximum)
 {
     if (minimum > maximum)
@@ -17,10 +19,60 @@ void require(bool condition, const char *message)
         throw std::runtime_error(message);
 }
 
+Poblacion populationWithFitness(std::initializer_list<double> fitnesses)
+{
+    Poblacion result;
+    for (double fitness : fitnesses)
+        result.push_back(Individuo::Build().setFitness(fitness));
+    return result;
+}
+
+void checkRouletteWheel()
+{
+    const Poblacion population = populationWithFitness({0.125, 0.375, 0.5});
+    randomUnit = 0.0;
+    require(rouletteWheel(population) == 0, "Roulette must select first positive weight at zero");
+    randomUnit = 0.125;
+    require(rouletteWheel(population) == 1, "Roulette cumulative boundary is incorrect");
+    randomUnit = 0.5;
+    require(rouletteWheel(population) == 2, "Roulette must include the last individual");
+    int counts[3] = {0, 0, 0};
+    for (int i = 0; i < 1000; ++i)
+    {
+        randomUnit = (i + 0.5) / 1000.0;
+        int selected = rouletteWheel(population);
+        require(selected >= 0 && selected < 3, "Roulette returned invalid index");
+        ++counts[selected];
+    }
+    require(counts[0] == 125 && counts[1] == 375 && counts[2] == 500,
+            "Roulette selection must be proportional to fractional fitness");
+    for (double unit : {0.0, 0.5, 0.999999})
+    {
+        randomUnit = unit;
+        require(rouletteWheel(populationWithFitness({0.0, 0.25, 0.0})) == 1,
+                "Zero-weight individuals must not be selected");
+        require(rouletteWheel(populationWithFitness({0.3})) == 0, "Singleton index must be zero");
+    }
+    require(rouletteWheel(populationWithFitness({0.0, 0.0, 0.0})) == 2,
+            "Zero total fitness must use uniform integer fallback");
+    for (Poblacion invalid : {Poblacion(), populationWithFitness({-0.1, 0.5}),
+             populationWithFitness({std::numeric_limits<double>::quiet_NaN()}),
+             populationWithFitness({std::numeric_limits<double>::infinity()})})
+    {
+        bool rejected = false;
+        try { rouletteWheel(invalid); }
+        catch (const std::invalid_argument &) { rejected = true; }
+        require(rejected, "Empty population or invalid fitness must be rejected");
+    }
+    randomUnit = 0.5;
+    std::cout << "PASS: roulette boundaries, 1000 proportional samples, zeros and invalid inputs\n";
+}
+
 int main()
 {
     try
     {
+        checkRouletteWheel();
         for (ROTATION_WAY rotation : {ROTATION_WAY::TWO_WAY, ROTATION_WAY::SIX_WAY})
         {
             DoubleGenome gen = DoubleGenome::Build()
