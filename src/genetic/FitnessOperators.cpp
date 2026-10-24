@@ -3,7 +3,7 @@
 void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
 {
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
-    ind.setFitness((float)bin.getLoadedVolume() / (float)bin.getDimensions().getVolumen());
+    ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
     std::string codeSolution = "|";
     for (const auto &item : bin.getLoadedItems())
     {
@@ -16,7 +16,7 @@ void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
 void evaluateFitnessDecodificated(Individuo &ind, LoadedBins itemData, Bin &bin)
 {
     DBLF(bin, decodificateIndividual(ind, itemData, bin));
-    ind.setFitness((float)bin.getLoadedVolume() / (float)bin.getDimensions().getVolumen());
+    ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
 }
 
 DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad)

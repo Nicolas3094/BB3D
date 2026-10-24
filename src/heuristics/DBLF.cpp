@@ -107,6 +107,8 @@ void DBLF(
 
     for (ItemBin &item : itemsToPack)
     {
+        if (rotationWay == ROTATION_WAY::ZERO_WAY)
+            item.rotate(ROTATION_WAY::ZERO_WAY, ROTATION_MODE::NONE);
         if (!item.isValidOrientation())
         {
             continue;

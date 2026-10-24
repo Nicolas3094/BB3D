@@ -171,8 +171,10 @@ void swapSubsequences(DoubleGenome &gen, int init1, int end1, int init2, int end
     {
         throw std::invalid_argument("Subsequences most have with same lenght.");
     }
-    copySubsequence(gen, buildSubsequence(gen, init2, end2), init1, end1);
-    copySubsequence(gen, buildSubsequence(gen, init1, end1), init2, end2);
+    const DoubleGenome first = buildSubsequence(gen, init1, end1);
+    const DoubleGenome second = buildSubsequence(gen, init2, end2);
+    copySubsequence(gen, second, init1, end1);
+    copySubsequence(gen, first, init2, end2);
 }
 
 void randomReversingSwapOfSubsequences(
@@ -203,13 +205,12 @@ void randomReversingSwapOfSubsequences(
 void combine1(DoubleGenome &gen, int i1, int j1, int i2, int j2)
 {
     double r = uniformUnit();
-    ;
 
-    if (r <= 1 / 3)
+    if (r < 1.0 / 3.0)
     {
         swap(gen, i1, j2);
     }
-    else if (r > 1 / 3 && r <= 2 / 3)
+    else if (r < 2.0 / 3.0)
     {
         swapSubsequences(gen, i1, j1, i2, j2);
     }
@@ -223,11 +224,11 @@ void combine2(DoubleGenome &gen, int indexToInsert, int i, int j)
 {
     double ran = uniformUnit();
 
-    if (ran <= 1 / 3)
+    if (ran < 1.0 / 3.0)
     {
-        insertion(gen, i, j);
+        insertion(gen, indexToInsert, i);
     }
-    if (ran > 1 / 3 && ran <= 2 / 3)
+    else if (ran < 2.0 / 3.0)
     {
         insertionOfSubsequence(gen, indexToInsert, i, j);
     }
@@ -239,68 +240,33 @@ void combine2(DoubleGenome &gen, int indexToInsert, int i, int j)
 
 void mutateC1(DoubleGenome &gen, int randomStep)
 {
-    int n, step, i, j, i2, j2, low, high;
-    n = gen.getDGenome().size();
-    step = randomStep;
-
-    if (randomStep == 1)
-    {
-        step = randomInteger(1, n - 2);
-    }
-    else if (randomStep <= 2 && randomStep >= 0)
-    {
-        step = 2;
-    }
-    low = 1;
-    high = std::floor(n / 2) - static_cast<int>(std::floor(step / 2)) + 1;
-    i = randomInteger(low, high);
-    j = i + static_cast<int>(std::floor(step / 2)) - 1;
-    low = static_cast<int>(std::floor(n / 2));
-    high = n - static_cast<int>(std::floor(step / 2));
-    i2 = randomInteger(low, high);
-    j2 = i2 + static_cast<int>(std::floor(step / 2)) - 1;
-
-    combine1(gen, i, j, i2, j2);
+    if (gen.getGenome().size() != gen.getDGenome().size() || randomStep < -1)
+        throw std::invalid_argument("C1 requires matching chromosomes and step >= -1.");
+    const int n = static_cast<int>(gen.getGenome().size());
+    if (n < 2) return;
+    const int half = n / 2;
+    const int length = randomStep == -1 ? randomInteger(1, half)
+        : std::min(half, std::max(1, randomStep / 2));
+    // Equal, non-empty segments in disjoint halves; explicit steps are bounded.
+    const int first = randomInteger(0, half - length);
+    const int second = randomInteger(half, n - length);
+    combine1(gen, first, first + length - 1, second, second + length - 1);
 }
 
 void mutateC2(DoubleGenome &gen, int randomStep)
 {
-    int n, step, init, end, index;
-    double r;
-    r = uniformUnit();
-    n = gen.getDGenome().size();
-    step = randomStep;
-    if (n == 0)
-    {
-        std::cerr << "\nERROR: mutateC2 - Genome has 0 length\n";
-        throw std::invalid_argument("Genome has 0 length");
-    }
-
-    if (randomStep == -1)
-    {
-        step = randomInteger(1, n - 2);
-    }
-    else if (randomStep <= 2)
-    {
-        step = 2;
-    }
-    init = randomInteger(1, n / 2);
-    if (init + step > n - 2)
-    {
-        end = n - 2;
-    }
-    else
-    {
-        end = init + step - 1;
-    }
-    if (r < 0.5)
-    {
-        index = randomInteger(0, init - 1);
-    }
-    else
-    {
-        index = randomInteger(end + 1, n - 1);
-    }
+    if (gen.getGenome().size() != gen.getDGenome().size() || randomStep < -1)
+        throw std::invalid_argument("C2 requires matching chromosomes and step >= -1.");
+    const int n = static_cast<int>(gen.getGenome().size());
+    if (n < 2) return;
+    const int length = randomStep == -1 ? randomInteger(1, n - 1)
+        : std::min(n - 1, std::max(1, randomStep));
+    const int init = randomInteger(0, n - length);
+    const int end = init + length - 1;
+    // Insertion uses the original vector boundary. Skip the immediately
+    // adjacent boundary on the right, which would leave the sequence unchanged.
+    const int index = init > 0 && (end == n - 1 || uniformUnit() < 0.5)
+        ? randomInteger(0, init - 1) : randomInteger(end + 2, n);
     combine2(gen, index, init, end);
 }
 

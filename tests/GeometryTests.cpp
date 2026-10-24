@@ -1,6 +1,9 @@
 #include "../src/heuristics/DBLF.hpp"
 #include "../src/binPacking/ItemBinOperators.hpp"
 #include "../src/genetic/FitnessOperators.hpp"
+#include "../src/metaheuristics/GeneticAlgorithm.hpp"
+#include "../src/metaheuristics/ArtificialBeeColonyAlgorithm.hpp"
+#include "../src/metaheuristics/FireflyAlgorithm.hpp"
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -165,10 +168,45 @@ void checkRestrictedOrientations()
     }
 }
 
+void checkMutationIntegration()
+{
+    DatasetBinBacking problem;
+    problem.bin = Bin::Build().setLargo(4).setAncho(4).setAlto(4).setRotationWay(ROTATION_WAY::SIX_WAY);
+    for (int id = 1; id <= 8; ++id) problem.totalItems.push_back(cube(id, 1, Punto::Build(0,0,0)));
+    auto verify = [](Poblacion population) {
+        require(population.size() == 6, "Metaheuristic changed population size");
+        for (auto &individual : population)
+        {
+            auto ids = individual.getGenome().getGenome(); std::sort(ids.begin(), ids.end());
+            require(ids == Chromosome({1,2,3,4,5,6,7,8}), "Metaheuristic mutation corrupted item permutation");
+            require(std::isfinite(individual.getFitness()) && std::abs(individual.getFitness() - 0.125) < 1e-12,
+                    "Metaheuristic mutation produced incorrect fitness");
+        }
+    };
+    for (MutationType type : {MutationType::C1, MutationType::C2})
+    {
+        GeneticAlgorithm ga;
+        ga.setProblem(problem).setNumberOfIndividuals(6).setMaxIteration(2).setRotationType(ROTATION_WAY::SIX_WAY)
+            .setMutationType(type).setIsWithReplacement(true).setCrossProbability(1.0).setSelectionProbability(0.8);
+        verify(ga.evolve());
+        ArtificialBeeColonyAlgorithm abc;
+        abc.setProblem(problem).setNumberOfIndividuals(6).setMaxIteration(2).setRotationType(ROTATION_WAY::SIX_WAY)
+            .setMutationType(type).setIsWithReplacement(true).setNumberOfSites(3).setNumberOfEliteSites(1)
+            .setNumberOfEliteBees(2).setNumberOfNonEliteBees(1);
+        verify(abc.evolve());
+        FireflyAlgorithm firefly;
+        firefly.setProblem(problem).setNumberOfIndividuals(6).setMaxIteration(2).setRotationType(ROTATION_WAY::SIX_WAY)
+            .setMutationType(type).setIsWithReplacement(true).setupIndex(2);
+        verify(firefly.evolve());
+    }
+    std::cout << "PASS: real C1/C2 mutations through GA, ABC and Firefly\n";
+}
+
 int main()
 {
     try
     {
+        checkMutationIntegration();
         checkRestrictedOrientations();
         std::cout << "PASS: all 8 permission masks, 2/6 rotations, three DBLF variants and both fitness paths\n";
         checkCompactionParity();

@@ -120,7 +120,7 @@ Dim ItemBin::getDimension() const
     return dimension;
 }
 
-long ItemBin::getVolumen()
+std::int64_t ItemBin::getVolumen() const
 {
     return dimension.getVolumen();
 }
@@ -141,6 +141,14 @@ int ItemBin::getRotationId() const
 void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
 {
     this->rotationId = getIdFromRotation(rotationMode);
+    this->rotation = rotationWay;
+    currentDimension = dimension.getVector();
+    hasValidRotation = false;
+    if (rotationWay == ROTATION_WAY::ZERO_WAY)
+    {
+        hasValidRotation = rotationMode == ROTATION_MODE::NONE && rotations.z == 1;
+        return;
+    }
     if (rotationWay == ROTATION_WAY::TWO_WAY)
     {
         switch (rotationMode)

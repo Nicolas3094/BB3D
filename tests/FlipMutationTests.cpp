@@ -2,8 +2,7 @@
 #include <stdexcept>
 #include <limits>
 
-// Controlled random inputs: p=0.6 selects exactly one allele because
-// 0.5 <= 0.6 and 0.5 > 0.6*0.6. Select the last index and rotation.
+// Controlled random inputs for roulette and geometric-gap rotation selection.
 double randomUnit = 0.5;
 double uniformUnit() { return randomUnit; }
 int randomInteger(int minimum, int maximum)
@@ -73,6 +72,8 @@ int main()
     try
     {
         checkRouletteWheel();
+        // floor(log(1-0.9)/log(1-0.6)) = 2 skipped loci, then mutate index 2.
+        randomUnit = 0.9;
         for (ROTATION_WAY rotation : {ROTATION_WAY::TWO_WAY, ROTATION_WAY::SIX_WAY})
         {
             DoubleGenome gen = DoubleGenome::Build()

@@ -49,12 +49,9 @@ LoadedBins decodificateIndividual(Individuo indivudual, LoadedBins dataSet, Bin 
     for (int i = 0; i < genomeSize; i++)
     {
         ItemBin item = dataSet[indivudual.getGenome().getGenome()[i] - 1];
-        if (bin.getRotationWay() != ROTATION_WAY::ZERO_WAY)
-        {
-            item.rotate(
-                bin.getRotationWay(),
-                getRotationFromId(indivudual.getGenome().getDGenome()[i]));
-        }
+        item.rotate(
+            bin.getRotationWay(),
+            getRotationFromId(indivudual.getGenome().getDGenome()[i]));
 
         itemsToPack[i] = item;
     }

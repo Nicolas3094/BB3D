@@ -13,7 +13,7 @@ class Bin
 {
 private:
     Dim dimensions;
-    long loadedVolume;
+    std::int64_t loadedVolume;
     long numberOfLoadedItems;
     LoadedBins loadedItems;
     ROTATION_WAY rotation;
@@ -31,7 +31,7 @@ public:
     Bin &setRotationWay(ROTATION_WAY);
 
     const Dim getDimensions() const;
-    int getLoadedVolume() const;
+    std::int64_t getLoadedVolume() const;
     int getNumberOfLoadedItems() const;
     // Borrowed view: valid while this Bin lives; element references/iterators
     // may be invalidated by addItem(). Copy explicitly when a snapshot is needed.

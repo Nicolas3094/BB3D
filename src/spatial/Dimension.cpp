@@ -1,4 +1,6 @@
 #include "Dimension.hpp"
+#include <limits>
+#include <stdexcept>
 
 Dim::~Dim() {}
 
@@ -53,9 +55,18 @@ const int Dim::getAncho() const
     return w;
 }
 
-const long Dim::getVolumen() const
+std::int64_t Dim::getVolumen() const
 {
-    return this->w * this->l * this->h;
+    std::int64_t volume = 1;
+    for (int side : {l, w, h})
+    {
+        if (side < 0) throw std::invalid_argument("Volume dimensions must be non-negative.");
+        if (side == 0) return 0;
+        if (volume > std::numeric_limits<std::int64_t>::max() / side)
+            throw std::overflow_error("Volume exceeds int64 range.");
+        volume *= side;
+    }
+    return volume;
 }
 
 Punto Dim::getVector()

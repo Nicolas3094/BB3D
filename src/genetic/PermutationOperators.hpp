@@ -19,6 +19,8 @@ void swapSubsequences(DoubleGenome &, int, int, int, int);
 void randomReversingSwapOfSubsequences(DoubleGenome &, int, int, int, int);
 void combine1(DoubleGenome &, int, int, int, int);
 void combine2(DoubleGenome &, int, int, int);
+// -1 chooses a random step; non-negative steps are bounded to valid segments.
+// Empty/singleton genomes are unchanged. Both chromosomes must have equal size.
 void mutateC1(DoubleGenome &, int randomStep = -1);
 void mutateC2(DoubleGenome &, int randomStep = -1);
 void mutateInversion(DoubleGenome &, int randomStep = -1);

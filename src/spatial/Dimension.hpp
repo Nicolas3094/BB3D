@@ -2,6 +2,7 @@
 #define DIMENSION_H
 
 #include "Punto.hpp"
+#include <cstdint>
 
 class Dim
 {
@@ -21,7 +22,7 @@ public:
     const int getLargo() const;
     const int getAncho() const;
     const int getAlto() const;
-    const long getVolumen() const;
+    std::int64_t getVolumen() const;
 
     Dim &setLargo(int);
     Dim &setAncho(int);

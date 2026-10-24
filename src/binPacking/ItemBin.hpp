@@ -43,7 +43,7 @@ public:
     int getAncho();
     int getAlto();
     Dim getDimension() const;
-    long getVolumen();
+    std::int64_t getVolumen() const;
     Punto getPunto() const;
     Punto getRotations() const;
     ROTATION_WAY getRotation();
@@ -57,16 +57,14 @@ struct VolumeGreater
 {
     bool operator()(ItemBin lx, ItemBin rx)
     {
-        return lx.getLargo() * lx.getAncho() * lx.getAlto() <
-               rx.getLargo() * rx.getAncho() * rx.getAlto();
+        return lx.getVolumen() < rx.getVolumen();
     }
 };
 struct VolumeLess
 {
     bool operator()(ItemBin lx, ItemBin rx)
     {
-        return lx.getLargo() * lx.getAncho() * lx.getAlto() >
-               rx.getLargo() * rx.getAncho() * rx.getAlto();
+        return lx.getVolumen() > rx.getVolumen();
     }
 };
 struct LengthGreater

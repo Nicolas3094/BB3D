@@ -1,4 +1,6 @@
 #include "Bin.hpp"
+#include <limits>
+#include <stdexcept>
 
 Bin::~Bin() {}
 
@@ -17,9 +19,12 @@ Bin Bin::Build()
 
 Bin &Bin::addItem(ItemBin itemBin)
 {
+    const std::int64_t volume = itemBin.getVolumen();
+    if (loadedVolume > std::numeric_limits<std::int64_t>::max() - volume)
+        throw std::overflow_error("Loaded volume exceeds int64 range.");
     this->loadedItems.push_back(itemBin);
     this->numberOfLoadedItems += 1;
-    this->loadedVolume += itemBin.getVolumen();
+    this->loadedVolume += volume;
     return *this;
 }
 Bin &Bin::setLargo(int largo)
@@ -48,7 +53,7 @@ const Dim Bin::getDimensions() const
 {
     return dimensions;
 }
-int Bin::getLoadedVolume() const
+std::int64_t Bin::getLoadedVolume() const
 {
     return this->loadedVolume;
 }

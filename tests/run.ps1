@@ -40,6 +40,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'DBLF input test compilation failed.' }
     & $inputBinary
     if ($LASTEXITCODE -ne 0) { throw "DBLF input tests failed: exit code $LASTEXITCODE" }
+    $regressionBinary = Join-Path $PSScriptRoot 'mutation_regression_tests.exe'
+    $regressionSources = @(Join-Path $PSScriptRoot 'MutationRegressionTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp') } | ForEach-Object { $_.FullName })
+    & $Compiler -std=c++14 $regressionSources -o $regressionBinary
+    if ($LASTEXITCODE -ne 0) { throw 'Mutation regression compilation failed.' }
+    & $regressionBinary
+    if ($LASTEXITCODE -ne 0) { throw "Mutation regression tests failed: exit code $LASTEXITCODE" }
 }
 finally {
     $env:PATH = $previousPath

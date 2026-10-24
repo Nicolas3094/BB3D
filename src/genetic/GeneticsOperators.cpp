@@ -35,38 +35,40 @@ void flipMutation(DoubleGenome &gen, double probability, ROTATION_WAY rotation)
     }
 }
 
-/** Instead of going one by one, we just figure out how many alleles have to be change.
- *  This way we reduce time complexity from O(n) to O(numberOfAllelesToChanges).
- *  Usually we're gonna get O(1).
- */
+// Independent Bernoulli(p) selection via geometric gaps: expected O(1+n*p)
+// time and O(1) auxiliary space. Every selected locus gets a different rotation.
 void flipMutationO1(DoubleGenome &gen, double probability, ROTATION_WAY rotation)
 {
-    int numberOfAllelesToChange, indexToChange, i, oldAllele, newAllele;
-    std::map<int, bool> visitedAllele;
-
-    numberOfAllelesToChange = getNumberOfChanges(uniformUnit(), probability);
-
-    if (numberOfAllelesToChange == 0)
+    if (!std::isfinite(probability) || probability < 0.0 || probability > 1.0)
+        throw std::invalid_argument("Mutation probability must be finite and in [0,1].");
+    if (gen.getGenome().size() != gen.getDGenome().size())
+        throw std::invalid_argument("Rotation mutation requires matching chromosomes.");
+    switch (rotation)
     {
-        return;
+    case ROTATION_WAY::ZERO_WAY: return; // No alternative orientations.
+    case ROTATION_WAY::TWO_WAY:
+    case ROTATION_WAY::SIX_WAY: break;
+    default: throw std::invalid_argument("Unsupported rotation mode.");
     }
-    for (i = 0; i < numberOfAllelesToChange; i++)
+    if (probability == 0.0) return;
+    auto &rotations = gen.getDGenome();
+    const int alternatives = getIdFromRotationWay(rotation);
+    const double logFailure = probability < 1.0 ? std::log1p(-probability) : 0.0;
+    size_t index = 0;
+    while (index < rotations.size())
     {
-        indexToChange = randomInteger(0, gen.getDGenome().size() - 1);
-        while (visitedAllele[indexToChange])
+        if (probability < 1.0)
         {
-            indexToChange = randomInteger(0, gen.getDGenome().size() - 1);
+            const double gap = std::floor(std::log1p(-uniformUnit()) / logFailure);
+            if (gap >= static_cast<double>(rotations.size() - index)) break;
+            index += static_cast<size_t>(gap);
         }
-        visitedAllele[indexToChange] = true;
-
-        oldAllele = gen.getDGenome()[indexToChange];
-
-        newAllele = randomInteger(1, getIdFromRotationWay(rotation));
-        while (newAllele == oldAllele)
-        {
-            newAllele = randomInteger(1, getIdFromRotationWay(rotation));
-        }
-        gen.getDGenome()[indexToChange] = newAllele;
+        const int oldRotation = rotations[index];
+        if (oldRotation < 1 || oldRotation > alternatives)
+            throw std::invalid_argument("Rotation gene is outside the configured mode.");
+        int replacement = randomInteger(1, alternatives - 1);
+        if (replacement >= oldRotation) ++replacement;
+        rotations[index++] = replacement;
     }
 }
 
@@ -158,19 +160,4 @@ int rouletteWheel(Poblacion poblation)
     }
     // Handle floating-point rounding without selecting a zero-weight entry.
     return lastPositive;
-}
-
-int getNumberOfChanges(double probability, double unitProbability)
-{
-
-    double currentPr = unitProbability;
-    int index = 0;
-
-    while (probability <= currentPr)
-    {
-        currentPr *= unitProbability;
-        index++;
-    }
-
-    return index;
 }

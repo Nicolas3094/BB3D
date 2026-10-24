@@ -13,6 +13,5 @@ int tournament(Poblacion, int, double);
 // uniform selection. Empty populations and invalid fitness throw invalid_argument.
 int rouletteWheel(Poblacion);
 void flipMutationO1(DoubleGenome &gen, double probability, ROTATION_WAY rotation);
-int getNumberOfChanges(double probability, double unitProbability);
 
 #endif
