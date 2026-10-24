@@ -5,7 +5,7 @@ void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
     ind.setFitness((float)bin.getLoadedVolume() / (float)bin.getDimensions().getVolumen());
     std::string codeSolution = "|";
-    for (auto item : bin.getLoadedItems())
+    for (const auto &item : bin.getLoadedItems())
     {
         codeSolution += std::to_string(item.getId()) + " " +
                         std::to_string(item.getRotationId()) + "|";

@@ -79,6 +79,53 @@ void checkCrossover()
     std::cout << "PASS: crossover sizes 1-10 and 50 at both random boundaries; empty rejected\n";
 }
 
+void checkHamming()
+{
+    auto genome = [](Chromosome ids, Chromosome rotations = Chromosome()) {
+        return DoubleGenome::Build().setGenome(ids).setDGenome(rotations);
+    };
+    auto expect = [](DoubleGenome first, DoubleGenome second, int distance) {
+        if (hamming(first, second) != distance || hamming(second, first) != distance)
+            throw std::runtime_error("Incorrect or asymmetric Hamming distance");
+    };
+    expect(genome({1, 2, 3}), genome({1, 2, 3}), 0);
+    expect(genome({1, 2, 3}), genome({2, 1, 3}), 2);
+    expect(genome({1, 2, 3}), genome({2, 3, 1}), 3);
+    expect(genome({}, {}), genome({}, {}), 0);
+    expect(genome({1}, {1}), genome({1}, {2}), 1);
+    // An (item,rotation) pair is one locus: changing both counts once.
+    expect(genome({1, 2, 3}, {1, 1, 1}), genome({2, 1, 3}, {2, 2, 1}), 2);
+    expect(genome({1, 2, 3}, {1, 1, 1}), genome({1, 2, 3}, {1, 2, 1}), 1);
+    expect(genome({1, 2, 3}, {1, 1, 1}), genome({1, 2, 3}, {1, 1, 1}), 0);
+
+    const std::vector<DoubleGenome> samples{
+        genome({1, 2, 3}, {1, 1, 1}), genome({2, 1, 3}, {2, 1, 1}),
+        genome({2, 3, 1}, {1, 2, 3}), genome({1, 2, 3}, {2, 2, 2})};
+    for (auto first : samples)
+    for (auto second : samples)
+    {
+        int distance = hamming(first, second);
+        if (distance < 0 || distance > 3 || distance != hamming(second, first))
+            throw std::runtime_error("Hamming bounds/symmetry violated");
+        for (auto third : samples)
+            if (distance > hamming(first, third) + hamming(third, second))
+                throw std::runtime_error("Hamming triangle inequality violated");
+    }
+    const DoubleGenome valid = genome({1, 2, 3}, {1, 1, 1});
+    for (auto invalid : {genome({1, 2}, {1, 1}), genome({1, 2, 3}, {1}),
+                         genome({1, 2, 3}), genome({1, 2, 3}, {1, 1, 1, 1})})
+    {
+        for (bool reverse : {false, true})
+        {
+            bool rejected = false;
+            try { reverse ? hamming(invalid, valid) : hamming(valid, invalid); }
+            catch (const std::invalid_argument &) { rejected = true; }
+            if (!rejected) throw std::runtime_error("Incompatible Hamming genomes must be rejected");
+        }
+    }
+    std::cout << "PASS: Hamming differences, rotations, symmetry, bounds, triangle and invalid lengths\n";
+}
+
 Individuo individual(const std::string &solution, double fitness)
 {
     Individuo result;
@@ -154,6 +201,7 @@ int main()
 {
     try
     {
+        checkHamming();
         checkCrossover();
         checkReplacement();
         checkRange(1, 3);

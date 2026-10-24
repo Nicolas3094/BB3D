@@ -73,7 +73,7 @@ ItemBin &ItemBin::setRotation(ROTATION_WAY rot)
     return *this;
 }
 
-int ItemBin::getId()
+int ItemBin::getId() const
 {
     return this->id;
 }
@@ -108,7 +108,7 @@ ROTATION_WAY ItemBin::getRotation()
     return this->rotation;
 }
 
-Punto ItemBin::getPunto()
+Punto ItemBin::getPunto() const
 {
     return this->posicion;
 }
@@ -128,11 +128,11 @@ Punto ItemBin::getOriginalDimension()
     return dimension.getVector();
 }
 
-Punto ItemBin::getCurrentDimension()
+Punto ItemBin::getCurrentDimension() const
 {
     return currentDimension;
 }
-int ItemBin::getRotationId()
+int ItemBin::getRotationId() const
 {
     return rotationId;
 }

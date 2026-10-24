@@ -3,24 +3,25 @@
 
 int hamming(DoubleGenome gen1, DoubleGenome gen2)
 {
-    int count = 0;
-    for (int i = 0; i < gen1.getGenome().size(); i++)
+    const auto &items1 = gen1.getGenome();
+    const auto &items2 = gen2.getGenome();
+    const auto &rotations1 = gen1.getDGenome();
+    const auto &rotations2 = gen2.getDGenome();
+    const bool withRotations = !rotations1.empty();
+    if (items1.size() != items2.size() ||
+        rotations1.empty() != rotations2.empty() ||
+        (!rotations1.empty() && rotations1.size() != items1.size()) ||
+        (!rotations2.empty() && rotations2.size() != items2.size()))
     {
-        if (gen1.getDGenome().size() > 0)
+        throw std::invalid_argument("Hamming requires compatible chromosome lengths and rotation encoding.");
+    }
+    int count = 0;
+    for (size_t i = 0; i < items1.size(); ++i)
+    {
+        if (items1[i] != items2[i] ||
+            (withRotations && rotations1[i] != rotations2[i]))
         {
-            if (gen1.getGenome()[i] == gen2.getGenome()[i] &&
-                gen1.getDGenome()[i] == gen2.getDGenome()[i])
-            {
-                count += 1;
-            }
-        }
-        else
-        {
-
-            if (gen1.getGenome()[i] == gen2.getGenome()[i])
-            {
-                count += 1;
-            }
+            ++count;
         }
     }
     return count;

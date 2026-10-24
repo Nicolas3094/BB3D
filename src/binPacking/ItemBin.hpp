@@ -35,16 +35,16 @@ public:
     ItemBin &setRotation(ROTATION_WAY);
 
     Punto getOriginalDimension();
-    Punto getCurrentDimension();
-    int getId();
-    int getRotationId();
+    Punto getCurrentDimension() const;
+    int getId() const;
+    int getRotationId() const;
     int getTipo();
     int getLargo();
     int getAncho();
     int getAlto();
     Dim getDimension();
     long getVolumen();
-    Punto getPunto();
+    Punto getPunto() const;
     Punto getRotations();
     ROTATION_WAY getRotation();
 

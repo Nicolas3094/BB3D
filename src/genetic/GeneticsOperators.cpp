@@ -1,5 +1,6 @@
 #include "GeneticsOperators.hpp"
 #include "PermutationOperators.hpp"
+#include <cmath>
 
 void mutationWithType(DoubleGenome &gen, MutationType type, int step)
 {
@@ -117,41 +118,46 @@ int tournament(Poblacion poblation, int n, double probability)
 
 int rouletteWheel(Poblacion poblation)
 {
-    int totalFitness, init, countWeight, n, i;
-    double r;
-    n = poblation.size();
-    std::vector<double>
-        weightedFitnessPoblation(n);
-
-    totalFitness = 0;
-    for (auto individual : poblation)
+    if (poblation.empty())
     {
-        totalFitness += individual.getFitness();
+        throw std::invalid_argument("Roulette selection requires a non-empty population.");
     }
-    // Calculate weights
-    for (i = 0; i < n; i++)
+    double totalFitness = 0.0;
+    for (auto &individual : poblation)
     {
-        weightedFitnessPoblation[i] = poblation[i].getFitness() / totalFitness;
-    }
-    init = randomInteger(0, n - 1);
-    r = uniformUnit();
-    countWeight = 0;
-    i = init;
-
-    while (countWeight < r)
-    {
-        countWeight += weightedFitnessPoblation[i++];
-        if (countWeight >= r)
+        const double fitness = individual.getFitness();
+        if (!std::isfinite(fitness) || fitness < 0.0)
         {
-            break;
+            throw std::invalid_argument("Roulette fitness must be finite and non-negative.");
         }
-        if (i == n - 1)
-        {
-            i = 0;
-        }
+        totalFitness += fitness;
+    }
+    if (!std::isfinite(totalFitness))
+    {
+        throw std::invalid_argument("Roulette total fitness must be finite.");
+    }
+    if (totalFitness == 0.0)
+    {
+        return randomInteger(0, static_cast<int>(poblation.size()) - 1);
     }
 
-    return i;
+    const double target = uniformUnit() * totalFitness;
+    double cumulativeFitness = 0.0;
+    int lastPositive = 0;
+    for (int i = 0; i < static_cast<int>(poblation.size()); ++i)
+    {
+        const double fitness = poblation[i].getFitness();
+        if (fitness == 0.0)
+            continue;
+        lastPositive = i;
+        cumulativeFitness += fitness;
+        if (target < cumulativeFitness)
+        {
+            return i;
+        }
+    }
+    // Handle floating-point rounding without selecting a zero-weight entry.
+    return lastPositive;
 }
 
 int getNumberOfChanges(double probability, double unitProbability)

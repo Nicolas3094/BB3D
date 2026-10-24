@@ -1,6 +1,6 @@
 #include "ItemBinOperators.hpp"
 
-bool canBePlaced(Bin bin, const Punto &possiblePoint)
+bool canBePlaced(const Bin &bin, const Punto &possiblePoint)
 {
     return possiblePoint.z <= bin.getDimensions().getAlto() &&
            possiblePoint.y <= bin.getDimensions().getAncho() &&
@@ -16,12 +16,13 @@ bool isABIntersect(Punto Amax, Punto Amin, Punto Bmax, Punto Bmin)
     return true;
 }
 // O(n)
-bool isOverlapped(Punto position, ItemBin currentItem, Bin bin)
+bool isOverlapped(Punto position, const ItemBin &currentItem, const Bin &bin)
 {
-    for (ItemBin loadedItem : bin.getLoadedItems())
+    const Punto envelope = position + currentItem.getCurrentDimension();
+    for (const ItemBin &loadedItem : bin.getLoadedItems())
     {
         if (isABIntersect(
-                /* Amax= */ position + currentItem.getCurrentDimension(),
+                /* Amax= */ envelope,
                 /* Amin= */ position,
                 /* Bmax= */ loadedItem.getPunto() + loadedItem.getCurrentDimension(),
                 /* Bmin= */ loadedItem.getPunto()))
@@ -33,8 +34,8 @@ bool isOverlapped(Punto position, ItemBin currentItem, Bin bin)
     return false;
 }
 
-// Min O(1), Max O(N**2), Prom O(N)
-void iterateByDeepestBottomLeft(Punto &punto, ItemBin item, Bin bin)
+// O(k * D): k loaded items and D unit steps across X, Z and Y.
+void iterateByDeepestBottomLeft(Punto &punto, const ItemBin &item, const Bin &bin)
 {
     if (bin.getNumberOfLoadedItems() <= 1)
     {

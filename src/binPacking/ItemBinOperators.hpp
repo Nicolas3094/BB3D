@@ -1,14 +1,14 @@
 #ifndef ITEM_BIN_OPERATORS_H
-#define CHROMOSOME_H
+#define ITEM_BIN_OPERATORS_H
 
 #include "Bin.hpp"
 #include "../structures/ColaPrioridad.hpp"
 #include "../structures/PriorityPointQueue.hpp"
 
-bool canBePlaced(Bin, const Punto &);
+bool canBePlaced(const Bin &, const Punto &);
 bool isABIntersect(Punto, Punto, Punto, Punto);
-bool isOverlapped(Punto, ItemBin, Bin);
-void iterateByDeepestBottomLeft(Punto &, ItemBin, Bin);
+bool isOverlapped(Punto, const ItemBin &, const Bin &);
+void iterateByDeepestBottomLeft(Punto &, const ItemBin &, const Bin &);
 void addItemToBin(ColaPuntosDBL &, Bin &, const Punto &, ItemBin);
 void addItemToBinQueue(PriorityPointQueue &, Bin &, const Punto &, ItemBin);
 

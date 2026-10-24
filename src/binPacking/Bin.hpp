@@ -31,9 +31,11 @@ public:
     Bin &setRotationWay(ROTATION_WAY);
 
     const Dim getDimensions() const;
-    int getLoadedVolume();
-    int getNumberOfLoadedItems();
-    LoadedBins getLoadedItems();
+    int getLoadedVolume() const;
+    int getNumberOfLoadedItems() const;
+    // Borrowed view: valid while this Bin lives; element references/iterators
+    // may be invalidated by addItem(). Copy explicitly when a snapshot is needed.
+    const LoadedBins &getLoadedItems() const;
     std::vector<Punto> getPostitionOfItems();
     std::vector<int> getIdItems();
     ROTATION_WAY getRotationWay();

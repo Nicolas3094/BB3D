@@ -47,17 +47,17 @@ const Dim Bin::getDimensions() const
 {
     return dimensions;
 }
-int Bin::getLoadedVolume()
+int Bin::getLoadedVolume() const
 {
     return this->loadedVolume;
 }
 
-int Bin::getNumberOfLoadedItems()
+int Bin::getNumberOfLoadedItems() const
 {
     return this->numberOfLoadedItems;
 }
 
-LoadedBins Bin::getLoadedItems()
+const LoadedBins &Bin::getLoadedItems() const
 {
     return this->loadedItems;
 }
@@ -92,7 +92,7 @@ std::ostream &operator<<(std::ostream &COUT, const LoadedBins &loadedBins)
          << "size: " << loadedBins.size()
          << "\nLoaded Items: |";
 
-    for (auto items : loadedBins)
+    for (const auto &items : loadedBins)
     {
         COUT << items.getId() << "|";
     }

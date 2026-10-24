@@ -28,6 +28,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Firefly test compilation failed.' }
     & $fireflyBinary
     if ($LASTEXITCODE -ne 0) { throw "Firefly tests failed: exit code $LASTEXITCODE" }
+    $geometryBinary = Join-Path $PSScriptRoot 'geometry_tests.exe'
+    $geometrySources = @(Join-Path $PSScriptRoot 'GeometryTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -ne 'main.cpp' } | ForEach-Object { $_.FullName })
+    & $Compiler -std=c++14 $geometrySources -o $geometryBinary
+    if ($LASTEXITCODE -ne 0) { throw 'Geometry test compilation failed.' }
+    & $geometryBinary
+    if ($LASTEXITCODE -ne 0) { throw "Geometry tests failed: exit code $LASTEXITCODE" }
 }
 finally {
     $env:PATH = $previousPath
