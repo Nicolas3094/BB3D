@@ -86,7 +86,9 @@ int main()
     try {
         geometry();
         ArtificialBeeColonyAlgorithm abc;
-        abc.setNumberOfSites(2).setNumberOfEliteSites(1).setNumberOfEliteBees(1).setNumberOfNonEliteBees(1);
+        // All sites searched locally: scouting now correctly uses the shared RNG
+        // and would otherwise contaminate the mutation draw counter.
+        abc.setNumberOfSites(4).setNumberOfEliteSites(1).setNumberOfEliteBees(1).setNumberOfNonEliteBees(1);
         probabilities(abc);
         abc.setProblem(problem()).setNumberOfSites(5); rejects([&]{abc.evolve();});
         abc.setNumberOfSites(2).setNumberOfEliteSites(3); rejects([&]{abc.evolve();});

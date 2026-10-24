@@ -5,6 +5,10 @@
 
 namespace
 {
+void shuffleIds(Chromosome &ids) {
+    for (size_t i=ids.size();i>1;--i)
+        std::swap(ids[i-1],ids[randomInteger(0,static_cast<int>(i-1))]);
+}
 void validateIds(const LoadedBins &items)
 {
     std::unordered_set<int> ids;
@@ -36,13 +40,11 @@ Chromosome generatePermutation(int n)
 {
     if (n < 0) throw std::invalid_argument("Permutation size must be non-negative.");
     Chromosome chromosome(n);
-    static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    static std::default_random_engine gen(seed);
 
     for (int i = 0; i < n; i++)
         chromosome[i] = i + 1;
 
-    std::shuffle(chromosome.begin(), chromosome.end(), gen);
+    shuffleIds(chromosome);
 
     return chromosome;
 }
@@ -155,12 +157,11 @@ std::vector<Chromosome> buildChromosomes(LoadedBins allBins, int numberOfChromos
 {
     if (numberOfChromosomes < 0) throw std::invalid_argument("Population size must be non-negative.");
     const Chromosome ids = codeChromosome(allBins);
-    static std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::vector<Chromosome> chromosomePoblation(numberOfChromosomes);
     for (int i = 0; i < numberOfChromosomes; i++)
     {
         chromosomePoblation[i] = ids;
-        std::shuffle(chromosomePoblation[i].begin(), chromosomePoblation[i].end(), generator);
+        shuffleIds(chromosomePoblation[i]);
     }
 
     return chromosomePoblation;
@@ -179,11 +180,8 @@ Chromosome generateRandomRepeatedAlalleleChromosome(int NumberCount, int minimum
         }
         return values;
     }
-    static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    static std::default_random_engine gen(seed);
-    std::uniform_int_distribution<> dis(minimum, maximum);
 
     std::generate(values.begin(), values.end(), [&]()
-                  { return dis(gen); });
+                  { return randomInteger(minimum, maximum); });
     return values;
 }

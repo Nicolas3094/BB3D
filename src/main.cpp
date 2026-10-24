@@ -10,14 +10,30 @@
 #include "structures/ColaPrioridad.hpp"
 #include "readData/Env.hpp"
 #include "readData/ExperimentResults.hpp"
+#include "readData/ExperimentConfiguration.hpp"
+#include "util/RandomNumbers.hpp"
 
-std::string LOCAL_PATH = getEnv("LOCAL_PATH");
+std::string LOCAL_PATH;
+std::uint64_t configuredSeed=20261024;
+DBLFCandidatePolicy configuredCandidates=DBLFCandidatePolicy::ThreePoints;
 
-int main()
+int main(int argc,char **argv)
 {
 
   try
   {
+    for(int arg=1;arg<argc;arg+=2) {
+      if(arg+1>=argc) throw std::invalid_argument("Options require a value: --seed N --candidates legacy|projected|best");
+      const std::string option=argv[arg],value=argv[arg+1];
+      if(option=="--seed") configuredSeed=parseExperimentSeed(value);
+      else if(option=="--candidates") {
+        if(value=="legacy") configuredCandidates=DBLFCandidatePolicy::ThreePoints;
+        else if(value=="projected") configuredCandidates=DBLFCandidatePolicy::Projected;
+        else if(value=="best") configuredCandidates=DBLFCandidatePolicy::BestOfBoth;
+        else throw std::invalid_argument("Unknown candidate policy.");
+      } else throw std::invalid_argument("Unknown command-line option: "+option);
+    }
+    LOCAL_PATH = getEnv("LOCAL_PATH");
     iterGeneticAll();
   }
 
@@ -85,6 +101,7 @@ void iterGeneticAll()
         for (auto problemName : PROBLEMS)
         {
           vector<DatasetBinBacking> DATASSET = readData(LOCAL_PATH + "/Instance/" + problemName + ".csv");
+          const std::string datasetHash=datasetFingerprint(LOCAL_PATH+"/Instance/"+problemName+".csv");
 
           for (MutationType mutationTyped : MUTATIONS)
           {
@@ -98,7 +115,12 @@ void iterGeneticAll()
                 rotation,
                 /* fitnessDataPath= */ fitnessDataPath,
                 /* timePATH= */ timePATH);
-            ExperimentResults results = loadExperimentResults(fitnessDataPath, timePATH, DATASSET.size());
+            auto config=makeExperimentConfiguration(algorithm,rotation,mutationTyped,isWithReplacement);
+            config.candidates=configuredCandidates;
+            const std::string identity=config.identity(datasetHash,configuredSeed);
+            const std::string suffix="."+experimentFingerprint(identity)+".csv";
+            fitnessDataPath+=suffix; timePATH+=suffix;
+            ExperimentResults results = loadExperimentResults(fitnessDataPath, timePATH, DATASSET.size(),identity);
 
             for (int i = 0; i < DATASSET.size(); i++)
             {
@@ -116,18 +138,19 @@ void iterGeneticAll()
               results[i] = {-1, -1, ExperimentStatus::Running};
 
               // Print it
-              saveExperimentResults(results, fitnessDataPath, timePATH);
+              saveExperimentResults(results, fitnessDataPath, timePATH,identity);
 
               auto start = chrono::high_resolution_clock::now();
-              bestPob = getEvolutiveAlgorithm(algorithm, rotation, mutationTyped, DATASSET[i], isWithReplacement);
+              seedRandomNumbers(instanceSeed(configuredSeed,DATASSET[i].id,DATASSET[i].PSeed));
+              bestPob = config.run(DATASSET[i]);
               auto stop = chrono::high_resolution_clock::now();
               auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
               // update data
-              results = loadExperimentResults(fitnessDataPath, timePATH, DATASSET.size());
+              results = loadExperimentResults(fitnessDataPath, timePATH, DATASSET.size(),identity);
               if (bestPob.empty()) throw std::runtime_error("Algorithm returned an empty population.");
               results[i] = {bestPob[0].getFitness(), duration.count(), ExperimentStatus::Complete};
-              saveExperimentResults(results, fitnessDataPath, timePATH);
+              saveExperimentResults(results, fitnessDataPath, timePATH,identity);
             }
           }
         }
@@ -447,48 +470,10 @@ std::string getAlgorithmNameFromNumber(std::string number)
 /** Gets evolutive algorithm based on the algorithm's name.*/
 Poblacion getEvolutiveAlgorithm(std::string algorithm, ROTATION_WAY rotation, MutationType mutation, DatasetBinBacking data, bool isWithReplacement)
 {
-  if (algorithm == "GA")
-  {
-    GeneticAlgorithm genetic;
-    genetic.setMaxIteration(1000)
-        .setNumberOfIndividuals(50)
-        .setCrossProbability(0.75)
-        .setSelectionProbability(0.85)
-        .setDMutationProbability(0.05)
-        .setIsWithReplacement(isWithReplacement)
-        .setRotationType(rotation)
-        .setMutationType(mutation)
-        .setProblem(data);
-
-    return genetic.evolve();
-  }
-  else if (algorithm == "ABC")
-  {
-    ArtificialBeeColonyAlgorithm abc;
-    abc.setMaxIteration(1000)
-        .setNumberOfIndividuals(20)
-        .setNumberOfSites(11)
-        .setNumberOfEliteSites(8)
-        .setNumberOfEliteBees(4)
-        .setNumberOfNonEliteBees(3)
-        .setIsWithReplacement(isWithReplacement)
-        .setRotationType(rotation)
-        .setMutationType(mutation)
-        .setProblem(data);
-    return abc.evolve();
-  }
-
-  FireflyAlgorithm ffa;
-  ffa.setMaxIteration(1000)
-      .setNumberOfIndividuals(25)
-      .setupIndex(2)
-      .setIsWithReplacement(isWithReplacement)
-      .setRotationType(rotation)
-      .setMutationType(mutation)
-      .setProblem(data);
-  return ffa.evolve();
+  auto config=makeExperimentConfiguration(algorithm,rotation,mutation,isWithReplacement);
+  config.candidates=configuredCandidates;
+  return config.run(data);
 }
-
 /** Gets the mutation type by the user's input.*/
 MutationType getMutationTypeFromUser(std::string mutationType)
 {

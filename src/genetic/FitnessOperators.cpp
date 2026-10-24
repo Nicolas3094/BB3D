@@ -1,22 +1,26 @@
 #include "FitnessOperators.hpp"
 
+namespace {
+void updateSolution(Individuo &ind,const Bin &bin) {
+    std::string code="|";
+    for(const auto &item:bin.getLoadedItems())
+        code+=std::to_string(item.getId())+" "+std::to_string(item.getRotationId())+"|";
+    ind.solution=std::move(code);
+}
+}
+
 void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
 {
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
     ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
-    std::string codeSolution = "|";
-    for (const auto &item : bin.getLoadedItems())
-    {
-        codeSolution += std::to_string(item.getId()) + " " +
-                        std::to_string(item.getRotationId()) + "|";
-    }
-    ind.solution = codeSolution;
+    updateSolution(ind,bin);
 }
 
 void evaluateFitnessDecodificated(Individuo &ind, LoadedBins itemData, Bin &bin)
 {
     DBLF(bin, decodificateIndividual(ind, itemData, bin));
     ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
+    updateSolution(ind,bin);
 }
 
 DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad)

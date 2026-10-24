@@ -7,6 +7,10 @@
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
+#include <cstdint>
+
+// One shared stream, reproducible with the same build and call sequence.
+void seedRandomNumbers(std::uint64_t seed);
 
 double uniformUnit();
 int randomInteger(int, int);

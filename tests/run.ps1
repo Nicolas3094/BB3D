@@ -11,7 +11,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Tests failed: exit code $LASTEXITCODE" }
     # Link the core with controlled RNG inputs; exclude application and search drivers.
     $mutationBinary = Join-Path $PSScriptRoot 'flip_mutation_tests.exe'
-    $mutationSources = @(Join-Path $PSScriptRoot 'FlipMutationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -ne 'main.cpp' -and $_.Name -ne 'RandomNumbers.cpp' -and $_.Directory.Name -ne 'metaheuristics' } | ForEach-Object { $_.FullName })
+    $mutationSources = @(Join-Path $PSScriptRoot 'FlipMutationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp','ExperimentConfiguration.cpp') -and $_.Directory.Name -ne 'metaheuristics' } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $mutationSources -o $mutationBinary
     if ($LASTEXITCODE -ne 0) { throw 'Mutation test compilation failed.' }
     & $mutationBinary
@@ -23,7 +23,7 @@ try {
     & $populationBinary
     if ($LASTEXITCODE -ne 0) { throw "Population tests failed: exit code $LASTEXITCODE" }
     $fireflyBinary = Join-Path $PSScriptRoot 'firefly_search_tests.exe'
-    $fireflySources = @(Join-Path $PSScriptRoot 'FireflySearchTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp', 'FitnessOperators.cpp', 'GeneticsOperators.cpp', 'GeneticAlgorithm.cpp', 'ArtificialBeeColonyAlgorithm.cpp') } | ForEach-Object { $_.FullName })
+    $fireflySources = @(Join-Path $PSScriptRoot 'FireflySearchTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp', 'FitnessOperators.cpp', 'GeneticsOperators.cpp', 'GeneticAlgorithm.cpp', 'ArtificialBeeColonyAlgorithm.cpp','ExperimentConfiguration.cpp') } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $fireflySources -o $fireflyBinary
     if ($LASTEXITCODE -ne 0) { throw 'Firefly test compilation failed.' }
     & $fireflyBinary
@@ -68,6 +68,13 @@ try {
         & $infrastructureBinary
         if ($LASTEXITCODE -ne 0) { throw "Infrastructure tests failed: exit code $LASTEXITCODE" }
     } finally { Pop-Location }
+    $integrityBinary=Join-Path $PSScriptRoot 'experiment_integrity_tests.exe'
+    $integritySources=@(Join-Path $PSScriptRoot 'ExperimentIntegrityTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
+    & $Compiler -std=c++14 $integritySources -o $integrityBinary
+    if($LASTEXITCODE -ne 0) { throw 'Experiment integrity compilation failed' }
+    Push-Location $root
+    try { & $integrityBinary; if($LASTEXITCODE -ne 0) { throw 'Experiment integrity tests failed' } }
+    finally { Pop-Location }
 }
 finally {
     $env:PATH = $previousPath

@@ -4,6 +4,12 @@
 
 Bin::~Bin() {}
 
+Bin &Bin::setCandidatePolicy(DBLFCandidatePolicy policy) {
+    if(policy!=DBLFCandidatePolicy::ThreePoints && policy!=DBLFCandidatePolicy::Projected && policy!=DBLFCandidatePolicy::BestOfBoth)
+        throw std::invalid_argument("Unsupported DBLF candidate policy.");
+    candidatePolicy=policy; return *this;
+}
+
 Bin::Bin()
 {
     this->rotation = ROTATION_WAY::ZERO_WAY;

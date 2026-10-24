@@ -20,6 +20,7 @@ private:
     double selectionProbability;
     double crossProability;
     double mutationProbaility;
+    bool adaptiveMutation = true;
     double dMutationProbability;
     double maxDiversityIndex;
 
@@ -58,6 +59,7 @@ public:
     GeneticAlgorithm &setSelectionProbability(double);
     GeneticAlgorithm &setCrossProbability(double);
     GeneticAlgorithm &setMutationProbabiliy(double);
+    GeneticAlgorithm &setAdaptiveMutation(bool enabled);
     GeneticAlgorithm &setDMutationProbability(double);
     GeneticAlgorithm &setMutationType(MutationType);
     GeneticAlgorithm &setRotationType(ROTATION_WAY);

@@ -8,6 +8,7 @@
 #include <vector>
 
 typedef std::vector<ItemBin> LoadedBins;
+enum class DBLFCandidatePolicy { ThreePoints, Projected, BestOfBoth };
 
 class Bin
 {
@@ -17,6 +18,7 @@ private:
     long numberOfLoadedItems;
     LoadedBins loadedItems;
     ROTATION_WAY rotation;
+    DBLFCandidatePolicy candidatePolicy = DBLFCandidatePolicy::ThreePoints;
 
 public:
     Bin();
@@ -39,6 +41,8 @@ public:
     std::vector<Punto> getPostitionOfItems();
     std::vector<int> getIdItems();
     ROTATION_WAY getRotationWay() const;
+    Bin &setCandidatePolicy(DBLFCandidatePolicy policy);
+    DBLFCandidatePolicy getCandidatePolicy() const { return candidatePolicy; }
 };
 
 std::ostream &operator<<(std::ostream &, const LoadedBins &);

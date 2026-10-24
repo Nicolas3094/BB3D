@@ -105,7 +105,23 @@ bool isExperimentComplete(const ExperimentResult &result)
         result.fitness >= 0 && result.fitness <= 1 && result.milliseconds >= 0;
 }
 
-ExperimentResults loadExperimentResults(const std::string &fitnessPath, const std::string &timePath, size_t count)
+std::string experimentFingerprint(const std::string &bytes)
+{
+    std::uint64_t hash=14695981039346656037ULL;
+    for(unsigned char byte:bytes) { hash^=byte; hash*=1099511628211ULL; }
+    std::ostringstream out; out<<std::hex<<std::setw(16)<<std::setfill('0')<<hash;
+    return out.str();
+}
+std::string datasetFingerprint(const std::string &path)
+{
+    std::ifstream file(path,std::ios::binary);
+    if(!file) throw std::runtime_error("Cannot fingerprint dataset: "+path);
+    std::ostringstream bytes; bytes<<file.rdbuf();
+    if(file.bad()) throw std::runtime_error("Cannot fingerprint dataset: "+path);
+    return experimentFingerprint(bytes.str());
+}
+
+ExperimentResults loadExperimentResults(const std::string &fitnessPath, const std::string &timePath, size_t count, const std::string &identity)
 {
     validatePaths(fitnessPath, timePath);
     errno = 0;
@@ -113,8 +129,10 @@ ExperimentResults loadExperimentResults(const std::string &fitnessPath, const st
     if (checkpoint.is_open())
     {
         std::string line;
-        if (!std::getline(checkpoint, line) || line != "BB3D_RESULTS_V1")
+        if (!std::getline(checkpoint, line) || line != (identity.empty()?"BB3D_RESULTS_V1":"BB3D_RESULTS_V2"))
             throw std::invalid_argument("Invalid experiment checkpoint header: " + fitnessPath);
+        if(!identity.empty() && (!std::getline(checkpoint,line) || line!=identity))
+            throw std::invalid_argument("Checkpoint dataset, seed or configuration differs from this experiment.");
         ExperimentResults results;
         while (std::getline(checkpoint, line))
         {
@@ -135,6 +153,8 @@ ExperimentResults loadExperimentResults(const std::string &fitnessPath, const st
     if (errno != ENOENT) throw std::runtime_error("Cannot open experiment checkpoint: " + fitnessPath);
     const auto fitness = getFloatNumberListFile(fitnessPath);
     const auto times = getIntegerNumberListFile(timePath);
+    if(!identity.empty() && (!fitness.empty() || !times.empty()))
+        throw std::invalid_argument("Legacy results have no experiment identity; use a fresh result path.");
     if (fitness.size() > count || times.size() > count) throw std::invalid_argument("Legacy results exceed the dataset instance count.");
     for (double value : fitness)
         if (value != -1 && (value < 0 || value > 1)) throw std::invalid_argument("Invalid legacy fitness value.");
@@ -150,13 +170,14 @@ ExperimentResults loadExperimentResults(const std::string &fitnessPath, const st
     return results;
 }
 
-void saveExperimentResults(const ExperimentResults &results, const std::string &fitnessPath, const std::string &timePath)
+void saveExperimentResults(const ExperimentResults &results, const std::string &fitnessPath, const std::string &timePath, const std::string &identity)
 {
+    if(identity.find_first_of("\r\n")!=std::string::npos) throw std::invalid_argument("Experiment identity must be one line.");
     validatePaths(fitnessPath, timePath);
     for (const auto &result : results) validate(result);
     std::ostringstream checkpoint, fitness, times;
     checkpoint.imbue(std::locale::classic()); fitness.imbue(std::locale::classic()); times.imbue(std::locale::classic());
-    checkpoint << "BB3D_RESULTS_V1\n" << std::setprecision(std::numeric_limits<double>::max_digits10);
+    checkpoint << (identity.empty()?"BB3D_RESULTS_V1\n":"BB3D_RESULTS_V2\n"+identity+"\n") << std::setprecision(std::numeric_limits<double>::max_digits10);
     fitness << std::setprecision(std::numeric_limits<double>::max_digits10);
     for (const auto &result : results)
     {

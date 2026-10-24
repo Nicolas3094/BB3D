@@ -2,11 +2,15 @@
 #include "DBLFValidation.hpp"
 /** Deepest Bottom Left Fill with PriorityQueue
  *
- * Worst-case O(n^3) for n input items and an initially empty bin:
+ * ThreePoints: worst-case O(n^3) for n input items and an initially empty bin:
  * O(n) candidate points per item, O(n) overlap checks per candidate,
  * and O(n) contact compaction after a feasible candidate is found.
  * The vector-backed DBLF below has the same bound (including queue updates).
  * The previous unit-step compaction added O(n^2 * D), where D bounds travel.
+ * Projected adds at most 54 contact projections per placed item: O(n)
+ * candidates, O(n^3) worst-case time and O(n) candidate space, with larger
+ * constants. BestOfBoth runs both policies and retains
+ * the greater loaded volume, preferring ThreePoints on ties.
  */
 void DBLFQueue(
     Bin &bin,
@@ -15,6 +19,14 @@ void DBLFQueue(
     LoadedBins itemDataOrderById)
 {
     validateDBLFInput(bin, itemsIdToPack, itemsRotation, itemDataOrderById);
+    if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
+        Bin legacy=bin,projected=bin;
+        legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
+        DBLFQueue(legacy,itemsIdToPack,itemsRotation,itemDataOrderById);
+        DBLFQueue(projected,itemsIdToPack,itemsRotation,itemDataOrderById);
+        bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
+        bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth); return;
+    }
     int countAllele = 0;
     PriorityPointQueue queue;
     Node<Punto> *rear;
@@ -66,6 +78,14 @@ void DBLF(
     bool print)
 {
     validateDBLFInput(bin, itemsIdToPack, itemsRotation, itemDataOrderById);
+    if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
+        Bin legacy=bin,projected=bin;
+        legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
+        DBLF(legacy,itemsIdToPack,itemsRotation,itemDataOrderById,print);
+        DBLF(projected,itemsIdToPack,itemsRotation,itemDataOrderById,print);
+        bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
+        bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth); return;
+    }
     ColaPuntosDBL queue = ColaPuntosDBL::Build();
     queue.push(Punto::Build(0, 0, 0));
     int countAllele = 0;
@@ -101,6 +121,13 @@ void DBLF(
     LoadedBins itemsToPack)
 {
     validateDBLFInput(bin, itemsToPack);
+    if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
+        Bin legacy=bin,projected=bin;
+        legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
+        DBLF(legacy,itemsToPack); DBLF(projected,itemsToPack);
+        bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
+        bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth); return;
+    }
     ROTATION_WAY rotationWay = bin.getRotationWay();
     ColaPuntosDBL queue = ColaPuntosDBL::Build();
     queue.push(Punto::Build(0, 0, 0));

@@ -120,6 +120,7 @@ double GeneticAlgorithm::diversityIndex(Poblacion currentPoblation)
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
 {
+    if (!adaptiveMutation) return mutationProbaility;
     return 1.0 - (individual.getFitness() + otherIndividual.getFitness()) / 2.0;
 }
 
@@ -130,14 +131,13 @@ void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int initIndex, int 
         if (uniformUnit() < adaptiveMutationProbabiliy(poblation[i], poblation[0]))
         {
             mutate(poblation[i]);
-
+            evaluateFitness(poblation[i], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
             if (visitedIndividuals[poblation[i].solution])
             {
                 poblation[i].setFitness(0.0);
             }
             else
             {
-                evaluateFitness(poblation[i], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
                 visitedIndividuals[poblation[i].solution] = true;
             }
         }
@@ -341,8 +341,11 @@ GeneticAlgorithm &GeneticAlgorithm::setCrossProbability(double crossProability)
 GeneticAlgorithm &GeneticAlgorithm::setMutationProbabiliy(double mutationProbaility)
 {
     this->mutationProbaility = mutationProbaility;
+    adaptiveMutation = false;
     return *this;
 }
+
+GeneticAlgorithm &GeneticAlgorithm::setAdaptiveMutation(bool enabled) { adaptiveMutation=enabled; return *this; }
 GeneticAlgorithm &GeneticAlgorithm::setDMutationProbability(double dMutationProbability)
 {
     this->dMutationProbability = dMutationProbability;

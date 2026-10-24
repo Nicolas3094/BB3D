@@ -8,6 +8,6 @@
 #include <vector>
 #include <iostream>
 
-std::string getEnv(std::string);
+std::string getEnv(std::string,const std::string &path=".env");
 
 #endif

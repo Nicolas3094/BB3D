@@ -27,8 +27,10 @@ struct GeneticAlgorithmTestAccess
     }
     static void run(GeneticAlgorithm &algorithm, Poblacion &population, int first, int last)
     {
-        // Use the existing visited-solution branch to observe which individuals
-        // were processed without invoking packing or unrelated fitness logic.
+        DatasetBinBacking data{};
+        data.bin=Bin::Build().setLargo(10).setAncho(10).setAlto(10);
+        for(int id=1;id<=6;++id) data.totalItems.push_back(ItemBin::Build().setId(id).setLargo(1).setAncho(1).setAlto(1).setRotations(Punto::Build(1,1,1)));
+        algorithm.setProblem(data);
         algorithm.visitedIndividuals["seen"] = true;
         algorithm.mutatePoblation(population, first, last);
     }
@@ -191,8 +193,11 @@ void checkRange(int first, int last)
     GeneticAlgorithmTestAccess::run(algorithm, population, first, last);
     for (int i = 0; i < 5; ++i)
     {
-        const double expected = i >= first && i <= last ? 0.0 : 0.25;
-        if (population[i].getFitness() != expected)
+        const bool selected=i>=first && i<=last;
+        // Identical newly evaluated packings may be penalized as duplicates.
+        if ((selected && (population[i].solution=="seen" ||
+                (population[i].getFitness()!=0 && population[i].getFitness()!=6.0/1000.0))) ||
+            (!selected && (population[i].getFitness()!=0.25 || population[i].solution!="seen")))
             throw std::runtime_error("Incorrect inclusive mutation interval");
     }
 }

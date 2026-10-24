@@ -120,3 +120,49 @@ reinicia su historial de soluciones visitadas.
 DBLF requiere un contenedor vacío y dimensiones actuales que sean una permutación
 de las originales. Las coordenadas usan enteros de 64 bits; sus operaciones
 rechazan desbordamientos y divisiones por cero.
+
+En GA, `setMutationProbabiliy(p)` selecciona una probabilidad fija; por ejemplo,
+`p=0` desactiva la mutación de individuos. El comportamiento inicial sigue siendo
+adaptativo y se puede recuperar con `setAdaptiveMutation(true)`. La probabilidad
+de mutación de orientaciones se aplica cuando se muta el individuo.
+
+Los experimentos aceptan una semilla y una política de candidatos:
+
+```powershell
+./main.exe --seed 123 --candidates legacy
+./main.exe --seed 123 --candidates best
+```
+
+La semilla predeterminada es `20261024`. Un único generador `mt19937_64` controla
+las permutaciones, orientaciones, selecciones y mutaciones. Cada instancia deriva
+su semilla de la semilla raíz, su ID y el `PSeed` del dataset. Reanudar no cambia
+el azar de las instancias pendientes. La reproducción se garantiza con el mismo
+código, biblioteca estándar y configuración; el tiempo de ejecución puede variar.
+
+`legacy` conserva los tres puntos actuales. `projected` añade proyecciones hacia
+paredes y caras de contacto en los seis órdenes de ejes, con un máximo de 54
+candidatos intermedios por caja. `best` evalúa ambos métodos y conserva el de mayor
+volumen, prefiriendo `legacy` en empates. Los tres mantienen una cota O(n³), pero
+los modos adicionales tienen un coste mayor. No garantizan el empaquetado óptimo.
+
+La ejecución principal escribe checkpoints V2 con la huella FNV-1a de 64 bits de
+los bytes del dataset, todos los parámetros, la semilla y la versión del motor.
+Es una comprobación de cambios accidentales, no una firma de seguridad. Las rutas
+incluyen un identificador de experimento; cambiar datos o parámetros inicia otro
+conjunto de resultados. Los checkpoints incompatibles se rechazan. Los resultados
+antiguos sin identidad se conservan y no se reutilizan automáticamente en estos
+experimentos; las funciones de compatibilidad V1 siguen disponibles.
+
+`.env` admite claves exactas, espacios alrededor de `=`, comentarios de línea
+completa y valores entre comillas. Las claves vacías o ausentes y los archivos
+inaccesibles producen errores capturados por `main()`.
+
+Comparación reproducible de candidatos (P1–P5, semillas 123 y 456, tres modos de
+rotación; 300 evaluaciones por ronda, calentamiento y tres rondas):
+
+```powershell
+./tests/benchmark-candidates.ps1
+```
+
+El informe en `build/candidates/comparison.csv` compara ocupación media, mediana
+del tiempo y pico del conjunto de trabajo del proceso medido por Windows.
