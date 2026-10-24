@@ -38,7 +38,7 @@ public:
     Punto getCurrentDimension() const;
     int getId() const;
     int getRotationId() const;
-    int getTipo();
+    int getTipo() const;
     int getLargo();
     int getAncho();
     int getAlto();
@@ -48,7 +48,7 @@ public:
     Punto getRotations() const;
     ROTATION_WAY getRotation();
 
-    bool isValidOrientation();
+    bool isValidOrientation() const;
 
     void rotate(ROTATION_WAY, ROTATION_MODE);
 };

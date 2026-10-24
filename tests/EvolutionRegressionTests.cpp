@@ -151,8 +151,8 @@ void checkGA()
     require(std::isfinite(diversity) && diversity == 0, "All-zero fitness has non-finite diversity");
     rejects([&] { GeneticAlgorithmTestAccess::diversity(ga, {}); });
     auto varied = population(2); varied.front().setFitness(0.8); varied.back().setFitness(0.4);
-    require(std::abs(GeneticAlgorithmTestAccess::diversity(ga, varied) - 0.625) < 1e-12,
-            "Positive-fitness diversity formula changed");
+    require(GeneticAlgorithmTestAccess::diversity(ga, varied)==0,
+            "Fitness differences were incorrectly counted as genetic diversity");
     ga.setSelectionProbability(1);
     auto two = population(2); two[0].setFitness(0.4); two[1].setFitness(0.9);
     for (bool boundary : {false,true})

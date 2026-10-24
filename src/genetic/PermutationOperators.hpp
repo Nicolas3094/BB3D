@@ -28,6 +28,7 @@ void addRangeToChromosome(Chromosome &, Chromosome, int, int);
 void addRangeToGenome(DoubleGenome &, DoubleGenome, int, int);
 void addToGenome(DoubleGenome &, int, int x);
 void copyEqualRangeToGenome(DoubleGenome &, DoubleGenome, int, int, int, int);
+// Both copy functions use inclusive intervals [start,end], including for reversal.
 void copyReversedEqualRangeToGenome(DoubleGenome &, DoubleGenome, int, int, int, int);
 DoubleGenome buildSubsequence(DoubleGenome, int, int);
 void copySubsequence(DoubleGenome &, DoubleGenome, int, int);

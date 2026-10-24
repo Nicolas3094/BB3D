@@ -1,0 +1,38 @@
+name: C++ tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      # Installs only on the ephemeral CI runner, not the local workstation.
+      # https://github.com/msys2/setup-msys2
+      - uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows'
+        id: msys2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+      - name: Unit tests, application build and CLI smoke tests
+        shell: pwsh
+        env:
+          MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          if ($IsWindows) {
+            $compiler = Join-Path $env:MSYS2_LOCATION 'ucrt64/bin/g++.exe'
+          } else {
+            $compiler = (Get-Command g++).Source
+          }
+          ./tests/run.ps1 -Compiler $compiler

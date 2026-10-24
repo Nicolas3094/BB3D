@@ -2,6 +2,7 @@
 #include "../metaheuristics/GeneticAlgorithm.hpp"
 #include "../metaheuristics/ArtificialBeeColonyAlgorithm.hpp"
 #include "../metaheuristics/FireflyAlgorithm.hpp"
+#include "../genetic/FitnessCache.hpp"
 #include <iomanip>
 #include <limits>
 #include <locale>
@@ -29,22 +30,24 @@ ExperimentConfiguration makeExperimentConfiguration(const std::string &name,ROTA
 }
 std::string ExperimentConfiguration::identity(const std::string &datasetHash,std::uint64_t seed) const {
     std::ostringstream out; out.imbue(std::locale::classic()); out<<std::setprecision(std::numeric_limits<double>::max_digits10);
-    out<<"bb3d-v4;compiler="<<__VERSION__<<";rng=mt19937_64;dataset="<<datasetHash<<";seed="<<seed
+    out<<"bb3d-v5;compiler="<<__VERSION__<<";rng=mt19937_64;dataset="<<datasetHash<<";seed="<<seed
        <<";algorithm="<<algorithm<<";rotation="<<static_cast<int>(rotation)<<";mutation="<<static_cast<int>(mutation)
        <<";candidates="<<static_cast<int>(candidates)<<";replacement="<<replacement<<";adaptive="<<adaptive
        <<";iterations="<<iterations<<";population="<<individuals<<";sites="<<sites<<";eliteSites="<<eliteSites
        <<";eliteBees="<<eliteBees<<";nonEliteBees="<<nonEliteBees<<";movements="<<movements
        <<";crossover="<<crossover<<";selection="<<selection<<";mutationProbability="<<mutationProbability
-       <<";rotationMutation="<<rotationMutation<<";diversity="<<diversity;
+       <<";rotationMutation="<<rotationMutation<<";diversity="<<diversity<<";patience="<<patience
+       <<";cacheEntries="<<cacheEntries<<";cacheBytes="<<cacheBytes;
     return out.str();
 }
 Poblacion ExperimentConfiguration::run(DatasetBinBacking data) const {
+    configureFitnessCache(cacheEntries,cacheBytes);
     data.bin.setCandidatePolicy(candidates);
     if(algorithm=="GA") {
         GeneticAlgorithm ga;
         ga.setMaxIteration(iterations).setNumberOfIndividuals(individuals).setCrossProbability(crossover)
           .setSelectionProbability(selection).setMutationProbabiliy(mutationProbability).setAdaptiveMutation(adaptive)
-          .setDMutationProbability(rotationMutation).setMaxDiversityIndex(diversity).setIsWithReplacement(replacement)
+          .setDMutationProbability(rotationMutation).setMaxDiversityIndex(diversity).setStagnationLimit(patience).setIsWithReplacement(replacement)
           .setRotationType(rotation).setMutationType(mutation).setProblem(data);
         return ga.evolve();
     }

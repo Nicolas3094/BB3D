@@ -166,3 +166,54 @@ rotación; 300 evaluaciones por ronda, calentamiento y tres rondas):
 
 El informe en `build/candidates/comparison.csv` compara ocupación media, mediana
 del tiempo y pico del conjunto de trabajo del proceso medido por Windows.
+
+## Ejecución y pruebas automatizadas
+
+Sin argumentos, `main.exe` muestra ayuda y termina. Ya no inicia el lote completo
+ni espera una pulsación al terminar. Ejemplo corto sin depender de `.env`:
+
+```powershell
+./main.exe --root . --algorithm all --dataset P1A2 --instances 1 --population 4 --iterations 2 --rounds 2 --seed 123 --output build/example-results
+```
+
+`--algorithm` admite `GA`, `ABC`, `FFA` o `all`; `--dataset` admite un nombre de
+dataset, un archivo CSV o `all`. También se pueden seleccionar rotación, mutación,
+reemplazo, probabilidades y parámetros de ABC/Firefly; `--help` enumera las opciones.
+Con una población pequeña, los sitios y élites predeterminados de ABC se ajustan
+para respetar sus límites. Los valores explícitos incompatibles producen un error.
+`--batch` selecciona todos los algoritmos, datasets, rotaciones, mutaciones y modos
+de reemplazo. Los resultados nuevos se guardan en `Results/cli` o en `--output`.
+Cada ronda tiene una semilla derivada y un checkpoint independiente. Repetir el
+mismo comando reanuda las instancias completadas; cambiar los parámetros usa
+otro identificador de experimento.
+
+GA inserta una sola vez hijos con la misma solución. Su diversidad es ahora la
+media de las distancias Hamming al primer individuo, normalizada por el número
+de loci, y no depende de diferencias de fitness. La parada anticipada exige
+diversidad inferior a `--diversity` y `--patience` generaciones sin mejora. Los
+valores predeterminados son `0.001` y `25`. `--patience 0` desactiva esta parada;
+el fitness perfecto y el límite de iteraciones siguen siendo condiciones de fin.
+Las funciones de copia de rangos usan extremos inclusivos y rechazan todos los
+argumentos inválidos antes de modificar el destino.
+
+La caché LRU de fitness es opcional: está desactivada por defecto después de
+medir una sobrecarga cercana al 5 % en GA con pocas repeticiones. Se puede activar
+con `--cache-entries 256 --cache-mib 8`. Las claves usan ambos cromosomas completos;
+el contexto incluye datos, dimensiones, permisos y política de empaquetado.
+Cambiar ese contexto invalida la caché, que también se reinicia al comenzar cada
+ejecución. Los límites cubren número de entradas y bytes de contexto, claves y
+soluciones; los nodos, buckets y el allocator tienen un coste adicional. La vía
+decodificada, que devuelve las cajas colocadas, no usa esta caché de fitness.
+La consola muestra aciertos y evaluaciones no reutilizadas. Para reproducir las
+mediciones y comprobar igualdad exacta de resultados:
+
+```powershell
+./tests/benchmark-cache.ps1
+```
+
+`tests/run.ps1` ejecuta los doce binarios de pruebas, compila la aplicación y
+prueba la CLI con los tres algoritmos, dos rondas y reanudación. GitHub Actions
+ejecuta ese mismo script en Windows y Linux para cada push y pull request; su
+definición está en `.github/workflows/tests.yml`. Las dependencias de CI se instalan
+únicamente en el runner temporal. No se requieren instalaciones locales nuevas.
+Todas las mediciones de duración usan `std::chrono::steady_clock`.

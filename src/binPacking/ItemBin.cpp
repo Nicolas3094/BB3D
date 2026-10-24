@@ -80,7 +80,7 @@ int ItemBin::getId() const
     return this->id;
 }
 
-int ItemBin::getTipo()
+int ItemBin::getTipo() const
 {
     return this->tipo;
 }
@@ -211,7 +211,7 @@ void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
     }
 }
 
-bool ItemBin::isValidOrientation()
+bool ItemBin::isValidOrientation() const
 {
     return hasValidRotation;
 }

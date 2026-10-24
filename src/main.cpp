@@ -11,6 +11,8 @@
 #include "readData/Env.hpp"
 #include "readData/ExperimentResults.hpp"
 #include "readData/ExperimentConfiguration.hpp"
+#include "readData/CommandLine.hpp"
+#include "readData/ExperimentRunner.hpp"
 #include "util/RandomNumbers.hpp"
 
 std::string LOCAL_PATH;
@@ -19,33 +21,15 @@ DBLFCandidatePolicy configuredCandidates=DBLFCandidatePolicy::ThreePoints;
 
 int main(int argc,char **argv)
 {
-
-  try
-  {
-    for(int arg=1;arg<argc;arg+=2) {
-      if(arg+1>=argc) throw std::invalid_argument("Options require a value: --seed N --candidates legacy|projected|best");
-      const std::string option=argv[arg],value=argv[arg+1];
-      if(option=="--seed") configuredSeed=parseExperimentSeed(value);
-      else if(option=="--candidates") {
-        if(value=="legacy") configuredCandidates=DBLFCandidatePolicy::ThreePoints;
-        else if(value=="projected") configuredCandidates=DBLFCandidatePolicy::Projected;
-        else if(value=="best") configuredCandidates=DBLFCandidatePolicy::BestOfBoth;
-        else throw std::invalid_argument("Unknown candidate policy.");
-      } else throw std::invalid_argument("Unknown command-line option: "+option);
-    }
-    LOCAL_PATH = getEnv("LOCAL_PATH");
-    iterGeneticAll();
-  }
-
-  catch (const std::exception &ex)
-  {
-    cerr << ex.what() << "\n";
-    return 1;
-  }
-  std::cin.get();
-  // system("pause");
+  try {
+    auto options=parseCommandLine(std::vector<std::string>(argv+1,argv+argc));
+    if(options.help) { std::cout<<commandLineHelp(); return 0; }
+    if(options.root.empty()) options.root=getEnv("LOCAL_PATH");
+    LOCAL_PATH=options.root; configuredSeed=options.seed; configuredCandidates=options.candidates;
+    runExperiments(options);
+    return 0;
+  } catch(const std::exception &error) { std::cerr<<error.what()<<'\n';return 1; }
 }
-
 void testInverseMutation()
 {
   DoubleGenome zerosChromosome;
@@ -82,7 +66,7 @@ void iterGeneticAll()
       /* isWithReplacement= */ isWithReplacement);
 
   vector<bool> replace{true, false};
-  vector<string> ALGORITHMS{getAlgorithmNameFromNumber("2"), getAlgorithmNameFromNumber("3")};
+  vector<string> ALGORITHMS{getAlgorithmNameFromNumber("1"), getAlgorithmNameFromNumber("2"), getAlgorithmNameFromNumber("3")};
   vector<string> PROBLEMS{"P1A2", "P2A2", "P3A2", "P4A2", "P5A2"};
   vector<MutationType> MUTATIONS{
       getMutationTypeFromUser("1"), getMutationTypeFromUser("2"), getMutationTypeFromUser("3")};
@@ -140,10 +124,10 @@ void iterGeneticAll()
               // Print it
               saveExperimentResults(results, fitnessDataPath, timePATH,identity);
 
-              auto start = chrono::high_resolution_clock::now();
+              auto start = chrono::steady_clock::now();
               seedRandomNumbers(instanceSeed(configuredSeed,DATASSET[i].id,DATASSET[i].PSeed));
               bestPob = config.run(DATASSET[i]);
-              auto stop = chrono::high_resolution_clock::now();
+              auto stop = chrono::steady_clock::now();
               auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
               // update data
@@ -322,9 +306,9 @@ void testRotationsGA(string name)
   {
     cout << i << " ";
 
-    auto start = chrono::high_resolution_clock::now();
+    auto start = chrono::steady_clock::now();
     bestPobRot = geneticAlgorithm.evolve();
-    auto stop = chrono::high_resolution_clock::now();
+    auto stop = chrono::steady_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
     fitnessGAReplace += bestPobRot[0].getFitness() / 1000;
@@ -352,23 +336,23 @@ void testDblf()
   DatasetBinBacking data = DATASSET[0];
   Poblacion heuristicPoblation = buildHeuristicPoblation(1000, data.bin, data.totalItems);
   Poblacion secondPob = heuristicPoblation;
-  auto start = std::chrono::high_resolution_clock::now();
+  auto start = std::chrono::steady_clock::now();
   for (Individuo &ind : heuristicPoblation)
   {
     Bin bin = data.bin;
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), data.totalItems);
     ind.setFitness((double)bin.getLoadedVolume() / (double)bin.getDimensions().getVolumen());
   }
-  auto stop = std::chrono::high_resolution_clock::now();
+  auto stop = std::chrono::steady_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-  auto start2 = std::chrono::high_resolution_clock::now();
+  auto start2 = std::chrono::steady_clock::now();
   for (Individuo &ind : secondPob)
   {
     Bin bin = data.bin;
     DBLFQueue(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), data.totalItems);
     ind.setFitness((double)bin.getLoadedVolume() / (double)bin.getDimensions().getVolumen());
   }
-  auto stop2 = std::chrono::high_resolution_clock::now();
+  auto stop2 = std::chrono::steady_clock::now();
   auto duration2 = std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2);
   for (int i = 0; i < secondPob.size(); i++)
   {
@@ -407,10 +391,10 @@ void evaluatePoblationTime()
       /* numberPoblation= */ numberOfIndividuals,
       /* bin= */ dataset.bin,
       /* allItemsBin= */ totalItems);
-  auto start = std::chrono::high_resolution_clock::now();
+  auto start = std::chrono::steady_clock::now();
   evaluatePoblation(heuristicPoblation, totalItems, dataset.bin);
   //  DBLF(dataset.bin, individual.getGenome().getGenome(), individual.getGenome().getDGenome(), totalItems);
-  auto stop = std::chrono::high_resolution_clock::now();
+  auto stop = std::chrono::steady_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
   print("Duration: " << duration.count() << "ms");
   print("Item places: " << dataset.bin.getLoadedItems());
@@ -432,7 +416,7 @@ void genetic()
   {
     cerr << ex.what() << "\n";
   }
-  auto start = std::chrono::high_resolution_clock::now();
+  auto start = std::chrono::steady_clock::now();
   std::cout << "Init\n";
   GeneticAlgorithm algorithm = GeneticAlgorithm::Build()
                                    .setIsWithReplacement(true)
@@ -444,7 +428,7 @@ void genetic()
                                    .setDMutationProbability(0.01)
                                    .setMutationType(MutationType::C2);
   Poblacion bestPob = algorithm.evolve();
-  auto stop = std::chrono::high_resolution_clock::now();
+  auto stop = std::chrono::steady_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
   std::cout << "Initial best fit: " << bestPob[0].getFitness() << "\n";
   std::cout << "Initial worst fit: " << bestPob[bestPob.size() - 1].getFitness() << "\n";

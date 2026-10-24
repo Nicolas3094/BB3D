@@ -1,4 +1,5 @@
 #include "FitnessOperators.hpp"
+#include "FitnessCache.hpp"
 
 namespace {
 void updateSolution(Individuo &ind,const Bin &bin) {
@@ -11,9 +12,12 @@ void updateSolution(Individuo &ind,const Bin &bin) {
 
 void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
 {
+    std::string cacheKey;
+    if(lookupFitness(ind,itemData,bin,cacheKey)) return;
     DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
     ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
     updateSolution(ind,bin);
+    rememberFitness(ind,cacheKey);
 }
 
 void evaluateFitnessDecodificated(Individuo &ind, LoadedBins itemData, Bin &bin)

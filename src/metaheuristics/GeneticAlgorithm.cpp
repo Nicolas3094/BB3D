@@ -9,9 +9,10 @@ Poblacion GeneticAlgorithm::evolve()
     for (double probability : {selectionProbability, crossProability, mutationProbaility, dMutationProbability})
         if (!std::isfinite(probability) || probability < 0.0 || probability > 1.0)
             throw std::invalid_argument("GA probabilities must be finite and in [0,1].");
-    if (!std::isfinite(maxDiversityIndex) || maxDiversityIndex < 0.0)
-        throw std::invalid_argument("GA diversity threshold must be finite and non-negative.");
+    if (!std::isfinite(maxDiversityIndex) || maxDiversityIndex < 0.0 || maxDiversityIndex > 1 || stagnationLimit < 0)
+        throw std::invalid_argument("GA requires diversity in [0,1] and non-negative stagnation patience.");
     visitedIndividuals.clear();
+    stagnantIterations=0; bestSeenFitness=-1;
     if (isWithReplacement)
     {
         return evolveWithReplacement();
@@ -59,6 +60,7 @@ Poblacion GeneticAlgorithm::evolveWithReplacement()
 {
     int i;
     Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    bestSeenFitness=poblation.front().getFitness();
 
     for (auto &ind : poblation)
     {
@@ -82,6 +84,7 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 {
     int i;
     Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    bestSeenFitness=poblation.front().getFitness();
 
     for (auto &ind : poblation)
     {
@@ -104,18 +107,25 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 bool GeneticAlgorithm::terminateCondition(Poblacion currentPoblation)
 {
     if (currentPoblation.empty()) throw std::invalid_argument("GA population cannot be empty.");
-    return currentPoblation[0].getFitness() == 1 || diversityIndex(currentPoblation) < maxDiversityIndex;
+    const double diversity=diversityIndex(currentPoblation);
+    const double best=currentPoblation.front().getFitness();
+    if(best>bestSeenFitness) { bestSeenFitness=best; stagnantIterations=0; }
+    else ++stagnantIterations;
+    return best==1 || (stagnationLimit>0 && stagnantIterations>=stagnationLimit && diversity<maxDiversityIndex);
 }
 
 double GeneticAlgorithm::diversityIndex(Poblacion currentPoblation)
 {
     if (currentPoblation.empty()) throw std::invalid_argument("GA population cannot be empty.");
-    const double bestFitness = currentPoblation.front().getFitness();
-    const double worstFitness = currentPoblation.back().getFitness();
-    if (!std::isfinite(bestFitness) || !std::isfinite(worstFitness) || worstFitness < 0.0 || bestFitness < worstFitness)
-        throw std::invalid_argument("GA diversity requires sorted non-negative finite fitness.");
-    if (bestFitness == 0.0) return 0.0;
-    return ((bestFitness - worstFitness) / bestFitness) / bestFitness;
+    const auto &reference=currentPoblation.front().getGenome();
+    double differences=0;
+    for(const auto &individual:currentPoblation) {
+        if(!std::isfinite(individual.getFitness()) || individual.getFitness()<0 || individual.getFitness()>1)
+            throw std::invalid_argument("GA diversity requires fitness in [0,1].");
+        differences+=hamming(reference,individual.getGenome());
+    }
+    const auto size=reference.getGenome().size();
+    return size==0?0:differences/(static_cast<double>(size)*currentPoblation.size());
 }
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
@@ -178,6 +188,13 @@ std::vector<Individuo> GeneticAlgorithm::getChildren(Individuo parent, Individuo
 
 void GeneticAlgorithm::addChildredToPoblation(Poblacion &poblation, Individuo child, Individuo secondChild)
 {
+    if(child.solution==secondChild.solution) {
+        if(!visitedIndividuals[child.solution]) {
+            visitedIndividuals[child.solution]=true;
+            poblation.push_back(child.getFitness()>=secondChild.getFitness()?child:secondChild);
+        }
+        return;
+    }
     if (!visitedIndividuals[child.solution] && visitedIndividuals[secondChild.solution])
     {
         visitedIndividuals[child.solution] = true;
@@ -321,6 +338,8 @@ GeneticAlgorithm &GeneticAlgorithm::setMaxDiversityIndex(double maxDiversityInde
     this->maxDiversityIndex = maxDiversityIndex;
     return *this;
 }
+
+GeneticAlgorithm &GeneticAlgorithm::setStagnationLimit(long limit) { stagnationLimit=limit; return *this; }
 
 GeneticAlgorithm &GeneticAlgorithm::setIsWithReplacement(bool isWithReplacement)
 {

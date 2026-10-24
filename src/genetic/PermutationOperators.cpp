@@ -332,32 +332,30 @@ void addToGenome(DoubleGenome &gen, int value, int valueRot)
 void copyEqualRangeToGenome(
     DoubleGenome &gen, DoubleGenome genToAdd, int initGen, int endGen, int initCopy, int endCopy)
 {
-    int initRange = initCopy;
-    for (int i = initGen; i <= endGen + 1; i++)
+    if(gen.getGenome().size()!=gen.getDGenome().size() || genToAdd.getGenome().size()!=genToAdd.getDGenome().size() ||
+       initGen<0 || initCopy<0 || endGen<initGen || endCopy<initCopy ||
+       static_cast<size_t>(endGen)>=gen.getGenome().size() || static_cast<size_t>(endCopy)>=genToAdd.getGenome().size() ||
+       endGen-initGen!=endCopy-initCopy)
+        throw std::invalid_argument("Copy requires valid inclusive intervals of equal length and paired chromosomes.");
+    for (size_t offset=0;offset<=static_cast<size_t>(endGen-initGen);++offset)
     {
-        gen.getGenome()[i] = genToAdd.getGenome()[initRange];
-        gen.getDGenome()[i] = genToAdd.getDGenome()[initRange];
-        initRange++;
-    }
-    if (initCopy > endCopy)
-    {
-        throw std::invalid_argument(" CopyEqualRangeToGenome ERROR");
+        gen.getGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getGenome()[static_cast<size_t>(initCopy)+offset];
+        gen.getDGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getDGenome()[static_cast<size_t>(initCopy)+offset];
     }
 }
 
 void copyReversedEqualRangeToGenome(
     DoubleGenome &gen, DoubleGenome genToAdd, int initGen, int endGen, int initCopy, int endCopy)
 {
-    int initRange = endCopy;
-    for (int i = initGen; i <= endGen + 1; i++)
+    if(gen.getGenome().size()!=gen.getDGenome().size() || genToAdd.getGenome().size()!=genToAdd.getDGenome().size() ||
+       initGen<0 || initCopy<0 || endGen<initGen || endCopy<initCopy ||
+       static_cast<size_t>(endGen)>=gen.getGenome().size() || static_cast<size_t>(endCopy)>=genToAdd.getGenome().size() ||
+       endGen-initGen!=endCopy-initCopy)
+        throw std::invalid_argument("Reverse copy requires valid inclusive intervals of equal length and paired chromosomes.");
+    for (size_t offset=0;offset<=static_cast<size_t>(endGen-initGen);++offset)
     {
-        gen.getGenome()[i] = genToAdd.getGenome()[initRange];
-        gen.getDGenome()[i] = genToAdd.getDGenome()[initRange];
-        initRange--;
-    }
-    if (initCopy < endCopy)
-    {
-        throw std::invalid_argument(" CopyReversedEqualRangeToGenome ERROR");
+        gen.getGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getGenome()[static_cast<size_t>(endCopy)-offset];
+        gen.getDGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getDGenome()[static_cast<size_t>(endCopy)-offset];
     }
 }
 

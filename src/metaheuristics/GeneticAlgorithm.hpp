@@ -23,6 +23,8 @@ private:
     bool adaptiveMutation = true;
     double dMutationProbability;
     double maxDiversityIndex;
+    long stagnationLimit=25,stagnantIterations=0;
+    double bestSeenFitness=-1;
 
     bool isWithReplacement;
 
@@ -55,6 +57,8 @@ public:
     static GeneticAlgorithm Build();
 
     GeneticAlgorithm &setMaxDiversityIndex(double);
+    // 0 disables early stopping by stagnation; iterations still bound the run.
+    GeneticAlgorithm &setStagnationLimit(long);
     GeneticAlgorithm &setIsWithReplacement(bool);
     GeneticAlgorithm &setSelectionProbability(double);
     GeneticAlgorithm &setCrossProbability(double);
