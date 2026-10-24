@@ -6,6 +6,9 @@ DoubleGenome::~DoubleGenome()
 {
 }
 
+const Chromosome &DoubleGenome::getGenome() const { return genome; }
+const Chromosome &DoubleGenome::getDGenome() const { return doubleGenome; }
+
 DoubleGenome DoubleGenome::Build()
 {
     DoubleGenome newGenome;

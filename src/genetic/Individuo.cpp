@@ -34,6 +34,8 @@ DoubleGenome &Individuo::getGenome()
     return this->genome;
 }
 
+const DoubleGenome &Individuo::getGenome() const { return genome; }
+
 std::ostream &operator<<(std::ostream &COUT, Individuo &ind)
 {
     COUT << ind.getGenome() << " || " << ind.getFitness();

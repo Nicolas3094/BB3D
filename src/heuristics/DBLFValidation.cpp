@@ -6,7 +6,7 @@
 
 namespace
 {
-bool binary(int value) { return value == 0 || value == 1; }
+bool binary(std::int64_t value) { return value == 0 || value == 1; }
 }
 
 void validateDBLFInput(const Bin &bin, const LoadedBins &items)
@@ -35,10 +35,10 @@ void validateDBLFInput(const Bin &bin, const LoadedBins &items)
             current.x <= 0 || current.y <= 0 || current.z <= 0)
             throw std::invalid_argument("DBLF: item dimensions must be positive.");
         original.getVolumen();
-        std::array<int,3> originalSides{{original.getLargo(), original.getAncho(), original.getAlto()}};
-        std::array<int,3> currentSides{{current.x, current.y, current.z}};
-        std::sort(originalSides.begin(), originalSides.end());
-        std::sort(currentSides.begin(), currentSides.end());
+        std::array<std::int64_t,3> originalSides{{original.getLargo(),original.getAncho(),original.getAlto()}};
+        std::array<std::int64_t,3> currentSides{{current.x,current.y,current.z}};
+        std::sort(originalSides.begin(),originalSides.end());
+        std::sort(currentSides.begin(),currentSides.end());
         if (originalSides != currentSides)
             throw std::invalid_argument("DBLF: current dimensions must be a permutation of original dimensions.");
         const Punto rotations = item.getRotations();

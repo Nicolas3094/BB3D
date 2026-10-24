@@ -11,6 +11,7 @@
 class ArtificialBeeColonyAlgorithm : public EvolutiveAlgorithm
 {
 private:
+    friend struct ArtificialBeeColonyAlgorithmTestAccess;
     std::map<std::string, bool> visitedIndividuals;
 
     long maxIteration;

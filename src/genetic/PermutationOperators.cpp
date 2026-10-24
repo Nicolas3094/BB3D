@@ -3,7 +3,7 @@
 #include <unordered_set>
 #include <limits>
 
-int hamming(DoubleGenome gen1, DoubleGenome gen2)
+int hamming(const DoubleGenome &gen1, const DoubleGenome &gen2)
 {
     const auto &items1 = gen1.getGenome();
     const auto &items2 = gen2.getGenome();

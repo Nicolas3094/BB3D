@@ -26,6 +26,8 @@ public:
 
     Chromosome &getGenome();
     Chromosome &getDGenome();
+    const Chromosome &getGenome() const;
+    const Chromosome &getDGenome() const;
 };
 
 bool operator==(DoubleGenome, DoubleGenome);

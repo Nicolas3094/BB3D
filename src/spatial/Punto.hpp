@@ -2,17 +2,18 @@
 #define PUNTO_H
 
 #include <iostream>
+#include <cstdint>
 
 class Punto
 {
 public:
-    int x;
-    int y;
-    int z;
+    std::int64_t x;
+    std::int64_t y;
+    std::int64_t z;
     Punto();
-    Punto(const int, const int, const int);
+    Punto(std::int64_t, std::int64_t, std::int64_t);
 
-    static Punto Build(const int, const int, const int);
+    static Punto Build(std::int64_t, std::int64_t, std::int64_t);
 };
 
 std::ostream &operator<<(std::ostream &, Punto);

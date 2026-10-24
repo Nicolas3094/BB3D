@@ -1,4 +1,6 @@
 #include "FireflyAlgorithm.hpp"
+#include "SearchValidation.hpp"
+#include "../util/RandomNumbers.hpp"
 
 Poblacion FireflyAlgorithm::evolve()
 {
@@ -7,6 +9,8 @@ Poblacion FireflyAlgorithm::evolve()
 
 Poblacion FireflyAlgorithm::search()
 {
+    validateConfiguration();
+    visitedIndividuals.clear();
     int n, iteration, firefly, bestFirefly;
     double gamma, bestIntensity;
 
@@ -67,7 +71,7 @@ Poblacion FireflyAlgorithm::search()
 }
 
 void FireflyAlgorithm::findMostAttractiveByIndexAndIntensity(
-    Poblacion fireflyPoblation, int currentFirefly, int &bestFireflyIndex, double &bestFireflyIntensity, double gamma)
+    const Poblacion &fireflyPoblation, int currentFirefly, int &bestFireflyIndex, double &bestFireflyIntensity, double gamma)
 {
     int bestFirefly, distance;
     double Ij, Ii;
@@ -107,7 +111,8 @@ DoubleGenome FireflyAlgorithm::randomMovement(DoubleGenome currentFireflyGenome)
 {
     DoubleGenome newFireflyGen = currentFireflyGenome;
 
-    mutationWithType(newFireflyGen, mutationType);
+    if (mutationProbaility == 1 || (mutationProbaility > 0 && uniformUnit() < mutationProbaility))
+        mutationWithType(newFireflyGen, mutationType);
 
     if (rotationType != ROTATION_WAY::ZERO_WAY)
     {
@@ -119,6 +124,8 @@ DoubleGenome FireflyAlgorithm::randomMovement(DoubleGenome currentFireflyGenome)
 
 Poblacion FireflyAlgorithm::searchD()
 {
+    validateConfiguration();
+    visitedIndividuals.clear();
     int n, iteration, fireflyIndex;
     double gamma;
 
@@ -256,10 +263,22 @@ double FireflyAlgorithm::lightIntensity(double fitness, double gamma, int distan
 
 FireflyAlgorithm::FireflyAlgorithm()
 {
+    maxIteration = 1000;
+    numberOfIndividuals = 25;
+    upIndex = 2;
+    isWithReplacement = true;
+    mutationType = MutationType::INVERSE_MUTATION;
+    rotationType = ROTATION_WAY::ZERO_WAY;
     this->dMutationProbability = 0.01;
     this->mutationProbaility = 1.0;
 }
 FireflyAlgorithm::~FireflyAlgorithm() {}
+
+void FireflyAlgorithm::validateConfiguration() const
+{
+    validateSearch(dataSet, numberOfIndividuals, maxIteration, mutationProbaility, dMutationProbability, mutationType, rotationType);
+    if (upIndex < 0) throw std::invalid_argument("Firefly movement count must be non-negative.");
+}
 
 FireflyAlgorithm FireflyAlgorithm::Build()
 {

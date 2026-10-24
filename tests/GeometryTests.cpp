@@ -37,7 +37,7 @@ ItemBin cube(int id, int size, Punto position)
 void legacyCompaction(Punto &point, const ItemBin &item, const Bin &bin)
 {
     if (bin.getNumberOfLoadedItems() <= 1) return;
-    for (int *coordinate : {&point.x, &point.z, &point.y})
+    for (std::int64_t *coordinate : {&point.x, &point.z, &point.y})
     {
         if (*coordinate == 0) continue;
         while (!isOverlapped(point, item, bin))

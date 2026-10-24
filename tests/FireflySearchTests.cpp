@@ -47,6 +47,10 @@ void checkSearch(std::initializer_list<double> fitnesses, int expectedCrosses,
     }
     crossCalls = movementCalls = fitnessCalls = 0;
     FireflyAlgorithm algorithm;
+    DatasetBinBacking problem{};
+    problem.bin = Bin::Build().setLargo(10).setAncho(10).setAlto(10);
+    problem.totalItems = {ItemBin::Build().setId(1).setLargo(1).setAncho(1).setAlto(1).setRotations(Punto::Build(1,1,1))};
+    algorithm.setProblem(problem);
     algorithm.setNumberOfIndividuals(static_cast<int>(fixture.size()))
         .setMaxIteration(1).setupIndex(movements).setIsWithReplacement(replacement)
         .setRotationType(ROTATION_WAY::ZERO_WAY)

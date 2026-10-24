@@ -1,7 +1,14 @@
 #include "ArtificialBeeColonyAlgorithm.hpp"
+#include "SearchValidation.hpp"
+#include "../util/RandomNumbers.hpp"
 
 Poblacion ArtificialBeeColonyAlgorithm::evolve()
 {
+    validateSearch(dataSet, numberOfIndividuals, maxIteration, mutationProbaility, dMutationProbability, mutationType, rotationType);
+    if (numberOfSites < 0 || numberOfSites > numberOfIndividuals || numberOfEliteSites < 0 ||
+        numberOfEliteSites > numberOfSites || numberOfEliteBees < 0 || numberOfNonEliteBees < 0)
+        throw std::invalid_argument("ABC requires 0 <= elite sites <= sites <= population and non-negative bee counts.");
+    visitedIndividuals.clear();
     int iteration, eliteSite, noneEliteSite, eliteBee, nonEliteBee, restOfSites;
 
     Poblacion sites =
@@ -90,7 +97,8 @@ void ArtificialBeeColonyAlgorithm::neighorhoodSearch(Poblacion &sites, int site)
 {
     DoubleGenome siteGenome = sites[site].getGenome();
 
-    mutationWithType(siteGenome, mutationType);
+    if (mutationProbaility == 1 || (mutationProbaility > 0 && uniformUnit() < mutationProbaility))
+        mutationWithType(siteGenome, mutationType);
 
     if (rotationType != ROTATION_WAY::ZERO_WAY)
     {
@@ -120,6 +128,15 @@ void ArtificialBeeColonyAlgorithm::neighorhoodSearch(Poblacion &sites, int site)
 
 ArtificialBeeColonyAlgorithm::ArtificialBeeColonyAlgorithm()
 {
+    maxIteration = 1000;
+    numberOfIndividuals = 20;
+    numberOfSites = 11;
+    numberOfEliteSites = 8;
+    numberOfEliteBees = 4;
+    numberOfNonEliteBees = 3;
+    isWithReplacement = true;
+    mutationType = MutationType::INVERSE_MUTATION;
+    rotationType = ROTATION_WAY::ZERO_WAY;
     this->dMutationProbability = 0.01;
     this->mutationProbaility = 1.0;
 }

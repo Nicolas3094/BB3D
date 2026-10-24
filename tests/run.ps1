@@ -52,6 +52,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Evolution regression compilation failed.' }
     & $evolutionBinary
     if ($LASTEXITCODE -ne 0) { throw "Evolution regression tests failed: exit code $LASTEXITCODE" }
+    $safetyBinary = Join-Path $PSScriptRoot 'search_safety_tests.exe'
+    $safetySources = @(Join-Path $PSScriptRoot 'SearchSafetyTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp') } | ForEach-Object { $_.FullName })
+    & $Compiler -std=c++14 $safetySources -o $safetyBinary
+    if ($LASTEXITCODE -ne 0) { throw 'Search safety test compilation failed.' }
+    & $safetyBinary
+    if ($LASTEXITCODE -ne 0) { throw "Search safety tests failed: exit code $LASTEXITCODE" }
     New-Item -ItemType Directory -Force (Join-Path $root 'build/infrastructure-tests') | Out-Null
     $infrastructureBinary = Join-Path $PSScriptRoot 'infrastructure_tests.exe'
     $infrastructureSources = @(Join-Path $PSScriptRoot 'InfrastructureTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -ne 'main.cpp' } | ForEach-Object { $_.FullName })

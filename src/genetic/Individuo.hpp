@@ -24,6 +24,7 @@ public:
 
     double getFitness() const;
     DoubleGenome &getGenome();
+    const DoubleGenome &getGenome() const;
 };
 
 typedef std::vector<Individuo> Poblacion;

@@ -7,7 +7,7 @@
 
 // Count differing loci (item,rotation), at most once per position, in [0,n].
 // Rotations may be absent in both genomes; incompatible lengths throw invalid_argument.
-int hamming(DoubleGenome, DoubleGenome);
+int hamming(const DoubleGenome &, const DoubleGenome &);
 DoubleGenome crossOx(DoubleGenome, DoubleGenome, int, int);
 void swapPointValue(DoubleGenome &, int, int);
 void inverseMutation(DoubleGenome &, int, int);

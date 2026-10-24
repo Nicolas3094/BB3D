@@ -2,7 +2,8 @@
 
 bool canBePlaced(const Bin &bin, const Punto &possiblePoint)
 {
-    return possiblePoint.z <= bin.getDimensions().getAlto() &&
+    return possiblePoint.x >= 0 && possiblePoint.y >= 0 && possiblePoint.z >= 0 &&
+           possiblePoint.z <= bin.getDimensions().getAlto() &&
            possiblePoint.y <= bin.getDimensions().getAncho() &&
            possiblePoint.x <= bin.getDimensions().getLargo();
 }
@@ -44,20 +45,20 @@ void iterateByDeepestBottomLeft(Punto &punto, const ItemBin &item, const Bin &bi
         return;
     }
     const Punto dimension = item.getCurrentDimension();
-    int position[3] = {punto.x, punto.y, punto.z};
-    const int extent[3] = {dimension.x, dimension.y, dimension.z};
+    std::int64_t position[3] = {punto.x, punto.y, punto.z};
+    const std::int64_t extent[3] = {dimension.x, dimension.y, dimension.z};
 
     // Move toward each wall in Deepest (X), Bottom (Z), Left (Y) order.
     for (int axis : {0, 2, 1})
     {
         if (position[axis] == 0) continue;
-        int contact = 0; // The wall is the default stopping surface.
+        std::int64_t contact = 0; // The wall is the default stopping surface.
         for (const ItemBin &obstacle : bin.getLoadedItems())
         {
             const Punto origin = obstacle.getPunto();
             const Punto end = origin + obstacle.getCurrentDimension();
-            const int minimum[3] = {origin.x, origin.y, origin.z};
-            const int maximum[3] = {end.x, end.y, end.z};
+            const std::int64_t minimum[3] = {origin.x, origin.y, origin.z};
+            const std::int64_t maximum[3] = {end.x, end.y, end.z};
             // Only obstacles behind the current position can block this movement.
             if (maximum[axis] > position[axis]) continue;
             bool projectionsOverlap = true;
@@ -65,7 +66,7 @@ void iterateByDeepestBottomLeft(Punto &punto, const ItemBin &item, const Bin &bi
             {
                 if (other == axis) continue;
                 if (position[other] >= maximum[other] ||
-                    position[other] + extent[other] <= minimum[other])
+                    (position[other] <= minimum[other] && extent[other] <= minimum[other] - position[other]))
                 {
                     projectionsOverlap = false;
                     break;

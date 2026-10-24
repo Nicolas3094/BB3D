@@ -109,3 +109,14 @@ Para ejecutar las pruebas sin instalar dependencias adicionales:
 ```
 
 Las pruebas de infraestructura escriben únicamente en `build/infrastructure-tests`.
+
+ABC y Firefly inicializan sus parámetros y rechazan configuraciones inválidas
+antes de buscar. En ABC debe cumplirse `0 <= élites <= sitios <= población`.
+`setMutationProbabiliy(p)` controla la mutación del orden de las cajas;
+`setDMutationProbability(p)` controla por separado la mutación de orientaciones.
+Ambas probabilidades deben ser finitas y estar entre 0 y 1. Cada ejecución
+reinicia su historial de soluciones visitadas.
+
+DBLF requiere un contenedor vacío y dimensiones actuales que sean una permutación
+de las originales. Las coordenadas usan enteros de 64 bits; sus operaciones
+rechazan desbordamientos y divisiones por cero.
