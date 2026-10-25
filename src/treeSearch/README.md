@@ -8,7 +8,7 @@ El ejecutable principal del proyecto sigue funcionando como antes.
 El menú SCLP conserva la selección de archivo y problemas, pide rondas y nombre
 de sesión y usa 30 segundos CPU por corrida. Las rotaciones siguen todos los
 permisos BR; no pide mutación, reemplazo, población ni candidatos DBLF.
-Lanza el ejecutable independiente mediante PowerShell 7, hereda la terminal y
+Lanza el ejecutable independiente mediante Windows PowerShell incluido en Windows, hereda la terminal y
 guarda CSV/resumen de sesión y una subcarpeta por corrida con acomodo y verificación.
 Se comprueba que el ejecutable SCLP esté compilado antes de crear la sesión.
 Las rondas son repeticiones temporales del mismo método determinista; no semillas

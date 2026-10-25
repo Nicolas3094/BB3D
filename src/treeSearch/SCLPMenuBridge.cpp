@@ -35,14 +35,21 @@ std::string executeSCLPMenu(const BRMenuSelection &selection) {
     const auto script=o.root+"/src/treeSearch/Run-SCLP-Menu.ps1";
     if(!std::ifstream(script))throw std::runtime_error("No se encontro el lanzador SCLP: "+script);
     const auto directory=createResultSessionDirectory(o.output.empty()?o.root+"/Results/BR":o.output,selection.sessionName);
-    std::wstring command=L"pwsh.exe -NoProfile -NonInteractive -File "+argument(script)
+    wchar_t windowsDirectory[MAX_PATH];
+    const auto length=GetWindowsDirectoryW(windowsDirectory,MAX_PATH);
+    if(!length || length>=MAX_PATH)throw std::runtime_error("No se encontro la carpeta de Windows.");
+    const std::wstring powershell=std::wstring(windowsDirectory)+L"\\System32\\WindowsPowerShell\\v1.0\\powershell.exe";
+    std::wstring command=L"\""+powershell+L"\" -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "+argument(script)
         +L" -DataRoot "+argument(o.root)+L" -Dataset "+argument(o.dataset)
         +L" -FirstInstance "+std::to_wstring(o.firstInstance)+L" -Count "+std::to_wstring(o.instances)
         +L" -Rounds "+std::to_wstring(o.rounds)+L" -OutputDirectory "+argument(directory);
     STARTUPINFOW startup{};startup.cb=sizeof(startup);PROCESS_INFORMATION process{};
     std::cout<<std::flush;
-    if(!CreateProcessW(nullptr,&command[0],nullptr,nullptr,TRUE,0,nullptr,nullptr,&startup,&process))
-        throw std::runtime_error("No se pudo iniciar PowerShell 7 para SCLP. Sesion: "+directory);
+    if(!CreateProcessW(powershell.c_str(),&command[0],nullptr,nullptr,TRUE,0,nullptr,nullptr,&startup,&process)) {
+        const auto message="No se pudo iniciar Windows PowerShell para SCLP. Error Windows: "+std::to_string(GetLastError());
+        saveResultText(directory+"/resumen.md",message+"\n");
+        throw std::runtime_error(message+"; sesion: "+directory);
+    }
     CloseHandle(process.hThread);WaitForSingleObject(process.hProcess,INFINITE);
     DWORD status=1;GetExitCodeProcess(process.hProcess,&status);CloseHandle(process.hProcess);
     if(status!=0)throw std::runtime_error("SCLP no completo la sesion. Revisa "+directory+"/resumen.md");

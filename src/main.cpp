@@ -16,6 +16,24 @@
 #include "readData/CommandLine.hpp"
 #include "readData/ExperimentRunner.hpp"
 #include "util/RandomNumbers.hpp"
+#ifdef _WIN32
+#include <io.h>
+#include <cstdio>
+#endif
+
+namespace {
+struct KeepInteractiveConsole {
+  bool enabled=false;
+  ~KeepInteractiveConsole() {
+#ifdef _WIN32
+    if(enabled && _isatty(_fileno(stdin))) {
+      std::cout<<"\nPresiona Enter para cerrar..."<<std::flush;
+      std::string ignored;std::getline(std::cin,ignored);
+    }
+#endif
+  }
+};
+}
 
 std::string LOCAL_PATH;
 std::uint64_t configuredSeed=20261024;
@@ -23,6 +41,9 @@ DBLFCandidatePolicy configuredCandidates=DBLFCandidatePolicy::ThreePoints;
 
 int main(int argc,char **argv)
 {
+  KeepInteractiveConsole console;
+  console.enabled=argc==1;
+  for(int i=1;i<argc;++i)if(std::string(argv[i])=="--menu")console.enabled=true;
   try {
     auto options=parseCommandLine(std::vector<std::string>(argv+1,argv+argc));
     if(options.help) {std::cout<<commandLineHelp();return 0;}

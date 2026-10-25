@@ -1,5 +1,11 @@
 param([string]$Dataset='BR15',[int]$Instance=1,[ValidateRange(1,3600)][double]$Seconds=30,[string]$OutputDirectory,[string]$DataRoot)
 $ErrorActionPreference='Stop'
+function File-Sha256([string]$Path) {
+    $stream=[IO.File]::OpenRead((Resolve-Path -LiteralPath $Path).Path)
+    $sha=[Security.Cryptography.SHA256]::Create()
+    try {return [BitConverter]::ToString($sha.ComputeHash($stream)).Replace('-','')}
+    finally {$sha.Dispose();$stream.Dispose()}
+}
 $root=Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $binary=Join-Path $root 'build/sclp-release/sclp_reference.exe'
 if(!(Test-Path $binary)){throw 'Compile src/treeSearch first; see README.md'}
@@ -27,7 +33,7 @@ try {
 } finally {$env:PATH=$previousPath}
 $verified=& "$PSScriptRoot/Verify-Packing.ps1" -InputFile $inputJson -PackingFile $packing -ReportFile (Join-Path $OutputDirectory 'verification.json')
 $result=Get-Content $packing -Raw | ConvertFrom-Json
-$manifest=[ordered]@{dataset=$Dataset;instance=$Instance;parameters=$arguments;cpu_limit_seconds=$Seconds;process_wall_seconds=$watch.Elapsed.TotalSeconds;solver_threads=1;build='Release -O3 -DNDEBUG; C++20; no fast-math';binary_sha256=(Get-FileHash $binary).Hash;dataset_sha256=(Get-FileHash $source).Hash;input_sha256=(Get-FileHash $inputJson).Hash;execution=$result.appendix.bb3d_execution;verification=$verified;paper='https://doi.org/10.1016/j.ejor.2026.01.039';source='https://zenodo.org/records/19247237'}
+$manifest=[ordered]@{dataset=$Dataset;instance=$Instance;parameters=$arguments;cpu_limit_seconds=$Seconds;process_wall_seconds=$watch.Elapsed.TotalSeconds;solver_threads=1;build='Release -O3 -DNDEBUG; C++20; no fast-math';binary_sha256=(File-Sha256 $binary);dataset_sha256=(File-Sha256 $source);input_sha256=(File-Sha256 $inputJson);execution=$result.appendix.bb3d_execution;verification=$verified;paper='https://doi.org/10.1016/j.ejor.2026.01.039';source='https://zenodo.org/records/19247237'}
 $manifest | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $OutputDirectory 'run.json') -Encoding utf8
 Write-Output ('OCUPACION FINAL VERIFICADA: {0:F6} %' -f $verified.occupation_percent)
 Write-Output ('Tiempo CPU: {0:F6} s; tiempo total transcurrido: {1:F6} s' -f $result.appendix.bb3d_execution.cpu_seconds_including_blocks,$watch.Elapsed.TotalSeconds)

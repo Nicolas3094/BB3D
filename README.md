@@ -33,6 +33,7 @@ task.json
                 "src/readData/*.cpp",
                 "src/spatial/*.cpp",
                 "src/structures/*.cpp",
+                "src/treeSearch/*.cpp",
                 "src/util/*.cpp",
                 "-o",
                 "main.exe"
