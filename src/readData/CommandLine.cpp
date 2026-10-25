@@ -32,6 +32,11 @@ CommandLineOptions parseCommandLine(const std::vector<std::string> &arguments) {
         else if(flag=="--root") o.root=value;
         else if(flag=="--output") o.output=value;
         else if(flag=="--seed") o.seed=parseExperimentSeed(value);
+        else if(flag=="--execution") {
+            if(value=="iterations")o.execution=ExecutionMode::Iterations;
+            else if(value=="30s")o.execution=ExecutionMode::ThirtySeconds;
+            else throw std::invalid_argument("Execution must be iterations or 30s.");
+        }
         else if(flag=="--rotation") o.rotation=value;
         else if(flag=="--mutation") o.mutation=value;
         else if(flag=="--replacement") o.replacement=value;
@@ -73,6 +78,7 @@ CommandLineOptions parseCommandLine(const std::vector<std::string> &arguments) {
 }
 ExperimentConfiguration CommandLineOptions::configuration(const std::string &name,ROTATION_WAY r,MutationType m,bool replace) const {
     auto c=makeExperimentConfiguration(name,r,m,replace);c.candidates=candidates;c.iterations=iterations;
+    c.execution=execution;
     if(population!=-1) c.individuals=population;
     c.sites=sites==-1?std::min(c.sites,c.individuals):sites;
     c.eliteSites=eliteSites==-1?std::min(c.eliteSites,c.sites):eliteSites;
@@ -89,6 +95,7 @@ std::string commandLineHelp() {
       "--algorithm GA|ABC|FFA|all  --dataset P1A2..P5A2|BR0..BR18|BR (all BR)|all|FILE\n"
       "--root DIRECTORY (otherwise LOCAL_PATH in .env)  --output DIRECTORY\n"
       "--population N --iterations N --rounds N --instances N (0: all) --first-instance N --seed N\n"
+      "--execution iterations|30s (30 seconds per problem/algorithm/round; ignores iteration/stagnation limits)\n"
       "--rotation 0|2|6|all --mutation inverse|c1|c2|all --replacement true|false|both\n"
       "--selection P --crossover P --mutation-probability adaptive|P --rotation-mutation P\n"
       "--patience N (0: disable stagnation stop) --diversity P --movements N\n"

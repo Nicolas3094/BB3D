@@ -1,0 +1,18 @@
+# temporary
+*foo*
+*goo*
+*hoo*
+*.log*
+
+# c++
+build/
+benchmark.log
+.cache/
+perf.*
+
+# vim
+*.swp
+*.swo
+
+# python
+venv

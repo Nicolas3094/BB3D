@@ -1,0 +1,73 @@
+{
+  "type": "input",
+  "version": "0.7.0",
+  "large_object": {
+    "measurement": {
+      "x": 1000,
+      "y": 2000,
+      "z": 3000
+    }
+  },
+  "small_items": [
+    {
+      "profit": 61,
+      "quantity": 41,
+      "measurement": {
+        "x": 3,
+        "y": 5,
+        "z": 7
+      },
+      "constraint": {
+        "weight": 67,
+        "multi_drop": {
+          "destination": 4
+        }
+      }
+    },
+    {
+      "profit": 29,
+      "quantity": 97,
+      "measurement": {
+        "x": 11,
+        "y": 13,
+        "z": 19
+      },
+      "constraint": {
+        "weight": 83,
+        "multi_drop": {
+          "destination": 1
+        }
+      }
+    },
+    {
+      "profit": 79,
+      "quantity": 53,
+      "measurement": {
+        "x": 23,
+        "y": 29,
+        "z": 31
+      },
+      "constraint": {
+        "weight": 173,
+        "multi_drop": {
+          "destination": 7
+        }
+      }
+    },
+    {
+      "profit": 17,
+      "quantity": 2,
+      "measurement": {
+        "x": 37,
+        "y": 41,
+        "z": 43
+      },
+      "constraint": {
+        "weight": 181,
+        "multi_drop": {
+          "destination": 1
+        }
+      }
+    }
+  ]
+}

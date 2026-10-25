@@ -1,0 +1,12 @@
+{
+  "type": "input",
+  "version": "0.4.0",
+  "large_object": {
+    "measurement": {
+      "x": 1,
+      "y": 2,
+      "z": 3
+    }
+  },
+  "small_items": []
+}

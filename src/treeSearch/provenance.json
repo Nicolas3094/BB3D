@@ -1,0 +1,11 @@
+{
+  "record": "https://zenodo.org/records/19247237",
+  "file": "3d_sclp_source_code.zip",
+  "md5": "4424c32762dff6fdddb8cd7e7cee0bb8",
+  "sha256": "57afc3766b0d5ef8059054df1089dfcea749269cb1ee137a279e4bc59684699a",
+  "original_sources_edited": false,
+  "license": "MIT",
+  "paper": "https://doi.org/10.1016/j.ejor.2026.01.039",
+  "boost_version": "1.83.0",
+  "boost_sha256": "c0685b68dd44cc46574cce86c4e17c0f611b15e195be9848dfd0769a0a207628"
+}

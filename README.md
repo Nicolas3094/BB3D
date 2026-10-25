@@ -212,7 +212,7 @@ mediciones y comprobar igualdad exacta de resultados:
 ./tests/benchmark-cache.ps1
 ```
 
-`tests/run.ps1` ejecuta los catorce binarios de pruebas, compila la aplicación y
+`tests/run.ps1` ejecuta los quince binarios de pruebas, compila la aplicación y
 prueba la CLI con los tres algoritmos, dos rondas y reanudación. GitHub Actions
 ejecuta ese mismo script en Windows y Linux para cada push y pull request; su
 definición está en `.github/workflows/tests.yml`. Las dependencias de CI se instalan
@@ -303,3 +303,39 @@ crea otra sesion. Para seleccionar un rango por argumentos se usa
 de base 1. `--dataset BR` selecciona BR0–BR18; `--dataset all` conserva P1–P5 para
 la automatizacion anterior. En el menu, `--output` es la carpeta base de sesiones;
 en la CLI normal o con `--report`, es la carpeta exacta de resultados.
+
+## Ejecución por iteraciones o por 30 segundos
+
+El método independiente del artículo de Guesser, de Queiroz y Miyazawa (2026)
+se compila y ejecuta aparte: [instrucciones y auditoría SCLP](src/treeSearch/README.md).
+Su prueba verificada BR15/1 y acomodo están en `Results/TreeSearch/`.
+
+El menú ofrece ejecución normal por iteraciones y ejecución de hasta 30 segundos.
+`ExperimentExecution` encapsula ambas estrategias: `IterationExecution` conserva
+los parámetros de parada habituales; `ThirtySecondExecution` controla el tiempo
+de búsqueda y devuelve la mejor solución válida observada.
+
+```powershell
+./main.exe --dataset BR0 --instances 1 --algorithm GA --population 50 --execution 30s --report --output Results/BR/prueba-30s
+```
+
+El límite se aplica a cada problema, algoritmo y ronda por separado. En este modo
+se ignoran las iteraciones y la parada por diversidad/estancamiento; encontrar una
+ocupación del 100 % permite terminar antes. La lectura de datos, preparación y
+escritura de informes quedan fuera del presupuesto de búsqueda. El control es
+cooperativo dentro de los algoritmos y DBLF, por lo que no es un plazo de tiempo
+real estricto y la devolución/serialización puede añadir un pequeño margen.
+
+Al vencer el límite, se conserva el mejor empaquetado válido, incluso si procede
+de una evaluación interrumpida; esta se marca como parcial y no entra en la caché.
+Los informes incluyen modo, límite, motivo de finalización y evaluación parcial.
+Al terminar también se imprime en la terminal un resumen de cada resultado con
+problema, algoritmo, método, ronda, ocupación, tiempo y motivo de finalización.
+Los resultados recuperados del archivo y las evaluaciones parciales se identifican.
+Los checkpoints V3 conservan esos datos al reanudar y siguen leyendo V2 anteriores.
+Una ejecución completada por tiempo no se repite al reanudar. Con tiempo limitado,
+la misma semilla puede producir resultados distintos según la carga del equipo.
+
+Las pruebas usan un reloj controlado para verificar el límite exacto, los tres
+algoritmos, ambos reemplazos, caché activada/desactivada, empaquetados parciales
+válidos y compatibilidad de checkpoints, sin esperar 30 segundos por caso.

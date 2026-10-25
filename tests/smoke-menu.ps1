@@ -5,8 +5,8 @@ $executable=(Resolve-Path -LiteralPath $Binary).Path
 $output=Join-Path $root ('build/menu-smoke-'+[guid]::NewGuid().ToString('N'))
 Push-Location $root
 try {
-    $first=@('999','bad','0','1','1','4','4','1','1','1','2','0','1','123','smoke','0','1','1')
-    $second=@('0','1','1','1','1','1','1','1','2','0','1','123','otra','0','1','0')
+    $first=@('999','bad','0','1','1','4','4','1','1','1','2','1','0','1','123','smoke','0','1','1')
+    $second=@('0','1','1','1','1','1','1','1','2','1','0','1','123','otra','0','1','0')
     $console=@(($first+$second -join "`n") | & $executable --menu --root $root --output $output)
     if($LASTEXITCODE -ne 0 -or ($console -join "`n") -notmatch 'Pruebas BR') {throw 'Interactive BR menu failed'}
     if(($console -join "`n") -notmatch 'Valor invalido') {throw 'Menu did not recover from invalid input'}

@@ -4,6 +4,34 @@
 #include "../genetic/FitnessCache.hpp"
 #include "../util/RandomNumbers.hpp"
 #include <chrono>
+#include <iomanip>
+#include <locale>
+
+void printExperimentSummary(std::ostream &output,const std::vector<ExperimentOutcome> &rows) {
+    std::ostringstream summary;summary.imbue(std::locale::classic());
+    summary<<std::fixed<<std::setprecision(3)<<"\n=== RESULTADOS FINALES ===\n";
+    for(const auto &row:rows) {
+        const char *reason=row.termination=="time_limit"?"limite de tiempo":(row.termination=="optimal"?"ocupacion completa":"completada");
+        summary<<row.dataset<<" | problema "<<row.position<<" (ID "<<row.instanceId<<") | "<<row.algorithm
+               <<" | ronda "<<row.round<<" | rotaciones "<<static_cast<int>(row.rotation)
+               <<" | mutacion "<<(row.mutation==MutationType::INVERSE_MUTATION?"inversion":(row.mutation==MutationType::C1?"C1":"C2"))
+               <<" | "<<(row.replacement?"con reemplazo":"sin reemplazo")
+               <<" | ocupacion: "<<100*row.fitness<<" % | tiempo: "<<row.milliseconds<<" ms | "<<reason;
+        if(row.partialEvaluation)summary<<" | evaluacion parcial (empaquetado valido)";
+        if(row.resumed)summary<<" | recuperado del archivo";
+        summary<<'\n';
+    }
+    summary<<"Total: "<<rows.size()<<" resultados.\n";
+    summary<<"\n=== PORCENTAJE DE OCUPACION FINAL ===\n";
+    for(const auto &row:rows) {
+        summary<<row.dataset<<" | problema "<<row.position<<" | "<<row.algorithm<<" | ronda "<<row.round
+               <<" | rotaciones "<<static_cast<int>(row.rotation)
+               <<" | "<<(row.mutation==MutationType::INVERSE_MUTATION?"inversion":(row.mutation==MutationType::C1?"C1":"C2"))
+               <<" | "<<(row.replacement?"con reemplazo":"sin reemplazo")
+               <<" -> OCUPACION FINAL: "<<100*row.fitness<<" %\n";
+    }
+    output<<summary.str();
+}
 
 std::vector<ExperimentOutcome> runExperiments(const CommandLineOptions &o) {
     std::vector<ExperimentOutcome> outcomes;
@@ -47,19 +75,20 @@ std::vector<ExperimentOutcome> runExperiments(const CommandLineOptions &o) {
                 else {
                     results[i]={-1,-1,ExperimentStatus::Running};saveExperimentResults(results,fitness,times,identity);
                     seedRandomNumbers(actualSeed);
-                    const auto start=std::chrono::steady_clock::now();auto best=config.run(data);
-                    const auto elapsed=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start).count();
-                    if(best.empty()) throw std::runtime_error("Algorithm returned an empty population.");
-                    results[i]={best.front().getFitness(),elapsed,ExperimentStatus::Complete};saveExperimentResults(results,fitness,times,identity);
+                    const auto result=config.execute(data);
+                    if(result.population.empty()) throw std::runtime_error("Algorithm returned an empty population.");
+                    results[i]={result.population.front().getFitness(),result.milliseconds,ExperimentStatus::Complete,result.termination,result.partialEvaluation};saveExperimentResults(results,fitness,times,identity);
                     const auto cache=fitnessCacheStats();
-                    std::cout<<algorithm<<" instance="<<data.id<<" round="<<round<<" fitness="<<best.front().getFitness()<<" milliseconds="<<elapsed<<" cache_hits="<<cache.hits<<" cache_misses="<<cache.misses<<'\n';
+                    std::cout<<algorithm<<" instance="<<data.id<<" round="<<round<<" fitness="<<result.population.front().getFitness()<<" milliseconds="<<result.milliseconds<<" termination="<<result.termination<<" cache_hits="<<cache.hits<<" cache_misses="<<cache.misses<<'\n';
                 }
                 ExperimentOutcome row;row.dataset=stem;row.algorithm=algorithm;row.checkpoint=fitness+".checkpoint";
                 row.position=static_cast<int>(startIndex+i+1);row.instanceId=data.id;row.datasetSeed=data.PSeed;row.round=round+1;
                 row.rotation=rotation;row.mutation=mutation;row.replacement=replacement;row.resumed=resumed;row.seed=actualSeed;
                 row.fitness=results[i].fitness;row.milliseconds=results[i].milliseconds;outcomes.push_back(std::move(row));
+                outcomes.back().execution=config.execution;outcomes.back().termination=results[i].termination;outcomes.back().partialEvaluation=results[i].partialEvaluation;
             }
         }
     }
+    printExperimentSummary(std::cout,outcomes);
     return outcomes;
 }

@@ -1,0 +1,2 @@
+dataset,problema,id,algoritmo,rotaciones,mutacion,reemplazo,ronda,semilla_dataset,semilla_ejecucion,fitness,ocupacion_porcentaje,tiempo_ms,reanudado,ejecucion,limite_ms,motivo_fin,evaluacion_parcial,checkpoint
+"BR15",1,1,"FFA",0,"C2",0,1,2502505,10804759042519190594,0.81452367959449135,81.452367959449134,30003,0,"30s",30000,"time_limit",0,"./Results/BR/sesion-20261024-215409/BR15/FFA/87fe2da55362e678-fitness.csv.checkpoint"

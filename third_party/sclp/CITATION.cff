@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+title: A Tree Search-Based Heuristic for the Three-Dimensional Single Container Loading Problem
+message: >-
+  If you use this software, please cite it using the metadata from this file.
+type: software
+authors:
+  - given-names: Lucas
+    family-names: Guesser
+    email: lucasguesser.persona.outgoing609@passinbox.com
+    orcid: 'https://orcid.org/0009-0000-6272-4061'
+identifiers:
+  - type: url
+    value: 'https://github.com/lucasguesserts'
+    description: github
+  - type: url
+    value: 'https://www.linkedin.com/in/lucasguesserts/'
+    description: linkedin
+  - type: url
+    value: 'https://lattes.cnpq.br/5397783811561318'
+    description: lattes
+repository-code: 'https://github.com/lucasguesserts/sclp-heuristic'
+abstract: >-
+  The three-dimensional single container loading problem aims to fill a container
+  with items to maximize the volume usage. Items are rectangular and may rotate,
+  but only orthogonal placements are allowed. We consider a beam search heuristic
+  embedded into a double-effort mechanism. It uses a cover representation with
+  maximal empty spaces for the residual space and generation of blocks of items
+  in a guillotine pattern. A two-stage fitness function selects the blocks, and a
+  greedy search selects the most promising partial packings. We propose many
+  advancements on this heuristic: specific data structures representing residual
+  spaces; a deeper calibration of its metaparameters; memoization to avoid
+  recomputation of packings; and a two-stage fitness function. Computational
+  experiments on the 1,600 BR benchmark instances demonstrate the high performance
+  of the proposed method. Under identical hardware, our method achieves 95.91%
+  average volume usage with 30 seconds, a +0.59% improvement over the
+  state-of-the-art with 30 seconds (95.31%). With 5 seconds, it achieves a 95.40%
+  result, still outperforming the state-of-the-art by +0.08%. This represents a
+  major advance when contextualized historically: the method of 2014 required
+  500 seconds and achieved a +0.42% gain while the one of 2017 reduced runtime
+  to 30 seconds and achieved a +0.13% gain.
+keywords:
+  - combinatorial optimization
+  - heuristics
+  - tree search
+  - load planing
+  - 3D packing
+  - container loading problem

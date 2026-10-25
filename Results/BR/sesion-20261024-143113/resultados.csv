@@ -1,0 +1,2 @@
+dataset,problema,id,algoritmo,rotaciones,mutacion,reemplazo,ronda,semilla_dataset,semilla_ejecucion,fitness,ocupacion_porcentaje,tiempo_ms,reanudado,ejecucion,limite_ms,motivo_fin,evaluacion_parcial,checkpoint
+"BR0",1,1,"GA",6,"C2",0,1,2502505,10804759042519190594,0.6792348989452176,67.923489894521765,30000,0,"30s",30000,"time_limit",0,"./Results/BR/sesion-20261024-143113/BR0/GA/f635d61b94534e61-fitness.csv.checkpoint"

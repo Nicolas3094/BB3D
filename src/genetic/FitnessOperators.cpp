@@ -1,5 +1,6 @@
 #include "FitnessOperators.hpp"
 #include "FitnessCache.hpp"
+#include "../util/ExecutionBudget.hpp"
 
 namespace {
 void updateSolution(Individuo &ind,const Bin &bin) {
@@ -12,19 +13,38 @@ void updateSolution(Individuo &ind,const Bin &bin) {
 
 void evaluateFitness(Individuo &ind, LoadedBins itemData, Bin bin)
 {
-    std::string cacheKey;
-    if(lookupFitness(ind,itemData,bin,cacheKey)) return;
-    DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
-    ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
-    updateSolution(ind,bin);
-    rememberFitness(ind,cacheKey);
+    try {
+        checkExecutionDeadline();
+        std::string cacheKey;
+        if(lookupFitness(ind,itemData,bin,cacheKey)) {
+            recordExecutionCandidate(ind);checkExecutionDeadline();return;
+        }
+        DBLF(bin, ind.getGenome().getGenome(), ind.getGenome().getDGenome(), itemData);
+        ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
+        updateSolution(ind,bin);recordExecutionCandidate(ind);
+        rememberFitness(ind,cacheKey);checkExecutionDeadline();
+    } catch(const ExecutionTimeLimit &) {
+        if(bin.getDimensions().getVolumen()>0) {
+            ind.setFitness(static_cast<double>(bin.getLoadedVolume())/bin.getDimensions().getVolumen());
+            updateSolution(ind,bin);recordExecutionCandidate(ind,true);
+        }
+        throw;
+    }
 }
 
 void evaluateFitnessDecodificated(Individuo &ind, LoadedBins itemData, Bin &bin)
 {
-    DBLF(bin, decodificateIndividual(ind, itemData, bin));
-    ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
-    updateSolution(ind,bin);
+    try {
+        checkExecutionDeadline();DBLF(bin, decodificateIndividual(ind, itemData, bin));
+        ind.setFitness(static_cast<double>(bin.getLoadedVolume()) / static_cast<double>(bin.getDimensions().getVolumen()));
+        updateSolution(ind,bin);recordExecutionCandidate(ind);checkExecutionDeadline();
+    } catch(const ExecutionTimeLimit &) {
+        if(bin.getDimensions().getVolumen()>0) {
+            ind.setFitness(static_cast<double>(bin.getLoadedVolume())/bin.getDimensions().getVolumen());
+            updateSolution(ind,bin);recordExecutionCandidate(ind,true);
+        }
+        throw;
+    }
 }
 
 DoubleGenome codificateItemsToPacked(LoadedBins &allBinsToLoad)
@@ -46,6 +66,7 @@ Poblacion buildHeuristicPoblation(const int numberPoblation, Bin bin, LoadedBins
     Poblacion heuristicPoblation(numberPoblation);
     for (int i = 0; i < numberPoblation; i++)
     {
+        checkExecutionDeadline();
         heuristicPoblation[i] = Individuo::Build()
                                     .setGenome(
                                         DoubleGenome::Build()
@@ -64,6 +85,7 @@ void evaluatePoblation(Poblacion &poblacion, LoadedBins allItemsBin, Bin bin)
 {
     for (int i = 0; i < poblacion.size(); i++)
     {
+        checkExecutionDeadline();
         evaluateFitness(poblacion[i], allItemsBin, bin);
     }
 }

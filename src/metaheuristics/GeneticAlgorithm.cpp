@@ -58,7 +58,7 @@ Individuo GeneticAlgorithm::instantiateChild(Individuo parent1, Individuo parent
 
 Poblacion GeneticAlgorithm::evolveWithReplacement()
 {
-    int i;
+    long i;
     Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
     bestSeenFitness=poblation.front().getFitness();
 
@@ -69,6 +69,7 @@ Poblacion GeneticAlgorithm::evolveWithReplacement()
 
     for (i = 0; i < maxIteration; i++)
     {
+        checkExecutionDeadline();
         nextGeneration(poblation);
 
         if (terminateCondition(poblation))
@@ -82,7 +83,7 @@ Poblacion GeneticAlgorithm::evolveWithReplacement()
 
 Poblacion GeneticAlgorithm::evolveWithAdded()
 {
-    int i;
+    long i;
     Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
     bestSeenFitness=poblation.front().getFitness();
 
@@ -93,6 +94,7 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 
     for (i = 0; i < maxIteration; i++)
     {
+        checkExecutionDeadline();
         nextGenerationByAdding(poblation);
 
         if (terminateCondition(poblation))
@@ -272,6 +274,7 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
 
     for (i = initialIndex; i < numberOfIndividuals; i++)
     {
+        checkExecutionDeadline();
 
         std::vector<Individuo> parents = getParents(oldPoblation, static_cast<int>(oldPoblation.size()));
 
@@ -296,6 +299,7 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 
     for (i = 0; i < numberOfAddedIndividuals; i++)
     {
+        checkExecutionDeadline();
         std::vector<Individuo> parents = getParents(poblation, parentCount);
 
         if (uniformUnit() < crossProability)

@@ -38,29 +38,39 @@ std::string ExperimentConfiguration::identity(const std::string &datasetHash,std
        <<";crossover="<<crossover<<";selection="<<selection<<";mutationProbability="<<mutationProbability
        <<";rotationMutation="<<rotationMutation<<";diversity="<<diversity<<";patience="<<patience
        <<";cacheEntries="<<cacheEntries<<";cacheBytes="<<cacheBytes;
+    if(execution==ExecutionMode::ThirtySeconds)out<<";execution=30s;limit_ms=30000";
     return out.str();
 }
 Poblacion ExperimentConfiguration::run(DatasetBinBacking data) const {
+    return execute(std::move(data)).population;
+}
+ExecutionResult ExperimentConfiguration::execute(DatasetBinBacking data) const {
+    if(execution==ExecutionMode::ThirtySeconds)return ThirtySecondExecution().execute(*this,std::move(data));
+    if(execution!=ExecutionMode::Iterations)throw std::invalid_argument("Unknown execution mode.");
+    return IterationExecution().execute(*this,std::move(data));
+}
+Poblacion ExperimentConfiguration::runAlgorithm(DatasetBinBacking data,bool timeOnly) const {
     configureFitnessCache(cacheEntries,cacheBytes);
     data.bin.setCandidatePolicy(candidates);
+    const long maximumIterations=timeOnly?std::numeric_limits<long>::max():iterations;
     if(algorithm=="GA") {
         GeneticAlgorithm ga;
-        ga.setMaxIteration(iterations).setNumberOfIndividuals(individuals).setCrossProbability(crossover)
+        ga.setMaxIteration(maximumIterations).setNumberOfIndividuals(individuals).setCrossProbability(crossover)
           .setSelectionProbability(selection).setMutationProbabiliy(mutationProbability).setAdaptiveMutation(adaptive)
-          .setDMutationProbability(rotationMutation).setMaxDiversityIndex(diversity).setStagnationLimit(patience).setIsWithReplacement(replacement)
+          .setDMutationProbability(rotationMutation).setMaxDiversityIndex(diversity).setStagnationLimit(timeOnly?0:patience).setIsWithReplacement(replacement)
           .setRotationType(rotation).setMutationType(mutation).setProblem(data);
         return ga.evolve();
     }
     if(algorithm=="ABC") {
         ArtificialBeeColonyAlgorithm abc;
-        abc.setMaxIteration(iterations).setNumberOfIndividuals(individuals).setNumberOfSites(sites).setNumberOfEliteSites(eliteSites)
+        abc.setMaxIteration(maximumIterations).setNumberOfIndividuals(individuals).setNumberOfSites(sites).setNumberOfEliteSites(eliteSites)
            .setNumberOfEliteBees(eliteBees).setNumberOfNonEliteBees(nonEliteBees).setMutationProbabiliy(mutationProbability)
            .setDMutationProbability(rotationMutation).setIsWithReplacement(replacement).setRotationType(rotation).setMutationType(mutation).setProblem(data);
         return abc.evolve();
     }
     if(algorithm!="FFA") throw std::invalid_argument("Unknown experiment algorithm.");
     FireflyAlgorithm ffa;
-    ffa.setMaxIteration(iterations).setNumberOfIndividuals(individuals).setupIndex(movements).setMutationProbabiliy(mutationProbability)
+    ffa.setMaxIteration(maximumIterations).setNumberOfIndividuals(individuals).setupIndex(movements).setMutationProbabiliy(mutationProbability)
        .setDMutationProbability(rotationMutation).setIsWithReplacement(replacement).setRotationType(rotation).setMutationType(mutation).setProblem(data);
     return ffa.evolve();
 }

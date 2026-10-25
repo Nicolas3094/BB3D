@@ -1,0 +1,2019 @@
+{
+  "large_object": {
+    "measurement": {
+      "z": 220,
+      "x": 587,
+      "y": 233
+    }
+  },
+  "bb3d_source": {
+    "position": 1,
+    "file": "BR15.txt",
+    "seed": 2502505,
+    "id": 1
+  },
+  "type": "input",
+  "version": "0.8.0",
+  "small_items": [
+    {
+      "profit": 246240,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 1,
+      "quantity": 1,
+      "measurement": {
+        "z": 30,
+        "x": 108,
+        "y": 76
+      }
+    },
+    {
+      "profit": 118250,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 2,
+      "quantity": 1,
+      "measurement": {
+        "z": 25,
+        "x": 110,
+        "y": 43
+      }
+    },
+    {
+      "profit": 409860,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 3,
+      "quantity": 1,
+      "measurement": {
+        "z": 55,
+        "x": 92,
+        "y": 81
+      }
+    },
+    {
+      "profit": 74844,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 4,
+      "quantity": 1,
+      "measurement": {
+        "z": 28,
+        "x": 81,
+        "y": 33
+      }
+    },
+    {
+      "profit": 867240,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 5,
+      "quantity": 3,
+      "measurement": {
+        "z": 73,
+        "x": 120,
+        "y": 99
+      }
+    },
+    {
+      "profit": 372960,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 6,
+      "quantity": 1,
+      "measurement": {
+        "z": 48,
+        "x": 111,
+        "y": 70
+      }
+    },
+    {
+      "profit": 324576,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 7,
+      "quantity": 1,
+      "measurement": {
+        "z": 46,
+        "x": 98,
+        "y": 72
+      }
+    },
+    {
+      "profit": 194370,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 8,
+      "quantity": 1,
+      "measurement": {
+        "z": 31,
+        "x": 95,
+        "y": 66
+      }
+    },
+    {
+      "profit": 214200,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 9,
+      "quantity": 1,
+      "measurement": {
+        "z": 30,
+        "x": 85,
+        "y": 84
+      }
+    },
+    {
+      "profit": 56800,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 10,
+      "quantity": 1,
+      "measurement": {
+        "z": 25,
+        "x": 71,
+        "y": 32
+      }
+    },
+    {
+      "profit": 30600,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 11,
+      "quantity": 2,
+      "measurement": {
+        "z": 25,
+        "x": 36,
+        "y": 34
+      }
+    },
+    {
+      "profit": 402938,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 12,
+      "quantity": 1,
+      "measurement": {
+        "z": 62,
+        "x": 97,
+        "y": 67
+      }
+    },
+    {
+      "profit": 18975,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 13,
+      "quantity": 1,
+      "measurement": {
+        "z": 23,
+        "x": 33,
+        "y": 25
+      }
+    },
+    {
+      "profit": 66690,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 14,
+      "quantity": 2,
+      "measurement": {
+        "z": 26,
+        "x": 95,
+        "y": 27
+      }
+    },
+    {
+      "profit": 335016,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 15,
+      "quantity": 1,
+      "measurement": {
+        "z": 44,
+        "x": 94,
+        "y": 81
+      }
+    },
+    {
+      "profit": 60762,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 16,
+      "quantity": 1,
+      "measurement": {
+        "z": 38,
+        "x": 41,
+        "y": 39
+      }
+    },
+    {
+      "profit": 500240,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 17,
+      "quantity": 1,
+      "measurement": {
+        "z": 65,
+        "x": 104,
+        "y": 74
+      }
+    },
+    {
+      "profit": 76752,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 18,
+      "quantity": 1,
+      "measurement": {
+        "z": 36,
+        "x": 52,
+        "y": 41
+      }
+    },
+    {
+      "profit": 275808,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 19,
+      "quantity": 1,
+      "measurement": {
+        "z": 34,
+        "x": 104,
+        "y": 78
+      }
+    },
+    {
+      "profit": 293986,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 20,
+      "quantity": 2,
+      "measurement": {
+        "z": 46,
+        "x": 83,
+        "y": 77
+      }
+    },
+    {
+      "profit": 124320,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 21,
+      "quantity": 1,
+      "measurement": {
+        "z": 30,
+        "x": 74,
+        "y": 56
+      }
+    },
+    {
+      "profit": 478800,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 22,
+      "quantity": 1,
+      "measurement": {
+        "z": 63,
+        "x": 95,
+        "y": 80
+      }
+    },
+    {
+      "profit": 64680,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 23,
+      "quantity": 1,
+      "measurement": {
+        "z": 33,
+        "x": 56,
+        "y": 35
+      }
+    },
+    {
+      "profit": 446880,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 24,
+      "quantity": 1,
+      "measurement": {
+        "z": 49,
+        "x": 96,
+        "y": 95
+      }
+    },
+    {
+      "profit": 179520,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 25,
+      "quantity": 1,
+      "measurement": {
+        "z": 30,
+        "x": 88,
+        "y": 68
+      }
+    },
+    {
+      "profit": 150800,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 26,
+      "quantity": 1,
+      "measurement": {
+        "z": 29,
+        "x": 80,
+        "y": 65
+      }
+    },
+    {
+      "profit": 135300,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 27,
+      "quantity": 1,
+      "measurement": {
+        "z": 41,
+        "x": 60,
+        "y": 55
+      }
+    },
+    {
+      "profit": 126560,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 28,
+      "quantity": 1,
+      "measurement": {
+        "z": 20,
+        "x": 113,
+        "y": 56
+      }
+    },
+    {
+      "profit": 89373,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 29,
+      "quantity": 1,
+      "measurement": {
+        "z": 31,
+        "x": 93,
+        "y": 31
+      }
+    },
+    {
+      "profit": 187746,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 30,
+      "quantity": 1,
+      "measurement": {
+        "z": 26,
+        "x": 87,
+        "y": 83
+      }
+    },
+    {
+      "profit": 324280,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 31,
+      "quantity": 2,
+      "measurement": {
+        "z": 44,
+        "x": 110,
+        "y": 67
+      }
+    },
+    {
+      "profit": 61950,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 32,
+      "quantity": 1,
+      "measurement": {
+        "z": 21,
+        "x": 118,
+        "y": 25
+      }
+    },
+    {
+      "profit": 104676,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 33,
+      "quantity": 2,
+      "measurement": {
+        "z": 39,
+        "x": 61,
+        "y": 44
+      }
+    },
+    {
+      "profit": 93600,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 34,
+      "quantity": 1,
+      "measurement": {
+        "z": 26,
+        "x": 120,
+        "y": 30
+      }
+    },
+    {
+      "profit": 131075,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 35,
+      "quantity": 1,
+      "measurement": {
+        "z": 25,
+        "x": 107,
+        "y": 49
+      }
+    },
+    {
+      "profit": 99840,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 36,
+      "quantity": 1,
+      "measurement": {
+        "z": 26,
+        "x": 64,
+        "y": 60
+      }
+    },
+    {
+      "profit": 329238,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 37,
+      "quantity": 1,
+      "measurement": {
+        "z": 54,
+        "x": 91,
+        "y": 67
+      }
+    },
+    {
+      "profit": 244608,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 38,
+      "quantity": 1,
+      "measurement": {
+        "z": 49,
+        "x": 78,
+        "y": 64
+      }
+    },
+    {
+      "profit": 64294,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 39,
+      "quantity": 1,
+      "measurement": {
+        "z": 31,
+        "x": 61,
+        "y": 34
+      }
+    },
+    {
+      "profit": 402696,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 40,
+      "quantity": 1,
+      "measurement": {
+        "z": 36,
+        "x": 119,
+        "y": 94
+      }
+    },
+    {
+      "profit": 93636,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 41,
+      "quantity": 1,
+      "measurement": {
+        "z": 34,
+        "x": 81,
+        "y": 34
+      }
+    },
+    {
+      "profit": 134064,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 42,
+      "quantity": 1,
+      "measurement": {
+        "z": 42,
+        "x": 57,
+        "y": 56
+      }
+    },
+    {
+      "profit": 99360,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 43,
+      "quantity": 1,
+      "measurement": {
+        "z": 30,
+        "x": 69,
+        "y": 48
+      }
+    },
+    {
+      "profit": 197316,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 44,
+      "quantity": 1,
+      "measurement": {
+        "z": 42,
+        "x": 81,
+        "y": 58
+      }
+    },
+    {
+      "profit": 146224,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 45,
+      "quantity": 1,
+      "measurement": {
+        "z": 26,
+        "x": 76,
+        "y": 74
+      }
+    },
+    {
+      "profit": 479787,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 46,
+      "quantity": 1,
+      "measurement": {
+        "z": 67,
+        "x": 93,
+        "y": 77
+      }
+    },
+    {
+      "profit": 167328,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 47,
+      "quantity": 1,
+      "measurement": {
+        "z": 32,
+        "x": 83,
+        "y": 63
+      }
+    },
+    {
+      "profit": 220805,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 48,
+      "quantity": 2,
+      "measurement": {
+        "z": 43,
+        "x": 79,
+        "y": 65
+      }
+    },
+    {
+      "profit": 309120,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 49,
+      "quantity": 1,
+      "measurement": {
+        "z": 40,
+        "x": 112,
+        "y": 69
+      }
+    },
+    {
+      "profit": 132308,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 50,
+      "quantity": 1,
+      "measurement": {
+        "z": 31,
+        "x": 97,
+        "y": 44
+      }
+    },
+    {
+      "profit": 299880,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 51,
+      "quantity": 1,
+      "measurement": {
+        "z": 51,
+        "x": 98,
+        "y": 60
+      }
+    },
+    {
+      "profit": 147798,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 52,
+      "quantity": 3,
+      "measurement": {
+        "z": 27,
+        "x": 119,
+        "y": 46
+      }
+    },
+    {
+      "profit": 251328,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 53,
+      "quantity": 1,
+      "measurement": {
+        "z": 44,
+        "x": 112,
+        "y": 51
+      }
+    },
+    {
+      "profit": 323204,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 54,
+      "quantity": 1,
+      "measurement": {
+        "z": 49,
+        "x": 97,
+        "y": 68
+      }
+    },
+    {
+      "profit": 690536,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 55,
+      "quantity": 2,
+      "measurement": {
+        "z": 76,
+        "x": 118,
+        "y": 77
+      }
+    },
+    {
+      "profit": 346969,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 56,
+      "quantity": 1,
+      "measurement": {
+        "z": 49,
+        "x": 97,
+        "y": 73
+      }
+    },
+    {
+      "profit": 592040,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 57,
+      "quantity": 2,
+      "measurement": {
+        "z": 76,
+        "x": 95,
+        "y": 82
+      }
+    },
+    {
+      "profit": 445809,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 58,
+      "quantity": 1,
+      "measurement": {
+        "z": 69,
+        "x": 91,
+        "y": 71
+      }
+    },
+    {
+      "profit": 103968,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 59,
+      "quantity": 1,
+      "measurement": {
+        "z": 36,
+        "x": 76,
+        "y": 38
+      }
+    },
+    {
+      "profit": 117612,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 60,
+      "quantity": 1,
+      "measurement": {
+        "z": 22,
+        "x": 81,
+        "y": 66
+      }
+    },
+    {
+      "profit": 79200,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 61,
+      "quantity": 1,
+      "measurement": {
+        "z": 33,
+        "x": 60,
+        "y": 40
+      }
+    },
+    {
+      "profit": 160146,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 62,
+      "quantity": 1,
+      "measurement": {
+        "z": 41,
+        "x": 93,
+        "y": 42
+      }
+    },
+    {
+      "profit": 326196,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 63,
+      "quantity": 1,
+      "measurement": {
+        "z": 39,
+        "x": 102,
+        "y": 82
+      }
+    },
+    {
+      "profit": 134520,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 64,
+      "quantity": 1,
+      "measurement": {
+        "z": 38,
+        "x": 60,
+        "y": 59
+      }
+    },
+    {
+      "profit": 132720,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 65,
+      "quantity": 1,
+      "measurement": {
+        "z": 30,
+        "x": 79,
+        "y": 56
+      }
+    },
+    {
+      "profit": 141960,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 66,
+      "quantity": 1,
+      "measurement": {
+        "z": 39,
+        "x": 70,
+        "y": 52
+      }
+    },
+    {
+      "profit": 207468,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 67,
+      "quantity": 1,
+      "measurement": {
+        "z": 36,
+        "x": 113,
+        "y": 51
+      }
+    },
+    {
+      "profit": 120384,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 68,
+      "quantity": 2,
+      "measurement": {
+        "z": 33,
+        "x": 96,
+        "y": 38
+      }
+    },
+    {
+      "profit": 390336,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 69,
+      "quantity": 2,
+      "measurement": {
+        "z": 57,
+        "x": 107,
+        "y": 64
+      }
+    },
+    {
+      "profit": 453600,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 70,
+      "quantity": 1,
+      "measurement": {
+        "z": 70,
+        "x": 81,
+        "y": 80
+      }
+    },
+    {
+      "profit": 190209,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 71,
+      "quantity": 2,
+      "measurement": {
+        "z": 47,
+        "x": 71,
+        "y": 57
+      }
+    },
+    {
+      "profit": 706800,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 72,
+      "quantity": 1,
+      "measurement": {
+        "z": 62,
+        "x": 120,
+        "y": 95
+      }
+    },
+    {
+      "profit": 156000,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 73,
+      "quantity": 1,
+      "measurement": {
+        "z": 48,
+        "x": 65,
+        "y": 50
+      }
+    },
+    {
+      "profit": 270816,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 74,
+      "quantity": 1,
+      "measurement": {
+        "z": 31,
+        "x": 112,
+        "y": 78
+      }
+    },
+    {
+      "profit": 148428,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 75,
+      "quantity": 1,
+      "measurement": {
+        "z": 38,
+        "x": 63,
+        "y": 62
+      }
+    },
+    {
+      "profit": 544320,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 76,
+      "quantity": 1,
+      "measurement": {
+        "z": 72,
+        "x": 90,
+        "y": 84
+      }
+    },
+    {
+      "profit": 496800,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 77,
+      "quantity": 2,
+      "measurement": {
+        "z": 48,
+        "x": 115,
+        "y": 90
+      }
+    },
+    {
+      "profit": 230112,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 78,
+      "quantity": 1,
+      "measurement": {
+        "z": 47,
+        "x": 72,
+        "y": 68
+      }
+    },
+    {
+      "profit": 210915,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 79,
+      "quantity": 2,
+      "measurement": {
+        "z": 43,
+        "x": 109,
+        "y": 45
+      }
+    },
+    {
+      "profit": 243236,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 80,
+      "quantity": 1,
+      "measurement": {
+        "z": 28,
+        "x": 119,
+        "y": 73
+      }
+    },
+    {
+      "profit": 109668,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 81,
+      "quantity": 1,
+      "measurement": {
+        "z": 37,
+        "x": 78,
+        "y": 38
+      }
+    },
+    {
+      "profit": 269010,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 82,
+      "quantity": 1,
+      "measurement": {
+        "z": 61,
+        "x": 70,
+        "y": 63
+      }
+    },
+    {
+      "profit": 302950,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 83,
+      "quantity": 1,
+      "measurement": {
+        "z": 50,
+        "x": 83,
+        "y": 73
+      }
+    },
+    {
+      "profit": 410856,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 84,
+      "quantity": 1,
+      "measurement": {
+        "z": 53,
+        "x": 114,
+        "y": 68
+      }
+    },
+    {
+      "profit": 701064,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 85,
+      "quantity": 1,
+      "measurement": {
+        "z": 78,
+        "x": 107,
+        "y": 84
+      }
+    },
+    {
+      "profit": 239400,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 86,
+      "quantity": 1,
+      "measurement": {
+        "z": 35,
+        "x": 90,
+        "y": 76
+      }
+    },
+    {
+      "profit": 43520,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 87,
+      "quantity": 1,
+      "measurement": {
+        "z": 32,
+        "x": 40,
+        "y": 34
+      }
+    },
+    {
+      "profit": 118932,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 88,
+      "quantity": 1,
+      "measurement": {
+        "z": 34,
+        "x": 66,
+        "y": 53
+      }
+    },
+    {
+      "profit": 107520,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 89,
+      "quantity": 1,
+      "measurement": {
+        "z": 32,
+        "x": 60,
+        "y": 56
+      }
+    },
+    {
+      "profit": 364038,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 90,
+      "quantity": 1,
+      "measurement": {
+        "z": 51,
+        "x": 86,
+        "y": 83
+      }
+    },
+    {
+      "profit": 197964,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 91,
+      "quantity": 1,
+      "measurement": {
+        "z": 26,
+        "x": 94,
+        "y": 81
+      }
+    },
+    {
+      "profit": 433650,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 92,
+      "quantity": 2,
+      "measurement": {
+        "z": 59,
+        "x": 98,
+        "y": 75
+      }
+    },
+    {
+      "profit": 203456,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 93,
+      "quantity": 1,
+      "measurement": {
+        "z": 44,
+        "x": 68,
+        "y": 68
+      }
+    },
+    {
+      "profit": 62640,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 94,
+      "quantity": 1,
+      "measurement": {
+        "z": 24,
+        "x": 87,
+        "y": 30
+      }
+    },
+    {
+      "profit": 141955,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 95,
+      "quantity": 2,
+      "measurement": {
+        "z": 29,
+        "x": 89,
+        "y": 55
+      }
+    },
+    {
+      "profit": 78948,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 96,
+      "quantity": 1,
+      "measurement": {
+        "z": 34,
+        "x": 54,
+        "y": 43
+      }
+    },
+    {
+      "profit": 152361,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": false,
+          "yxz": true,
+          "zxy": false,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 97,
+      "quantity": 1,
+      "measurement": {
+        "z": 27,
+        "x": 99,
+        "y": 57
+      }
+    },
+    {
+      "profit": 179826,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 98,
+      "quantity": 1,
+      "measurement": {
+        "z": 43,
+        "x": 82,
+        "y": 51
+      }
+    },
+    {
+      "profit": 87516,
+      "constraint": {
+        "orientation": {
+          "zyx": false,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": false,
+          "xyz": true
+        }
+      },
+      "br_type_id": 99,
+      "quantity": 1,
+      "measurement": {
+        "z": 33,
+        "x": 78,
+        "y": 34
+      }
+    },
+    {
+      "profit": 101439,
+      "constraint": {
+        "orientation": {
+          "zyx": true,
+          "xzy": true,
+          "yxz": true,
+          "zxy": true,
+          "yzx": true,
+          "xyz": true
+        }
+      },
+      "br_type_id": 100,
+      "quantity": 1,
+      "measurement": {
+        "z": 39,
+        "x": 51,
+        "y": 51
+      }
+    }
+  ]
+}

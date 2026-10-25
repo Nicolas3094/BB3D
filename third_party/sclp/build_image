@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Default values
+DOCKER_REGISTRY="${DOCKER_REGISTRY:-docker.io/library}"
+COMMIT="$(git rev-parse --short HEAD)"
+TAG_LATEST=false
+PUSH=false
+DRY_RUN=false
+
+# Function to print help message
+function print_help {
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  --latest         Tag images with 'latest'"
+    echo "  --push           Push images to the registry"
+    echo "  --registry REG   Specify a custom registry"
+    echo "  --dry-run        Print commands without executing them"
+    echo "  --help           Display this help message"
+    exit 0
+}
+
+# Parse command line options
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --latest) TAG_LATEST=true ;;
+        --push) PUSH=true ;;
+        --registry) DOCKER_REGISTRY="$2"; shift ;;
+        --dry-run) DRY_RUN=true ;;
+        --help) print_help ;;
+        *) echo "Unknown option: $1"; print_help ;;
+    esac
+    shift
+done
+
+# Command executor: either runs or prints depending on DRY_RUN
+function run_cmd {
+    if [ "$DRY_RUN" = true ]; then
+        echo "$@"
+    else
+        eval "$@"
+    fi
+}
+
+# Function to tag images with 'latest' if TAG_LATEST is true
+function tag_latest_images {
+    if [ "$TAG_LATEST" = true ]; then
+        run_cmd "docker tag ${DOCKER_REGISTRY}:sclp-app-${COMMIT} ${DOCKER_REGISTRY}:sclp-app-latest"
+    fi
+}
+
+# Function to push images if PUSH is true
+function push_images {
+    run_cmd "docker push ${DOCKER_REGISTRY}:sclp-app-${COMMIT}"
+
+    if [ "$TAG_LATEST" = true ]; then
+        run_cmd "docker push ${DOCKER_REGISTRY}:sclp-app-latest"
+    fi
+}
+
+# Build images
+run_cmd "docker build --file=Dockerfile --tag=${DOCKER_REGISTRY}:sclp-app-${COMMIT}"
+
+# Tag images with 'latest' if needed
+tag_latest_images
+
+# Push images if --push option is given
+if [ "$PUSH" = true ]; then
+    push_images
+fi

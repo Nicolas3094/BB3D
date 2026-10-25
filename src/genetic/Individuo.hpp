@@ -5,6 +5,7 @@
 #include "../binPacking/Bin.hpp"
 #include <algorithm>
 #include <functional>
+#include "../util/ExecutionCheckpoint.hpp"
 
 class Individuo
 {
@@ -31,8 +32,9 @@ typedef std::vector<Individuo> Poblacion;
 
 struct greater_fitness
 {
-    inline bool operator()(Individuo struct1, Individuo struct2)
+    inline bool operator()(const Individuo &struct1, const Individuo &struct2)
     {
+        checkExecutionDeadline();
         return (struct1.getFitness() > struct2.getFitness());
     }
 };

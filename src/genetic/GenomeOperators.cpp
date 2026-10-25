@@ -2,12 +2,15 @@
 #include <chrono>
 #include <unordered_set>
 #include "../util/RandomNumbers.hpp"
+#include "../util/ExecutionCheckpoint.hpp"
 
 namespace
 {
 void shuffleIds(Chromosome &ids) {
-    for (size_t i=ids.size();i>1;--i)
+    for (size_t i=ids.size();i>1;--i) {
+        if((i&255)==0)checkExecutionDeadline();
         std::swap(ids[i-1],ids[randomInteger(0,static_cast<int>(i-1))]);
+    }
 }
 void validateIds(const LoadedBins &items)
 {
@@ -42,7 +45,10 @@ Chromosome generatePermutation(int n)
     Chromosome chromosome(n);
 
     for (int i = 0; i < n; i++)
+    {
+        if((i&255)==0)checkExecutionDeadline();
         chromosome[i] = i + 1;
+    }
 
     shuffleIds(chromosome);
 
@@ -160,6 +166,7 @@ std::vector<Chromosome> buildChromosomes(LoadedBins allBins, int numberOfChromos
     std::vector<Chromosome> chromosomePoblation(numberOfChromosomes);
     for (int i = 0; i < numberOfChromosomes; i++)
     {
+        checkExecutionDeadline();
         chromosomePoblation[i] = ids;
         shuffleIds(chromosomePoblation[i]);
     }
@@ -169,6 +176,7 @@ std::vector<Chromosome> buildChromosomes(LoadedBins allBins, int numberOfChromos
 
 Chromosome generateRandomRepeatedAlalleleChromosome(int NumberCount, int minimum, int maximum)
 {
+    checkExecutionDeadline();
     if (NumberCount < 0 || maximum < 0 || (maximum != 0 && minimum > maximum))
         throw std::invalid_argument("Invalid allele count or random range.");
     Chromosome values(NumberCount);
@@ -181,7 +189,8 @@ Chromosome generateRandomRepeatedAlalleleChromosome(int NumberCount, int minimum
         return values;
     }
 
+    std::size_t index=0;
     std::generate(values.begin(), values.end(), [&]()
-                  { return randomInteger(minimum, maximum); });
+                  {if((index++&255)==0)checkExecutionDeadline();return randomInteger(minimum, maximum);});
     return values;
 }

@@ -11,7 +11,8 @@ Poblacion FireflyAlgorithm::search()
 {
     validateConfiguration();
     visitedIndividuals.clear();
-    int n, iteration, firefly, bestFirefly;
+    int n, firefly, bestFirefly;
+    long iteration;
     double gamma, bestIntensity;
 
     Poblacion fireflyPoblation =
@@ -28,8 +29,10 @@ Poblacion FireflyAlgorithm::search()
 
     for (iteration = 0; iteration < this->maxIteration; iteration++)
     {
+        checkExecutionDeadline();
         for (firefly = 0; firefly < numberOfIndividuals; firefly++)
         {
+            checkExecutionDeadline();
             bestFirefly = -1;
             bestIntensity = -1.0;
 
@@ -78,6 +81,7 @@ void FireflyAlgorithm::findMostAttractiveByIndexAndIntensity(
 
     for (bestFirefly = 0; bestFirefly < this->numberOfIndividuals; bestFirefly++)
     {
+        checkExecutionDeadline();
         if (currentFirefly == bestFirefly)
         {
             continue;
@@ -126,7 +130,8 @@ Poblacion FireflyAlgorithm::searchD()
 {
     validateConfiguration();
     visitedIndividuals.clear();
-    int n, iteration, fireflyIndex;
+    int n, fireflyIndex;
+    long iteration;
     double gamma;
 
     Poblacion fireflyPoblation =
@@ -143,8 +148,10 @@ Poblacion FireflyAlgorithm::searchD()
 
     for (iteration = 0; iteration < this->maxIteration; iteration++)
     {
+        checkExecutionDeadline();
         for (fireflyIndex = 0; fireflyIndex < numberOfIndividuals; fireflyIndex++)
         {
+            checkExecutionDeadline();
 
             Individuo *mostAttactiveFirefly =
                 findMostAttractiveFirefly(fireflyPoblation, fireflyPoblation[fireflyIndex], gamma);

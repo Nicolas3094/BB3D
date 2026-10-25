@@ -56,8 +56,26 @@ BRMenuSelection BRExperimentMenu::choose(std::istream &input,std::ostream &outpu
         o.firstInstance=selection==3?1:number(input,output,"Primer problema (posicion en el archivo)",1,count,1);
         o.instances=selection==3?0:1;
         if(selection==2)o.instances=number(input,output,"Ultimo problema",o.firstInstance,count,o.firstInstance+std::min(9,count-o.firstInstance))-o.firstInstance+1;
-        output<<"Algoritmos: 1=Genetico (GA), 2=Abejas (ABC), 3=Firefly (FFA), 4=comparar los tres.\n";
-        const int algorithm=number(input,output,"Algoritmo",1,4,1);o.algorithm=std::vector<std::string>{"GA","ABC","FFA","all"}[algorithm-1];
+        output<<"Algoritmos: 1=Genetico (GA), 2=Abejas (ABC), 3=Firefly (FFA), 4=comparar los tres, 5=articulo SCLP (Guesser 2026).\n";
+        const int algorithm=number(input,output,"Algoritmo",1,5,1);o.algorithm=std::vector<std::string>{"GA","ABC","FFA","all","SCLP"}[algorithm-1];
+        if(o.algorithm=="SCLP") {
+            o.execution=ExecutionMode::ThirtySeconds;
+            output<<"SCLP: configuracion publicada de dos etapas, memoizacion strict, 1 hilo.\n"
+                  <<"30 segundos CPU por problema y ronda, incluyendo generacion de bloques.\n"
+                  <<"Orientaciones: todos los permisos de los datos BR. No utiliza mutacion, poblacion ni DBLF.\n";
+            o.rounds=number(input,output,"Rondas",1,10000,o.rounds);
+            for(;;) {
+                output<<"Nombre de sesion (letras, numeros, guion) [sesion]: "<<std::flush;
+                auto name=line(input);if(name.empty())name="sesion";
+                if(name.size()<=64 && name.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")==std::string::npos){result.sessionName=name;break;}
+                output<<"Nombre invalido.\n";
+            }
+            const auto runs=static_cast<std::uint64_t>(file==19?19:1)*(o.instances==0?count:o.instances)*o.rounds;
+            output<<"\nResumen: "<<o.dataset<<", desde problema "<<o.firstInstance<<", algoritmo SCLP, "<<runs<<" ejecuciones de hasta 30 segundos CPU.\n";
+            result.confirmed=number(input,output,"Iniciar? 1=si, 0=cancelar",0,1,0)==1;
+            if(!result.confirmed)output<<"Sesion cancelada; no se escribieron resultados.\n";
+            return result;
+        }
         output<<"Mutacion: 1=inversion, 2=C1, 3=C2, 4=comparar todas.\n";
         o.mutation=std::vector<std::string>{"inverse","c1","c2","all"}[number(input,output,"Metodo de mutacion",1,4,1)-1];
         output<<"Orientaciones: 1=sin rotacion, 2=dos, 3=seis, 4=comparar todas.\n";
@@ -67,7 +85,9 @@ BRMenuSelection BRExperimentMenu::choose(std::istream &input,std::ostream &outpu
         output<<"DBLF: 1=legacy (rapido), 2=proyectado, 3=best (evalua ambos y conserva mayor volumen).\n";
         o.candidates=static_cast<DBLFCandidatePolicy>(number(input,output,"Candidatos DBLF",1,3,1)-1);
         o.population=number(input,output,"Tamano de poblacion",2,100000,o.population>=2?o.population:20);
-        o.iterations=number(input,output,"Maximo de iteraciones",0,10000000,o.iterations);
+        output<<"Ejecucion: 1=normal por iteraciones, 2=hasta 30 segundos por problema/algoritmo/ronda.\n";
+        o.execution=number(input,output,"Modo de ejecucion",1,2,o.execution==ExecutionMode::ThirtySeconds?2:1)==2?ExecutionMode::ThirtySeconds:ExecutionMode::Iterations;
+        if(o.execution==ExecutionMode::Iterations)o.iterations=number(input,output,"Maximo de iteraciones",0,10000000,o.iterations);
         o.rounds=number(input,output,"Rondas independientes",1,10000,o.rounds);
         for(;;) {
             output<<"Semilla raiz ["<<o.seed<<"]: "<<std::flush;const auto text=line(input);if(text.empty())break;
@@ -82,8 +102,10 @@ BRMenuSelection BRExperimentMenu::choose(std::istream &input,std::ostream &outpu
             if(o.algorithm=="GA" || o.algorithm=="all") {
                 o.selection=probability(input,output,"Probabilidad de seleccionar al mejor",o.selection);
                 o.crossover=probability(input,output,"Probabilidad de cruce",o.crossover);
-                o.diversity=probability(input,output,"Umbral de diversidad genetica",o.diversity);
-                o.patience=number(input,output,"Generaciones sin mejora (0 desactiva parada)",0,10000000,o.patience);
+                if(o.execution==ExecutionMode::Iterations) {
+                    o.diversity=probability(input,output,"Umbral de diversidad genetica",o.diversity);
+                    o.patience=number(input,output,"Generaciones sin mejora (0 desactiva parada)",0,10000000,o.patience);
+                }
             }
             const int mode=number(input,output,"Mutacion: 1=adaptativa en GA/1 en otros, 2=probabilidad fija",1,2,1);
             o.mutationProbability=mode==1?-1:probability(input,output,"Probabilidad fija de mutacion",1);
@@ -107,8 +129,10 @@ BRMenuSelection BRExperimentMenu::choose(std::istream &input,std::ostream &outpu
         output<<"\nResumen: "<<o.dataset<<", problemas desde "<<o.firstInstance<<", cantidad "<<(o.instances==0?count:o.instances)
               <<", algoritmo "<<o.algorithm<<", mutacion "<<o.mutation<<", orientaciones "<<o.rotation
               <<", reemplazo "<<o.replacement<<", candidatos "<<(o.candidates==DBLFCandidatePolicy::ThreePoints?"legacy":(o.candidates==DBLFCandidatePolicy::Projected?"projected":"best"))
-              <<", poblacion "<<o.population<<", iteraciones "<<o.iterations<<", rondas "<<o.rounds
+              <<", poblacion "<<o.population<<", ejecucion "<<(o.execution==ExecutionMode::ThirtySeconds?"30 segundos":"iteraciones")<<", rondas "<<o.rounds
               <<". Total: "<<runs<<" ejecuciones.\n";
+        if(o.execution==ExecutionMode::ThirtySeconds)output<<"Limite de busqueda: 30 segundos por ejecucion; los metodos se ejecutan en serie. Puede finalizar antes con ocupacion 100%.\n";
+        else output<<"Maximo de iteraciones: "<<o.iterations<<".\n";
         result.confirmed=number(input,output,"Iniciar? 1=si, 0=cancelar",0,1,0)==1;
         if(!result.confirmed)output<<"Sesion cancelada; no se escribieron resultados.\n";
     } catch(const Cancelled &) {output<<"\nMenu cancelado; no se escribieron resultados.\n";}

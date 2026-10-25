@@ -1,0 +1,32 @@
+{
+  "type": "input",
+  "version": "0.4.0",
+  "large_object": {
+    "measurement": {
+      "x": 10,
+      "y": 20,
+      "z": 30
+    }
+  },
+  "small_items": [
+    {
+      "profit": 12,
+      "quantity": 1,
+      "measurement": {
+        "x": 1,
+        "y": 2,
+        "z": 3
+      },
+      "constraint": {
+        "orientation": {
+          "xyz": true,
+          "yxz": false,
+          "zyx": false,
+          "xzy": false,
+          "zxy": false,
+          "yzx": false
+        }
+      }
+    }
+  ]
+}

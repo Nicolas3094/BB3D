@@ -1,0 +1,2 @@
+OCUPACION FINAL: 95.50596518001889 %
+Tiempo CPU (incluye bloques): 30 s

@@ -26,6 +26,7 @@ std::string context(const LoadedBins &items,const Bin &bin) {
     const auto d=bin.getDimensions(); append(result,d.getLargo());append(result,d.getAncho());append(result,d.getAlto());
     append(result,static_cast<int>(bin.getRotationWay()));append(result,static_cast<int>(bin.getCandidatePolicy()));append(result,items.size());
     for(const auto &item:items) {
+        checkExecutionDeadline();
         const auto d=item.getDimension();
         append(result,item.getId());append(result,item.getTipo());append(result,d.getLargo());append(result,d.getAncho());append(result,d.getAlto());
         point(result,item.getCurrentDimension());point(result,item.getRotations());point(result,item.getPunto());

@@ -11,6 +11,8 @@ struct ExperimentResult
     double fitness = 0;
     std::int64_t milliseconds = 0;
     ExperimentStatus status = ExperimentStatus::Pending;
+    std::string termination="completed";
+    bool partialEvaluation=false;
 };
 using ExperimentResults = std::vector<ExperimentResult>;
 // Complete records remain complete at zero fitness or zero elapsed milliseconds.

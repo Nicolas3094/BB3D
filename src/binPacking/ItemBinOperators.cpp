@@ -1,6 +1,7 @@
 #include "ItemBinOperators.hpp"
 #include <array>
 #include <algorithm>
+#include "../util/ExecutionCheckpoint.hpp"
 
 namespace {
 std::vector<Punto> projectedCandidates(const Bin &bin,const Punto &point,const ItemBin &item) {
@@ -10,6 +11,7 @@ std::vector<Punto> projectedCandidates(const Bin &bin,const Punto &point,const I
     auto add=[&](Punto p) {
         if(!canBePlaced(bin,p) || p.x==bin.getDimensions().getLargo() || p.y==bin.getDimensions().getAncho() || p.z==bin.getDimensions().getAlto()) return;
         for(const auto &obstacle:bin.getLoadedItems()) {
+            checkExecutionDeadline();
             const auto start=obstacle.getPunto(), finish=start+obstacle.getCurrentDimension();
             if(p.x>=start.x && p.x<finish.x && p.y>=start.y && p.y<finish.y && p.z>=start.z && p.z<finish.z) return;
         }
@@ -19,6 +21,7 @@ std::vector<Punto> projectedCandidates(const Bin &bin,const Punto &point,const I
         std::int64_t coordinates[3]={p.x,p.y,p.z};
         std::int64_t contact=0;
         for(const auto &obstacle:bin.getLoadedItems()) {
+            checkExecutionDeadline();
             const auto origin=obstacle.getPunto(),finish=origin+obstacle.getCurrentDimension();
             const std::int64_t low[3]={origin.x,origin.y,origin.z},high[3]={finish.x,finish.y,finish.z};
             if(high[axis]>coordinates[axis]) continue;
@@ -65,6 +68,7 @@ bool isOverlapped(Punto position, const ItemBin &currentItem, const Bin &bin)
     const Punto envelope = position + currentItem.getCurrentDimension();
     for (const ItemBin &loadedItem : bin.getLoadedItems())
     {
+        checkExecutionDeadline();
         if (isABIntersect(
                 /* Amax= */ envelope,
                 /* Amin= */ position,
@@ -98,6 +102,7 @@ void iterateByDeepestBottomLeft(Punto &punto, const ItemBin &item, const Bin &bi
         std::int64_t contact = 0; // The wall is the default stopping surface.
         for (const ItemBin &obstacle : bin.getLoadedItems())
         {
+            checkExecutionDeadline();
             const Punto origin = obstacle.getPunto();
             const Punto end = origin + obstacle.getCurrentDimension();
             const std::int64_t minimum[3] = {origin.x, origin.y, origin.z};

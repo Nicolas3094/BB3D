@@ -28,6 +28,9 @@ namespace
 {
 void validate(const ExperimentResult &result)
 {
+    if((result.termination!="completed" && result.termination!="optimal" && result.termination!="time_limit") ||
+       (result.partialEvaluation && result.termination!="time_limit"))
+        throw std::invalid_argument("Invalid execution termination metadata.");
     if (result.status == ExperimentStatus::Complete)
     {
         if (!std::isfinite(result.fitness) || result.fitness < 0 || result.fitness > 1 || result.milliseconds < 0)
@@ -151,20 +154,28 @@ ExperimentResults loadExperimentResults(const std::string &fitnessPath, const st
     if (checkpoint.is_open())
     {
         std::string line;
-        if (!std::getline(checkpoint, line) || line != (identity.empty()?"BB3D_RESULTS_V1":"BB3D_RESULTS_V2"))
+        if (!std::getline(checkpoint, line))throw std::invalid_argument("Missing checkpoint header.");
+        const bool version3=line=="BB3D_RESULTS_V3";
+        if (identity.empty()?line!="BB3D_RESULTS_V1":(!version3 && line!="BB3D_RESULTS_V2"))
             throw std::invalid_argument("Invalid experiment checkpoint header: " + fitnessPath);
         if(!identity.empty() && (!std::getline(checkpoint,line) || line!=identity))
             throw std::invalid_argument("Checkpoint dataset, seed or configuration differs from this experiment.");
         ExperimentResults results;
         while (std::getline(checkpoint, line))
         {
-            if (std::count(line.begin(), line.end(), ',') != 2)
+            if (std::count(line.begin(), line.end(), ',') != (version3?4:2))
                 throw std::invalid_argument("Invalid experiment checkpoint columns: " + fitnessPath);
             std::replace(line.begin(), line.end(), ',', ' ');
             std::istringstream input(line); input.imbue(std::locale::classic());
             int status; ExperimentResult result; std::string extra;
-            if (!(input >> status >> result.fitness >> result.milliseconds) || (input >> extra) || status < 0 || status > 2)
+            if (!(input >> status >> result.fitness >> result.milliseconds) || status < 0 || status > 2)
                 throw std::invalid_argument("Invalid experiment checkpoint row: " + fitnessPath);
+            if(version3) {
+                int partial;
+                if(!(input>>result.termination>>partial) || (partial!=0 && partial!=1))throw std::invalid_argument("Invalid execution metadata in checkpoint.");
+                result.partialEvaluation=partial!=0;
+            }
+            if(input>>extra)throw std::invalid_argument("Extra experiment checkpoint fields.");
             result.status = static_cast<ExperimentStatus>(status);
             validate(result); results.push_back(result);
         }
@@ -197,13 +208,17 @@ void saveExperimentResults(const ExperimentResults &results, const std::string &
     if(identity.find_first_of("\r\n")!=std::string::npos) throw std::invalid_argument("Experiment identity must be one line.");
     validatePaths(fitnessPath, timePath);
     for (const auto &result : results) validate(result);
+    if(identity.empty())for(const auto &result:results)
+        if(result.termination!="completed" || result.partialEvaluation)throw std::invalid_argument("Execution metadata requires a bound experiment identity.");
     std::ostringstream checkpoint, fitness, times;
     checkpoint.imbue(std::locale::classic()); fitness.imbue(std::locale::classic()); times.imbue(std::locale::classic());
-    checkpoint << (identity.empty()?"BB3D_RESULTS_V1\n":"BB3D_RESULTS_V2\n"+identity+"\n") << std::setprecision(std::numeric_limits<double>::max_digits10);
+    checkpoint << (identity.empty()?"BB3D_RESULTS_V1\n":"BB3D_RESULTS_V3\n"+identity+"\n") << std::setprecision(std::numeric_limits<double>::max_digits10);
     fitness << std::setprecision(std::numeric_limits<double>::max_digits10);
     for (const auto &result : results)
     {
-        checkpoint << static_cast<int>(result.status) << ',' << result.fitness << ',' << result.milliseconds << '\n';
+        checkpoint << static_cast<int>(result.status) << ',' << result.fitness << ',' << result.milliseconds;
+        if(!identity.empty())checkpoint<<','<<result.termination<<','<<result.partialEvaluation;
+        checkpoint<<'\n';
         fitness << result.fitness << '\n'; times << result.milliseconds << '\n';
     }
     // The single authoritative checkpoint is committed before compatibility exports.

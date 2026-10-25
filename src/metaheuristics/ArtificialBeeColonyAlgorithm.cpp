@@ -9,7 +9,8 @@ Poblacion ArtificialBeeColonyAlgorithm::evolve()
         numberOfEliteSites > numberOfSites || numberOfEliteBees < 0 || numberOfNonEliteBees < 0)
         throw std::invalid_argument("ABC requires 0 <= elite sites <= sites <= population and non-negative bee counts.");
     visitedIndividuals.clear();
-    int iteration, eliteSite, noneEliteSite, eliteBee, nonEliteBee, restOfSites;
+    long iteration;
+    int eliteSite, noneEliteSite, eliteBee, nonEliteBee, restOfSites;
 
     Poblacion sites =
         initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
@@ -21,6 +22,7 @@ Poblacion ArtificialBeeColonyAlgorithm::evolve()
 
     for (iteration = 0; iteration < maxIteration; iteration++)
     {
+        checkExecutionDeadline();
         // Select elite sites
         for (eliteSite = 0; eliteSite < numberOfEliteSites; eliteSite++)
         {
@@ -68,6 +70,7 @@ void ArtificialBeeColonyAlgorithm::orderSites(Poblacion &sites)
 
 void ArtificialBeeColonyAlgorithm::globalSearch(Poblacion &sites, int site)
 {
+    checkExecutionDeadline();
     Individuo newSite = Individuo::Build()
                             .setGenome(DoubleGenome::Build()
                                            .setGenome(generatePermutation(dataSet.totalItems.size()))
@@ -95,6 +98,7 @@ void ArtificialBeeColonyAlgorithm::globalSearch(Poblacion &sites, int site)
 
 void ArtificialBeeColonyAlgorithm::neighorhoodSearch(Poblacion &sites, int site)
 {
+    checkExecutionDeadline();
     DoubleGenome siteGenome = sites[site].getGenome();
 
     if (mutationProbaility == 1 || (mutationProbaility > 0 && uniformUnit() < mutationProbaility))

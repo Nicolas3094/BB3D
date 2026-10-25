@@ -1,5 +1,6 @@
 #include "DBLF.hpp"
 #include "DBLFValidation.hpp"
+#include "../util/ExecutionCheckpoint.hpp"
 /** Deepest Bottom Left Fill with PriorityQueue
  *
  * ThreePoints: worst-case O(n^3) for n input items and an initially empty bin:
@@ -22,8 +23,13 @@ void DBLFQueue(
     if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
         Bin legacy=bin,projected=bin;
         legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
-        DBLFQueue(legacy,itemsIdToPack,itemsRotation,itemDataOrderById);
-        DBLFQueue(projected,itemsIdToPack,itemsRotation,itemDataOrderById);
+        try {
+            DBLFQueue(legacy,itemsIdToPack,itemsRotation,itemDataOrderById);
+            DBLFQueue(projected,itemsIdToPack,itemsRotation,itemDataOrderById);
+        } catch(const ExecutionTimeLimit &) {
+            bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
+            bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth);throw;
+        }
         bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
         bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth); return;
     }
@@ -35,6 +41,7 @@ void DBLFQueue(
 
     for (int boxId : itemsIdToPack) // O(n)
     {
+        checkExecutionDeadline();
         // Rotate box accordingly with the rotation codification
         itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(),
                                             getRotationFromId(itemsRotation[countAllele++]));
@@ -46,6 +53,7 @@ void DBLFQueue(
         rear = queue.getRear();
         while (rear != null) // O(n)
         {
+            checkExecutionDeadline();
             Punto currentPoint = rear->data;
             Punto dimensionPoint = itemDataOrderById[boxId - 1].getCurrentDimension();
 
@@ -81,8 +89,13 @@ void DBLF(
     if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
         Bin legacy=bin,projected=bin;
         legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
-        DBLF(legacy,itemsIdToPack,itemsRotation,itemDataOrderById,print);
-        DBLF(projected,itemsIdToPack,itemsRotation,itemDataOrderById,print);
+        try {
+            DBLF(legacy,itemsIdToPack,itemsRotation,itemDataOrderById,print);
+            DBLF(projected,itemsIdToPack,itemsRotation,itemDataOrderById,print);
+        } catch(const ExecutionTimeLimit &) {
+            bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
+            bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth);throw;
+        }
         bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
         bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth); return;
     }
@@ -91,6 +104,7 @@ void DBLF(
     int countAllele = 0;
     for (int boxId : itemsIdToPack)
     {
+        checkExecutionDeadline();
         ROTATION_MODE rotation = getRotationFromId(itemsRotation[countAllele++]);
         itemDataOrderById[boxId - 1].rotate(bin.getRotationWay(), rotation);
         if (!itemDataOrderById[boxId - 1].isValidOrientation())
@@ -99,6 +113,7 @@ void DBLF(
         }
         for (int j = queue.size() - 1; j >= 0; j--)
         {
+            checkExecutionDeadline();
             Punto currenPoint = queue[j];
             Punto dimensionPoint = itemDataOrderById[boxId - 1].getCurrentDimension();
 
@@ -124,7 +139,11 @@ void DBLF(
     if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
         Bin legacy=bin,projected=bin;
         legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
-        DBLF(legacy,itemsToPack); DBLF(projected,itemsToPack);
+        try {DBLF(legacy,itemsToPack);DBLF(projected,itemsToPack);}
+        catch(const ExecutionTimeLimit &) {
+            bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
+            bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth);throw;
+        }
         bin=projected.getLoadedVolume()>legacy.getLoadedVolume()?std::move(projected):std::move(legacy);
         bin.setCandidatePolicy(DBLFCandidatePolicy::BestOfBoth); return;
     }
@@ -134,6 +153,7 @@ void DBLF(
 
     for (ItemBin &item : itemsToPack)
     {
+        checkExecutionDeadline();
         if (rotationWay == ROTATION_WAY::ZERO_WAY)
             item.rotate(ROTATION_WAY::ZERO_WAY, ROTATION_MODE::NONE);
         if (!item.isValidOrientation())
@@ -144,6 +164,7 @@ void DBLF(
         std::cout << "Available points: " << queue;
         for (int j = queue.size() - 1; j >= 0; j--)
         {
+            checkExecutionDeadline();
             Punto currenPoint = queue[j];
             Punto dimensionPoint = item.getCurrentDimension();
             std::cout << "Prueba con punto: " << currenPoint << "\n";

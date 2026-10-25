@@ -20,6 +20,7 @@ int hamming(const DoubleGenome &gen1, const DoubleGenome &gen2)
     int count = 0;
     for (size_t i = 0; i < items1.size(); ++i)
     {
+        if((i&255)==0)checkExecutionDeadline();
         if (items1[i] != items2[i] ||
             (withRotations && rotations1[i] != rotations2[i]))
         {
