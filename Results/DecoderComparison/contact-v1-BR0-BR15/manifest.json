@@ -1,0 +1,22 @@
+{
+  "points": "legacy three-points",
+  "BR0_sha256": "F2D77EF65E2D1FF6A49DA436F8660D8FABC463037576CE6E5B67A963FAE06202",
+  "search_limit_seconds": 30,
+  "mutation": "C2",
+  "threads": 1,
+  "instance_position": 1,
+  "orientations": "six permitted by BR flags",
+  "seeds": [
+    123,
+    456
+  ],
+  "paired_genomes_per_instance": 32,
+  "BR15_sha256": "598DC5D805000C856B2C802296633A11FF90E7BDB849C72D00212272CC3A2F6F",
+  "flags": "-std=c++14 -O3 -DNDEBUG",
+  "cache": 0,
+  "clock": "steady_clock wall",
+  "binary_sha256": "48D2AFC4745DF547787C9774CF63ED7D2ABB659F2D978864B10C5B481DFAD9D9",
+  "replacement": true,
+  "compiler": "MinGW GCC 16.2.0",
+  "population": 20
+}

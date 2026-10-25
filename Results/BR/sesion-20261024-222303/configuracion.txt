@@ -1,0 +1,18 @@
+Sesion de pruebas BR
+Dataset: BR0
+Algoritmo: all
+Primer problema: 1
+Cantidad: 1
+Mutacion: c2
+Orientaciones: 0
+Reemplazo: false
+Poblacion: 20
+Candidatos DBLF: projected
+Iteraciones: 1000
+Rondas: 1
+Semilla raiz: 20261024
+Ejecucion: hasta 30 segundos por problema/algoritmo/ronda; iteraciones y estancamiento no aplican
+Resultados: ./Results/BR/sesion-20261024-222303
+
+Comando para reanudar desde la carpeta del proyecto (PowerShell):
+& './main.exe' --report --root '.' --output './Results/BR/sesion-20261024-222303' --algorithm 'all' --dataset 'BR0' --rotation '0' --mutation 'c2' --replacement 'false' --execution '30s' --iterations 1000 --rounds 1 --first-instance 1 --instances 1 --seed 20261024 --population 20 --elite-bees 4 --non-elite-bees 3 --movements 2 --selection 0.84999999999999998 --crossover 0.75 --diversity 0.001 --patience 25 --mutation-probability adaptive --candidates 'projected' --cache-entries 0 --cache-mib 16

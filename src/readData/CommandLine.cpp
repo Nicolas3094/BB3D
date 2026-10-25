@@ -32,6 +32,11 @@ CommandLineOptions parseCommandLine(const std::vector<std::string> &arguments) {
         else if(flag=="--root") o.root=value;
         else if(flag=="--output") o.output=value;
         else if(flag=="--seed") o.seed=parseExperimentSeed(value);
+        else if(flag=="--decoder") {
+            if(value=="dblf")o.decoder=PackingDecoder::DBLF;
+            else if(value=="contact")o.decoder=PackingDecoder::Contact;
+            else throw std::invalid_argument("Decoder must be dblf or contact.");
+        }
         else if(flag=="--execution") {
             if(value=="iterations")o.execution=ExecutionMode::Iterations;
             else if(value=="30s")o.execution=ExecutionMode::ThirtySeconds;
@@ -78,6 +83,8 @@ CommandLineOptions parseCommandLine(const std::vector<std::string> &arguments) {
 }
 ExperimentConfiguration CommandLineOptions::configuration(const std::string &name,ROTATION_WAY r,MutationType m,bool replace) const {
     auto c=makeExperimentConfiguration(name,r,m,replace);c.candidates=candidates;c.iterations=iterations;
+    c.decoder=decoder;
+    if(decoder==PackingDecoder::Contact && candidates!=DBLFCandidatePolicy::ThreePoints)throw std::invalid_argument("Contact decoder requires --candidates legacy.");
     c.execution=execution;
     if(population!=-1) c.individuals=population;
     c.sites=sites==-1?std::min(c.sites,c.individuals):sites;
@@ -101,6 +108,7 @@ std::string commandLineHelp() {
       "--patience N (0: disable stagnation stop) --diversity P --movements N\n"
       "--sites N --elite-sites N --elite-bees N --non-elite-bees N\n"
       "--candidates legacy|projected|best --cache-entries N (default 0: disabled)\n"
+      "--decoder dblf|contact (contact requires legacy candidates)\n"
       "--cache-mib N (payload budget; 0 disables cache)\n"
       "--report regenerates a BR session report in the explicit --output directory\n"
       "--batch (all algorithms, datasets, rotations, mutations and replacement modes)\n";

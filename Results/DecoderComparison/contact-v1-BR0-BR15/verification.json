@@ -1,0 +1,19 @@
+{
+  "fixed_evaluations": 128,
+  "valid_packings": 152,
+  "search_min_ms": 30000.0,
+  "search_max_ms": 30002.0,
+  "search_runs": 24,
+  "all_passed": true,
+  "checks": [
+    "IDs and quantities",
+    "genome orientations",
+    "orientation permissions",
+    "dimension permutation",
+    "bounds",
+    "pairwise intersections",
+    "recomputed volume",
+    "timed incumbent replay fitness"
+  ],
+  "independent_auditor": "tests/PackingAudit.hpp"
+}

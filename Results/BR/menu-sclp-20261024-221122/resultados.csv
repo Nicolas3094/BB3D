@@ -1,0 +1,2 @@
+"dataset","problema","algoritmo","ronda","ocupacion_porcentaje","tiempo_cpu_segundos","tiempo_total_segundos","verificado","acomodo"
+"BR15","1","SCLP","1","95.50596518001889","30.000000000000004","30.6143846","True","Results\BR\menu-sclp-20261024-221122\BR15-problema-1-ronda-1/packing.json"

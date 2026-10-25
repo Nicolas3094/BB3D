@@ -9,6 +9,7 @@ struct ExperimentOutcome {
     MutationType mutation=MutationType::INVERSE_MUTATION;
     bool replacement=true,resumed=false;
     ExecutionMode execution=ExecutionMode::Iterations;
+    PackingDecoder decoder=PackingDecoder::DBLF;
     std::string termination="completed";
     bool partialEvaluation=false;
     std::uint64_t seed=0;

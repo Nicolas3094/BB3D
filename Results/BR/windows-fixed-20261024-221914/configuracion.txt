@@ -1,0 +1,4 @@
+SCLP H: parametros publicados de dos etapas; memoizacion strict; 1 hilo.
+Limite: 30 segundos CPU por problema/ronda, incluye bloques.
+Dataset: BR15; desde 1; cantidad 1 (0=todos); rondas 1.
+Acomodo, parametros completos y verificacion geometrica en cada subcarpeta.

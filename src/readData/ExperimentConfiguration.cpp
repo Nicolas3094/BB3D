@@ -39,6 +39,7 @@ std::string ExperimentConfiguration::identity(const std::string &datasetHash,std
        <<";rotationMutation="<<rotationMutation<<";diversity="<<diversity<<";patience="<<patience
        <<";cacheEntries="<<cacheEntries<<";cacheBytes="<<cacheBytes;
     if(execution==ExecutionMode::ThirtySeconds)out<<";execution=30s;limit_ms=30000";
+    if(decoder==PackingDecoder::Contact)out<<";decoder=contact-v1";
     return out.str();
 }
 Poblacion ExperimentConfiguration::run(DatasetBinBacking data) const {
@@ -52,6 +53,9 @@ ExecutionResult ExperimentConfiguration::execute(DatasetBinBacking data) const {
 Poblacion ExperimentConfiguration::runAlgorithm(DatasetBinBacking data,bool timeOnly) const {
     configureFitnessCache(cacheEntries,cacheBytes);
     data.bin.setCandidatePolicy(candidates);
+    data.bin.setDecoder(decoder);
+    if(decoder==PackingDecoder::Contact && candidates!=DBLFCandidatePolicy::ThreePoints)
+        throw std::invalid_argument("Contact decoder requires legacy candidates.");
     const long maximumIterations=timeOnly?std::numeric_limits<long>::max():iterations;
     if(algorithm=="GA") {
         GeneticAlgorithm ga;

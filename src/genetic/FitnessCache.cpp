@@ -25,6 +25,7 @@ std::string context(const LoadedBins &items,const Bin &bin) {
     std::string result;
     const auto d=bin.getDimensions(); append(result,d.getLargo());append(result,d.getAncho());append(result,d.getAlto());
     append(result,static_cast<int>(bin.getRotationWay()));append(result,static_cast<int>(bin.getCandidatePolicy()));append(result,items.size());
+    append(result,static_cast<int>(bin.getDecoder()));
     for(const auto &item:items) {
         checkExecutionDeadline();
         const auto d=item.getDimension();

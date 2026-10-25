@@ -1,0 +1,9 @@
+{
+  "valid": true,
+  "boxes": 111,
+  "volume": 28737382,
+  "container_volume": 30089620,
+  "occupation_percent": 95.50596518001889,
+  "pairwise_checks": 6105,
+  "orientation_quantities_bounds_intersections": "passed"
+}

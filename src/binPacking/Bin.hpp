@@ -9,6 +9,7 @@
 
 typedef std::vector<ItemBin> LoadedBins;
 enum class DBLFCandidatePolicy { ThreePoints, Projected, BestOfBoth };
+enum class PackingDecoder { DBLF, Contact };
 
 class Bin
 {
@@ -19,6 +20,7 @@ private:
     LoadedBins loadedItems;
     ROTATION_WAY rotation;
     DBLFCandidatePolicy candidatePolicy = DBLFCandidatePolicy::ThreePoints;
+    PackingDecoder decoder = PackingDecoder::DBLF;
 
 public:
     Bin();
@@ -43,6 +45,8 @@ public:
     ROTATION_WAY getRotationWay() const;
     Bin &setCandidatePolicy(DBLFCandidatePolicy policy);
     DBLFCandidatePolicy getCandidatePolicy() const { return candidatePolicy; }
+    Bin &setDecoder(PackingDecoder value) {decoder=value;return *this;}
+    PackingDecoder getDecoder() const {return decoder;}
 };
 
 std::ostream &operator<<(std::ostream &, const LoadedBins &);

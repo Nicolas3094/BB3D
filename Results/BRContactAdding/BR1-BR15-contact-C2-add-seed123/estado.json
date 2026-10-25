@@ -1,0 +1,21 @@
+{
+  "updated_utc": "2026-10-25T20:22:56.7319551Z",
+  "completed": 84,
+  "state": "detenido por el usuario",
+  "workers": [
+    {
+      "algorithm": "ABC",
+      "pid": 21672
+    },
+    {
+      "algorithm": "GA",
+      "pid": 17940
+    },
+    {
+      "algorithm": "FFA",
+      "pid": 15660
+    }
+  ],
+  "total": 4500,
+  "manager_pid": 4980
+}

@@ -25,6 +25,7 @@ std::string resumeCommand(const CommandLineOptions &o) {
     text("--root",o.root);text("--output",o.output);text("--algorithm",o.algorithm);text("--dataset",o.dataset);
     text("--rotation",o.rotation);text("--mutation",o.mutation);text("--replacement",o.replacement);
     text("--execution",o.execution==ExecutionMode::ThirtySeconds?"30s":"iterations");
+    text("--decoder",o.decoder==PackingDecoder::Contact?"contact":"dblf");
     out<<" --iterations "<<o.iterations<<" --rounds "<<o.rounds<<" --first-instance "<<o.firstInstance<<" --instances "<<o.instances<<" --seed "<<o.seed;
     if(o.population!=-1)out<<" --population "<<o.population;
     if(o.sites!=-1)out<<" --sites "<<o.sites;if(o.eliteSites!=-1)out<<" --elite-sites "<<o.eliteSites;
@@ -45,13 +46,14 @@ std::string configuration(const CommandLineOptions &o) {
        <<"\nIteraciones: "<<o.iterations<<"\nRondas: "<<o.rounds<<"\nSemilla raiz: "<<o.seed
        <<"\nEjecucion: "<<(o.execution==ExecutionMode::ThirtySeconds?"hasta 30 segundos por problema/algoritmo/ronda; iteraciones y estancamiento no aplican":"limite de iteraciones")
        <<"\nResultados: "<<o.output<<"\n\nComando para reanudar desde la carpeta del proyecto (PowerShell):\n"<<resumeCommand(o)<<'\n';
+    out<<"Decodificador: "<<(o.decoder==PackingDecoder::Contact?"contact":"dblf")<<'\n';
     return out.str();
 }
 }
 void BRExperimentSession::writeReport(const std::string &directory,const CommandLineOptions &o,const std::vector<ExperimentOutcome> &rows) const {
     if(rows.empty())throw std::invalid_argument("No hay resultados para esta sesion BR.");
     std::ostringstream details,report;details.imbue(std::locale::classic());report.imbue(std::locale::classic());
-    details<<std::setprecision(17)<<"dataset,problema,id,algoritmo,rotaciones,mutacion,reemplazo,ronda,semilla_dataset,semilla_ejecucion,fitness,ocupacion_porcentaje,tiempo_ms,reanudado,ejecucion,limite_ms,motivo_fin,evaluacion_parcial,checkpoint\n";
+    details<<std::setprecision(17)<<"dataset,problema,id,algoritmo,rotaciones,mutacion,reemplazo,ronda,semilla_dataset,semilla_ejecucion,fitness,ocupacion_porcentaje,tiempo_ms,reanudado,ejecucion,limite_ms,motivo_fin,evaluacion_parcial,decoder,checkpoint\n";
     report<<"# Sesion de pruebas BR\n\nEstado: completada\n\n## Configuracion\n\n"
           <<"- Dataset: "<<o.dataset<<"\n- Algoritmo: "<<o.algorithm<<"\n- Primer problema: "<<o.firstInstance
           <<"\n- Cantidad de problemas: "<<(o.instances==0?"todos los restantes":std::to_string(o.instances))
@@ -66,9 +68,10 @@ void BRExperimentSession::writeReport(const std::string &directory,const Command
             throw std::invalid_argument("Resultado BR invalido.");
         const auto group=row.dataset+" / "+row.algorithm+" / rotaciones "+std::to_string(static_cast<int>(row.rotation))+" / "+mutation(row.mutation)+" / "+(row.replacement?"con reemplazo":"sin reemplazo");
         groups[group].push_back(&row);
-        details<<csv(row.dataset)<<','<<row.position<<','<<row.instanceId<<','<<csv(row.algorithm)<<','<<static_cast<int>(row.rotation)<<','<<csv(mutation(row.mutation))<<','<<row.replacement<<','<<row.round<<','<<row.datasetSeed<<','<<row.seed<<','<<row.fitness<<','<<100*row.fitness<<','<<row.milliseconds<<','<<row.resumed<<','<<csv(row.execution==ExecutionMode::ThirtySeconds?"30s":"iterations")<<','<<(row.execution==ExecutionMode::ThirtySeconds?30000:0)<<','<<csv(row.termination)<<','<<row.partialEvaluation<<','<<csv(row.checkpoint)<<'\n';
+        details<<csv(row.dataset)<<','<<row.position<<','<<row.instanceId<<','<<csv(row.algorithm)<<','<<static_cast<int>(row.rotation)<<','<<csv(mutation(row.mutation))<<','<<row.replacement<<','<<row.round<<','<<row.datasetSeed<<','<<row.seed<<','<<row.fitness<<','<<100*row.fitness<<','<<row.milliseconds<<','<<row.resumed<<','<<csv(row.execution==ExecutionMode::ThirtySeconds?"30s":"iterations")<<','<<(row.execution==ExecutionMode::ThirtySeconds?30000:0)<<','<<csv(row.termination)<<','<<row.partialEvaluation<<','<<csv(row.decoder==PackingDecoder::Contact?"contact":"dblf")<<','<<csv(row.checkpoint)<<'\n';
     }
     report<<std::fixed<<std::setprecision(3);
+    report<<"Decodificador: "<<(o.decoder==PackingDecoder::Contact?"contact":"dblf")<<"\n\n";
     for(const auto &group:groups) {
         long double totalFitness=0,totalTime=0;double best=0,worst=1;size_t resumed=0,timedOut=0,partial=0;
         for(const auto *row:group.second){totalFitness+=row->fitness;totalTime+=row->milliseconds;best=std::max(best,row->fitness);worst=std::min(worst,row->fitness);resumed+=row->resumed?1:0;timedOut+=row->termination=="time_limit"?1:0;partial+=row->partialEvaluation?1:0;}

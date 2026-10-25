@@ -1,0 +1,2019 @@
+﻿{
+    "small_items":  [
+                        {
+                            "br_type_id":  1,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  246240,
+                            "measurement":  {
+                                                "y":  76,
+                                                "z":  30,
+                                                "x":  108
+                                            }
+                        },
+                        {
+                            "br_type_id":  2,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  118250,
+                            "measurement":  {
+                                                "y":  43,
+                                                "z":  25,
+                                                "x":  110
+                                            }
+                        },
+                        {
+                            "br_type_id":  3,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  409860,
+                            "measurement":  {
+                                                "y":  81,
+                                                "z":  55,
+                                                "x":  92
+                                            }
+                        },
+                        {
+                            "br_type_id":  4,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  74844,
+                            "measurement":  {
+                                                "y":  33,
+                                                "z":  28,
+                                                "x":  81
+                                            }
+                        },
+                        {
+                            "br_type_id":  5,
+                            "quantity":  3,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  867240,
+                            "measurement":  {
+                                                "y":  99,
+                                                "z":  73,
+                                                "x":  120
+                                            }
+                        },
+                        {
+                            "br_type_id":  6,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  372960,
+                            "measurement":  {
+                                                "y":  70,
+                                                "z":  48,
+                                                "x":  111
+                                            }
+                        },
+                        {
+                            "br_type_id":  7,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  324576,
+                            "measurement":  {
+                                                "y":  72,
+                                                "z":  46,
+                                                "x":  98
+                                            }
+                        },
+                        {
+                            "br_type_id":  8,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  194370,
+                            "measurement":  {
+                                                "y":  66,
+                                                "z":  31,
+                                                "x":  95
+                                            }
+                        },
+                        {
+                            "br_type_id":  9,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  214200,
+                            "measurement":  {
+                                                "y":  84,
+                                                "z":  30,
+                                                "x":  85
+                                            }
+                        },
+                        {
+                            "br_type_id":  10,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  56800,
+                            "measurement":  {
+                                                "y":  32,
+                                                "z":  25,
+                                                "x":  71
+                                            }
+                        },
+                        {
+                            "br_type_id":  11,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  30600,
+                            "measurement":  {
+                                                "y":  34,
+                                                "z":  25,
+                                                "x":  36
+                                            }
+                        },
+                        {
+                            "br_type_id":  12,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  402938,
+                            "measurement":  {
+                                                "y":  67,
+                                                "z":  62,
+                                                "x":  97
+                                            }
+                        },
+                        {
+                            "br_type_id":  13,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  18975,
+                            "measurement":  {
+                                                "y":  25,
+                                                "z":  23,
+                                                "x":  33
+                                            }
+                        },
+                        {
+                            "br_type_id":  14,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  66690,
+                            "measurement":  {
+                                                "y":  27,
+                                                "z":  26,
+                                                "x":  95
+                                            }
+                        },
+                        {
+                            "br_type_id":  15,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  335016,
+                            "measurement":  {
+                                                "y":  81,
+                                                "z":  44,
+                                                "x":  94
+                                            }
+                        },
+                        {
+                            "br_type_id":  16,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  60762,
+                            "measurement":  {
+                                                "y":  39,
+                                                "z":  38,
+                                                "x":  41
+                                            }
+                        },
+                        {
+                            "br_type_id":  17,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  500240,
+                            "measurement":  {
+                                                "y":  74,
+                                                "z":  65,
+                                                "x":  104
+                                            }
+                        },
+                        {
+                            "br_type_id":  18,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  76752,
+                            "measurement":  {
+                                                "y":  41,
+                                                "z":  36,
+                                                "x":  52
+                                            }
+                        },
+                        {
+                            "br_type_id":  19,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  275808,
+                            "measurement":  {
+                                                "y":  78,
+                                                "z":  34,
+                                                "x":  104
+                                            }
+                        },
+                        {
+                            "br_type_id":  20,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  293986,
+                            "measurement":  {
+                                                "y":  77,
+                                                "z":  46,
+                                                "x":  83
+                                            }
+                        },
+                        {
+                            "br_type_id":  21,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  124320,
+                            "measurement":  {
+                                                "y":  56,
+                                                "z":  30,
+                                                "x":  74
+                                            }
+                        },
+                        {
+                            "br_type_id":  22,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  478800,
+                            "measurement":  {
+                                                "y":  80,
+                                                "z":  63,
+                                                "x":  95
+                                            }
+                        },
+                        {
+                            "br_type_id":  23,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  64680,
+                            "measurement":  {
+                                                "y":  35,
+                                                "z":  33,
+                                                "x":  56
+                                            }
+                        },
+                        {
+                            "br_type_id":  24,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  446880,
+                            "measurement":  {
+                                                "y":  95,
+                                                "z":  49,
+                                                "x":  96
+                                            }
+                        },
+                        {
+                            "br_type_id":  25,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  179520,
+                            "measurement":  {
+                                                "y":  68,
+                                                "z":  30,
+                                                "x":  88
+                                            }
+                        },
+                        {
+                            "br_type_id":  26,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  150800,
+                            "measurement":  {
+                                                "y":  65,
+                                                "z":  29,
+                                                "x":  80
+                                            }
+                        },
+                        {
+                            "br_type_id":  27,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  135300,
+                            "measurement":  {
+                                                "y":  55,
+                                                "z":  41,
+                                                "x":  60
+                                            }
+                        },
+                        {
+                            "br_type_id":  28,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  126560,
+                            "measurement":  {
+                                                "y":  56,
+                                                "z":  20,
+                                                "x":  113
+                                            }
+                        },
+                        {
+                            "br_type_id":  29,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  89373,
+                            "measurement":  {
+                                                "y":  31,
+                                                "z":  31,
+                                                "x":  93
+                                            }
+                        },
+                        {
+                            "br_type_id":  30,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  187746,
+                            "measurement":  {
+                                                "y":  83,
+                                                "z":  26,
+                                                "x":  87
+                                            }
+                        },
+                        {
+                            "br_type_id":  31,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  324280,
+                            "measurement":  {
+                                                "y":  67,
+                                                "z":  44,
+                                                "x":  110
+                                            }
+                        },
+                        {
+                            "br_type_id":  32,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  61950,
+                            "measurement":  {
+                                                "y":  25,
+                                                "z":  21,
+                                                "x":  118
+                                            }
+                        },
+                        {
+                            "br_type_id":  33,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  104676,
+                            "measurement":  {
+                                                "y":  44,
+                                                "z":  39,
+                                                "x":  61
+                                            }
+                        },
+                        {
+                            "br_type_id":  34,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  93600,
+                            "measurement":  {
+                                                "y":  30,
+                                                "z":  26,
+                                                "x":  120
+                                            }
+                        },
+                        {
+                            "br_type_id":  35,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  131075,
+                            "measurement":  {
+                                                "y":  49,
+                                                "z":  25,
+                                                "x":  107
+                                            }
+                        },
+                        {
+                            "br_type_id":  36,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  99840,
+                            "measurement":  {
+                                                "y":  60,
+                                                "z":  26,
+                                                "x":  64
+                                            }
+                        },
+                        {
+                            "br_type_id":  37,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  329238,
+                            "measurement":  {
+                                                "y":  67,
+                                                "z":  54,
+                                                "x":  91
+                                            }
+                        },
+                        {
+                            "br_type_id":  38,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  244608,
+                            "measurement":  {
+                                                "y":  64,
+                                                "z":  49,
+                                                "x":  78
+                                            }
+                        },
+                        {
+                            "br_type_id":  39,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  64294,
+                            "measurement":  {
+                                                "y":  34,
+                                                "z":  31,
+                                                "x":  61
+                                            }
+                        },
+                        {
+                            "br_type_id":  40,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  402696,
+                            "measurement":  {
+                                                "y":  94,
+                                                "z":  36,
+                                                "x":  119
+                                            }
+                        },
+                        {
+                            "br_type_id":  41,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  93636,
+                            "measurement":  {
+                                                "y":  34,
+                                                "z":  34,
+                                                "x":  81
+                                            }
+                        },
+                        {
+                            "br_type_id":  42,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  134064,
+                            "measurement":  {
+                                                "y":  56,
+                                                "z":  42,
+                                                "x":  57
+                                            }
+                        },
+                        {
+                            "br_type_id":  43,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  99360,
+                            "measurement":  {
+                                                "y":  48,
+                                                "z":  30,
+                                                "x":  69
+                                            }
+                        },
+                        {
+                            "br_type_id":  44,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  197316,
+                            "measurement":  {
+                                                "y":  58,
+                                                "z":  42,
+                                                "x":  81
+                                            }
+                        },
+                        {
+                            "br_type_id":  45,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  146224,
+                            "measurement":  {
+                                                "y":  74,
+                                                "z":  26,
+                                                "x":  76
+                                            }
+                        },
+                        {
+                            "br_type_id":  46,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  479787,
+                            "measurement":  {
+                                                "y":  77,
+                                                "z":  67,
+                                                "x":  93
+                                            }
+                        },
+                        {
+                            "br_type_id":  47,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  167328,
+                            "measurement":  {
+                                                "y":  63,
+                                                "z":  32,
+                                                "x":  83
+                                            }
+                        },
+                        {
+                            "br_type_id":  48,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  220805,
+                            "measurement":  {
+                                                "y":  65,
+                                                "z":  43,
+                                                "x":  79
+                                            }
+                        },
+                        {
+                            "br_type_id":  49,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  309120,
+                            "measurement":  {
+                                                "y":  69,
+                                                "z":  40,
+                                                "x":  112
+                                            }
+                        },
+                        {
+                            "br_type_id":  50,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  132308,
+                            "measurement":  {
+                                                "y":  44,
+                                                "z":  31,
+                                                "x":  97
+                                            }
+                        },
+                        {
+                            "br_type_id":  51,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  299880,
+                            "measurement":  {
+                                                "y":  60,
+                                                "z":  51,
+                                                "x":  98
+                                            }
+                        },
+                        {
+                            "br_type_id":  52,
+                            "quantity":  3,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  147798,
+                            "measurement":  {
+                                                "y":  46,
+                                                "z":  27,
+                                                "x":  119
+                                            }
+                        },
+                        {
+                            "br_type_id":  53,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  251328,
+                            "measurement":  {
+                                                "y":  51,
+                                                "z":  44,
+                                                "x":  112
+                                            }
+                        },
+                        {
+                            "br_type_id":  54,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  323204,
+                            "measurement":  {
+                                                "y":  68,
+                                                "z":  49,
+                                                "x":  97
+                                            }
+                        },
+                        {
+                            "br_type_id":  55,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  690536,
+                            "measurement":  {
+                                                "y":  77,
+                                                "z":  76,
+                                                "x":  118
+                                            }
+                        },
+                        {
+                            "br_type_id":  56,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  346969,
+                            "measurement":  {
+                                                "y":  73,
+                                                "z":  49,
+                                                "x":  97
+                                            }
+                        },
+                        {
+                            "br_type_id":  57,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  592040,
+                            "measurement":  {
+                                                "y":  82,
+                                                "z":  76,
+                                                "x":  95
+                                            }
+                        },
+                        {
+                            "br_type_id":  58,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  445809,
+                            "measurement":  {
+                                                "y":  71,
+                                                "z":  69,
+                                                "x":  91
+                                            }
+                        },
+                        {
+                            "br_type_id":  59,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  103968,
+                            "measurement":  {
+                                                "y":  38,
+                                                "z":  36,
+                                                "x":  76
+                                            }
+                        },
+                        {
+                            "br_type_id":  60,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  117612,
+                            "measurement":  {
+                                                "y":  66,
+                                                "z":  22,
+                                                "x":  81
+                                            }
+                        },
+                        {
+                            "br_type_id":  61,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  79200,
+                            "measurement":  {
+                                                "y":  40,
+                                                "z":  33,
+                                                "x":  60
+                                            }
+                        },
+                        {
+                            "br_type_id":  62,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  160146,
+                            "measurement":  {
+                                                "y":  42,
+                                                "z":  41,
+                                                "x":  93
+                                            }
+                        },
+                        {
+                            "br_type_id":  63,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  326196,
+                            "measurement":  {
+                                                "y":  82,
+                                                "z":  39,
+                                                "x":  102
+                                            }
+                        },
+                        {
+                            "br_type_id":  64,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  134520,
+                            "measurement":  {
+                                                "y":  59,
+                                                "z":  38,
+                                                "x":  60
+                                            }
+                        },
+                        {
+                            "br_type_id":  65,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  132720,
+                            "measurement":  {
+                                                "y":  56,
+                                                "z":  30,
+                                                "x":  79
+                                            }
+                        },
+                        {
+                            "br_type_id":  66,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  141960,
+                            "measurement":  {
+                                                "y":  52,
+                                                "z":  39,
+                                                "x":  70
+                                            }
+                        },
+                        {
+                            "br_type_id":  67,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  207468,
+                            "measurement":  {
+                                                "y":  51,
+                                                "z":  36,
+                                                "x":  113
+                                            }
+                        },
+                        {
+                            "br_type_id":  68,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  120384,
+                            "measurement":  {
+                                                "y":  38,
+                                                "z":  33,
+                                                "x":  96
+                                            }
+                        },
+                        {
+                            "br_type_id":  69,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  390336,
+                            "measurement":  {
+                                                "y":  64,
+                                                "z":  57,
+                                                "x":  107
+                                            }
+                        },
+                        {
+                            "br_type_id":  70,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  453600,
+                            "measurement":  {
+                                                "y":  80,
+                                                "z":  70,
+                                                "x":  81
+                                            }
+                        },
+                        {
+                            "br_type_id":  71,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  190209,
+                            "measurement":  {
+                                                "y":  57,
+                                                "z":  47,
+                                                "x":  71
+                                            }
+                        },
+                        {
+                            "br_type_id":  72,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  706800,
+                            "measurement":  {
+                                                "y":  95,
+                                                "z":  62,
+                                                "x":  120
+                                            }
+                        },
+                        {
+                            "br_type_id":  73,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  156000,
+                            "measurement":  {
+                                                "y":  50,
+                                                "z":  48,
+                                                "x":  65
+                                            }
+                        },
+                        {
+                            "br_type_id":  74,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  270816,
+                            "measurement":  {
+                                                "y":  78,
+                                                "z":  31,
+                                                "x":  112
+                                            }
+                        },
+                        {
+                            "br_type_id":  75,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  148428,
+                            "measurement":  {
+                                                "y":  62,
+                                                "z":  38,
+                                                "x":  63
+                                            }
+                        },
+                        {
+                            "br_type_id":  76,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  544320,
+                            "measurement":  {
+                                                "y":  84,
+                                                "z":  72,
+                                                "x":  90
+                                            }
+                        },
+                        {
+                            "br_type_id":  77,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  496800,
+                            "measurement":  {
+                                                "y":  90,
+                                                "z":  48,
+                                                "x":  115
+                                            }
+                        },
+                        {
+                            "br_type_id":  78,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  230112,
+                            "measurement":  {
+                                                "y":  68,
+                                                "z":  47,
+                                                "x":  72
+                                            }
+                        },
+                        {
+                            "br_type_id":  79,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  210915,
+                            "measurement":  {
+                                                "y":  45,
+                                                "z":  43,
+                                                "x":  109
+                                            }
+                        },
+                        {
+                            "br_type_id":  80,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  243236,
+                            "measurement":  {
+                                                "y":  73,
+                                                "z":  28,
+                                                "x":  119
+                                            }
+                        },
+                        {
+                            "br_type_id":  81,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  109668,
+                            "measurement":  {
+                                                "y":  38,
+                                                "z":  37,
+                                                "x":  78
+                                            }
+                        },
+                        {
+                            "br_type_id":  82,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  269010,
+                            "measurement":  {
+                                                "y":  63,
+                                                "z":  61,
+                                                "x":  70
+                                            }
+                        },
+                        {
+                            "br_type_id":  83,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  302950,
+                            "measurement":  {
+                                                "y":  73,
+                                                "z":  50,
+                                                "x":  83
+                                            }
+                        },
+                        {
+                            "br_type_id":  84,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  410856,
+                            "measurement":  {
+                                                "y":  68,
+                                                "z":  53,
+                                                "x":  114
+                                            }
+                        },
+                        {
+                            "br_type_id":  85,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  701064,
+                            "measurement":  {
+                                                "y":  84,
+                                                "z":  78,
+                                                "x":  107
+                                            }
+                        },
+                        {
+                            "br_type_id":  86,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  239400,
+                            "measurement":  {
+                                                "y":  76,
+                                                "z":  35,
+                                                "x":  90
+                                            }
+                        },
+                        {
+                            "br_type_id":  87,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  43520,
+                            "measurement":  {
+                                                "y":  34,
+                                                "z":  32,
+                                                "x":  40
+                                            }
+                        },
+                        {
+                            "br_type_id":  88,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  118932,
+                            "measurement":  {
+                                                "y":  53,
+                                                "z":  34,
+                                                "x":  66
+                                            }
+                        },
+                        {
+                            "br_type_id":  89,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  107520,
+                            "measurement":  {
+                                                "y":  56,
+                                                "z":  32,
+                                                "x":  60
+                                            }
+                        },
+                        {
+                            "br_type_id":  90,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  364038,
+                            "measurement":  {
+                                                "y":  83,
+                                                "z":  51,
+                                                "x":  86
+                                            }
+                        },
+                        {
+                            "br_type_id":  91,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  197964,
+                            "measurement":  {
+                                                "y":  81,
+                                                "z":  26,
+                                                "x":  94
+                                            }
+                        },
+                        {
+                            "br_type_id":  92,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  433650,
+                            "measurement":  {
+                                                "y":  75,
+                                                "z":  59,
+                                                "x":  98
+                                            }
+                        },
+                        {
+                            "br_type_id":  93,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  203456,
+                            "measurement":  {
+                                                "y":  68,
+                                                "z":  44,
+                                                "x":  68
+                                            }
+                        },
+                        {
+                            "br_type_id":  94,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  62640,
+                            "measurement":  {
+                                                "y":  30,
+                                                "z":  24,
+                                                "x":  87
+                                            }
+                        },
+                        {
+                            "br_type_id":  95,
+                            "quantity":  2,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  141955,
+                            "measurement":  {
+                                                "y":  55,
+                                                "z":  29,
+                                                "x":  89
+                                            }
+                        },
+                        {
+                            "br_type_id":  96,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  78948,
+                            "measurement":  {
+                                                "y":  43,
+                                                "z":  34,
+                                                "x":  54
+                                            }
+                        },
+                        {
+                            "br_type_id":  97,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  false,
+                                                                   "xzy":  false
+                                                               }
+                                           },
+                            "profit":  152361,
+                            "measurement":  {
+                                                "y":  57,
+                                                "z":  27,
+                                                "x":  99
+                                            }
+                        },
+                        {
+                            "br_type_id":  98,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  179826,
+                            "measurement":  {
+                                                "y":  51,
+                                                "z":  43,
+                                                "x":  82
+                                            }
+                        },
+                        {
+                            "br_type_id":  99,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  false,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  false,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  87516,
+                            "measurement":  {
+                                                "y":  34,
+                                                "z":  33,
+                                                "x":  78
+                                            }
+                        },
+                        {
+                            "br_type_id":  100,
+                            "quantity":  1,
+                            "constraint":  {
+                                               "orientation":  {
+                                                                   "zyx":  true,
+                                                                   "xyz":  true,
+                                                                   "yxz":  true,
+                                                                   "yzx":  true,
+                                                                   "zxy":  true,
+                                                                   "xzy":  true
+                                                               }
+                                           },
+                            "profit":  101439,
+                            "measurement":  {
+                                                "y":  51,
+                                                "z":  39,
+                                                "x":  51
+                                            }
+                        }
+                    ],
+    "bb3d_source":  {
+                        "position":  1,
+                        "seed":  2502505,
+                        "file":  "BR15.txt",
+                        "id":  1
+                    },
+    "version":  "0.8.0",
+    "type":  "input",
+    "large_object":  {
+                         "measurement":  {
+                                             "y":  233,
+                                             "z":  220,
+                                             "x":  587
+                                         }
+                     }
+}

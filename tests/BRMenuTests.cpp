@@ -23,6 +23,12 @@ void menuTests(){
     require(selected.confirmed && o.dataset=="BR0" && o.firstInstance==2 && o.instances==1,"Menu lost BR/problem selection");
     require(o.algorithm=="all" && o.mutation=="c1" && o.rotation=="6" && o.replacement=="both","Menu lost method selection");
     require(o.population==4 && o.iterations==0 && o.rounds==2 && o.seed==123,"Menu lost search parameters");
+    auto contactAnswers=answers();const auto contactPosition=contactAnswers.find("3\n1\n4\n1\n0\n");
+    require(contactPosition!=std::string::npos,"Contact menu fixture mismatch");
+    contactAnswers.replace(contactPosition,10,"3\n4\n4\n1\n0\n");
+    std::istringstream contactInput(contactAnswers);std::ostringstream contactOutput;
+    auto contact=BRExperimentMenu().choose(contactInput,contactOutput,defaults);
+    require(contact.confirmed && contact.options.decoder==PackingDecoder::Contact && contact.options.candidates==DBLFCandidatePolicy::ThreePoints,"Contact menu selection failed");
     auto timedAnswers=answers();
     const auto modePosition=timedAnswers.find("4\n1\n0\n2\n123");
     require(modePosition!=std::string::npos,"Timed menu test fixture is invalid");

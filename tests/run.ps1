@@ -94,6 +94,12 @@ try {
     if($LASTEXITCODE -ne 0) {throw 'Timed execution compilation failed'}
     Push-Location $root
     try {& $timedBinary;if($LASTEXITCODE -ne 0) {throw 'Timed execution tests failed'}} finally {Pop-Location}
+    $contactBinary=Join-Path $PSScriptRoot 'contact_decoder_tests.exe'
+    $contactSources=@(Join-Path $PSScriptRoot 'ContactDecoderTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
+    & $Compiler -std=c++14 $contactSources -o $contactBinary
+    if($LASTEXITCODE -ne 0) {throw 'Contact decoder compilation failed'}
+    & $contactBinary
+    if($LASTEXITCODE -ne 0) {throw 'Contact decoder tests failed'}
     $application=Join-Path $PSScriptRoot 'project_build_check.exe'
     $menuBinary=Join-Path $PSScriptRoot 'br_menu_tests.exe'
     $menuSources=@(Join-Path $PSScriptRoot 'BRMenuTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)

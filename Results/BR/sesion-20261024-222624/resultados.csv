@@ -1,0 +1,4 @@
+dataset,problema,id,algoritmo,rotaciones,mutacion,reemplazo,ronda,semilla_dataset,semilla_ejecucion,fitness,ocupacion_porcentaje,tiempo_ms,reanudado,ejecucion,limite_ms,motivo_fin,evaluacion_parcial,checkpoint
+"BR15",1,1,"GA",0,"C2",0,1,2502505,10804759042519190594,0.81045795859170044,81.045795859170042,30002,0,"30s",30000,"time_limit",0,"./Results/BR/sesion-20261024-222624/BR15/GA/d457407b3a082045-fitness.csv.checkpoint"
+"BR15",1,1,"ABC",0,"C2",0,1,2502505,10804759042519190594,0.82604167151329932,82.604167151329932,30001,0,"30s",30000,"time_limit",0,"./Results/BR/sesion-20261024-222624/BR15/ABC/fd639d3b659cd0b7-fitness.csv.checkpoint"
+"BR15",1,1,"FFA",0,"C2",0,1,2502505,10804759042519190594,0.81342831846995745,81.34283184699575,30001,0,"30s",30000,"time_limit",0,"./Results/BR/sesion-20261024-222624/BR15/FFA/87fe2da55362e678-fitness.csv.checkpoint"

@@ -1,5 +1,6 @@
 #include "DBLF.hpp"
 #include "DBLFValidation.hpp"
+#include "ContactDecoder.hpp"
 #include "../util/ExecutionCheckpoint.hpp"
 /** Deepest Bottom Left Fill with PriorityQueue
  *
@@ -20,6 +21,7 @@ void DBLFQueue(
     LoadedBins itemDataOrderById)
 {
     validateDBLFInput(bin, itemsIdToPack, itemsRotation, itemDataOrderById);
+    if(bin.getDecoder()==PackingDecoder::Contact){contactDecode(bin,itemsIdToPack,itemsRotation,std::move(itemDataOrderById));return;}
     if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
         Bin legacy=bin,projected=bin;
         legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
@@ -86,6 +88,7 @@ void DBLF(
     bool print)
 {
     validateDBLFInput(bin, itemsIdToPack, itemsRotation, itemDataOrderById);
+    if(bin.getDecoder()==PackingDecoder::Contact){contactDecode(bin,itemsIdToPack,itemsRotation,std::move(itemDataOrderById));return;}
     if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
         Bin legacy=bin,projected=bin;
         legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);
@@ -136,6 +139,7 @@ void DBLF(
     LoadedBins itemsToPack)
 {
     validateDBLFInput(bin, itemsToPack);
+    if(bin.getDecoder()==PackingDecoder::Contact){contactDecode(bin,std::move(itemsToPack));return;}
     if(bin.getCandidatePolicy()==DBLFCandidatePolicy::BestOfBoth) {
         Bin legacy=bin,projected=bin;
         legacy.setCandidatePolicy(DBLFCandidatePolicy::ThreePoints); projected.setCandidatePolicy(DBLFCandidatePolicy::Projected);

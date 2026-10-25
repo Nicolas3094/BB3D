@@ -19,6 +19,7 @@ void printExperimentSummary(std::ostream &output,const std::vector<ExperimentOut
                <<" | ocupacion: "<<100*row.fitness<<" % | tiempo: "<<row.milliseconds<<" ms | "<<reason;
         if(row.partialEvaluation)summary<<" | evaluacion parcial (empaquetado valido)";
         if(row.resumed)summary<<" | recuperado del archivo";
+        summary<<" | decodificador: "<<(row.decoder==PackingDecoder::Contact?"contacto":"DBLF");
         summary<<'\n';
     }
     summary<<"Total: "<<rows.size()<<" resultados.\n";
@@ -85,6 +86,7 @@ std::vector<ExperimentOutcome> runExperiments(const CommandLineOptions &o) {
                 row.position=static_cast<int>(startIndex+i+1);row.instanceId=data.id;row.datasetSeed=data.PSeed;row.round=round+1;
                 row.rotation=rotation;row.mutation=mutation;row.replacement=replacement;row.resumed=resumed;row.seed=actualSeed;
                 row.fitness=results[i].fitness;row.milliseconds=results[i].milliseconds;outcomes.push_back(std::move(row));
+                outcomes.back().decoder=config.decoder;
                 outcomes.back().execution=config.execution;outcomes.back().termination=results[i].termination;outcomes.back().partialEvaluation=results[i].partialEvaluation;
             }
         }

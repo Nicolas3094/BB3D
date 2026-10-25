@@ -1,0 +1,3 @@
+BB3D_RESULTS_V3
+bb3d-v5;compiler=16.2.0;rng=mt19937_64;dataset=38073f085a351f30;seed=20261024;algorithm=GA;rotation=0;mutation=1;candidates=1;replacement=0;adaptive=1;iterations=1000;population=20;sites=11;eliteSites=8;eliteBees=4;nonEliteBees=3;movements=2;crossover=0.75;selection=0.84999999999999998;mutationProbability=1;rotationMutation=0.050000000000000003;diversity=0.001;patience=25;cacheEntries=0;cacheBytes=16777216;execution=30s;limit_ms=30000;rootSeed=20261024;round=0;instances=1
+2,0.85927306493069699,30002,time_limit,0

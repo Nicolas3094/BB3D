@@ -213,7 +213,7 @@ mediciones y comprobar igualdad exacta de resultados:
 ./tests/benchmark-cache.ps1
 ```
 
-`tests/run.ps1` ejecuta los quince binarios de pruebas, compila la aplicación y
+`tests/run.ps1` ejecuta los dieciséis binarios de pruebas, compila la aplicación y
 prueba la CLI con los tres algoritmos, dos rondas y reanudación. GitHub Actions
 ejecuta ese mismo script en Windows y Linux para cada push y pull request; su
 definición está en `.github/workflows/tests.yml`. Las dependencias de CI se instalan
@@ -306,6 +306,10 @@ la automatizacion anterior. En el menu, `--output` es la carpeta base de sesione
 en la CLI normal o con `--report`, es la carpeta exacta de resultados.
 
 ## Ejecución por iteraciones o por 30 segundos
+
+La variante experimental de empacado por contacto se elige con `--decoder contact`
+y `--candidates legacy`, o con la opción 4 de decodificador en el menú. DBLF sigue
+siendo la referencia predeterminada. Véase [protocolo y comparación](experiments/README.md).
 
 El método independiente del artículo de Guesser, de Queiroz y Miyazawa (2026)
 se compila y ejecuta aparte: [instrucciones y auditoría SCLP](src/treeSearch/README.md).

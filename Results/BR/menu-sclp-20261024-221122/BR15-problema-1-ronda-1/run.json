@@ -1,0 +1,48 @@
+{
+  "dataset": "BR15",
+  "instance": 1,
+  "parameters": [
+    "C:\\Users\\nicoo\\OneDrive\\Documentos\\BB3D\\Results\\BR\\menu-sclp-20261024-221122\\BR15-problema-1-ronda-1\\input.json",
+    "--output-file=C:\\Users\\nicoo\\OneDrive\\Documentos\\BB3D\\Results\\BR\\menu-sclp-20261024-221122\\BR15-problema-1-ronda-1\\packing.json",
+    "--maximum_running_time_seconds=30",
+    "--alpha=3.7015",
+    "--beta=2.6631",
+    "--gamma=0.3968",
+    "--delta=0.0139",
+    "--alpha_2=2.0934",
+    "--beta_2=1.4609",
+    "--gamma_2=0.4732",
+    "--delta_2=0.0366",
+    "--configuration_switch_threshold=0.6740",
+    "--skip_type=strict",
+    "--initial_branching_factor=4",
+    "--maximum_branching_factor=10000",
+    "--maximum_number_of_blocks=10000",
+    "--block_minimum_volume_ratio=-1"
+  ],
+  "cpu_limit_seconds": 30.0,
+  "process_wall_seconds": 30.6143846,
+  "solver_threads": 1,
+  "build": "Release -O3 -DNDEBUG; C++20; no fast-math",
+  "binary_sha256": "3E80300455B6FA0D6A76E09454877A95320EB4DA7EBF7A5C1EECB7575184B5A9",
+  "dataset_sha256": "598DC5D805000C856B2C802296633A11FF90E7BDB849C72D00212272CC3A2F6F",
+  "input_sha256": "A535BFF6E400B6C1949112B16DA7F8C168D43A40E6C4093F8049B476D99498B4",
+  "execution": {
+    "clock": "boost::timer process user + system CPU",
+    "compiler": "16.2.0",
+    "cpu_seconds_including_blocks": 30.000000000000004,
+    "driver_wall_seconds_before_final_export": 30.5822995,
+    "solver_threads": 1
+  },
+  "verification": {
+    "valid": true,
+    "boxes": 111,
+    "volume": 28737382,
+    "container_volume": 30089620,
+    "occupation_percent": 95.50596518001889,
+    "pairwise_checks": 6105,
+    "orientation_quantities_bounds_intersections": "passed"
+  },
+  "paper": "https://doi.org/10.1016/j.ejor.2026.01.039",
+  "source": "https://zenodo.org/records/19247237"
+}

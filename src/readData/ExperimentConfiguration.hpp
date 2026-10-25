@@ -11,6 +11,7 @@ struct ExperimentConfiguration {
     ROTATION_WAY rotation=ROTATION_WAY::ZERO_WAY;
     MutationType mutation=MutationType::INVERSE_MUTATION;
     DBLFCandidatePolicy candidates=DBLFCandidatePolicy::ThreePoints;
+    PackingDecoder decoder=PackingDecoder::DBLF;
     bool replacement=true,adaptive=true;
     ExecutionMode execution=ExecutionMode::Iterations;
     long iterations=1000;
