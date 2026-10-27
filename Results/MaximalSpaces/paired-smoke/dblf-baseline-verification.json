@@ -1,0 +1,34 @@
+[
+  {
+    "file": "BR1-g0-dblf-packing.csv",
+    "identical": true
+  },
+  {
+    "file": "BR1-g1-dblf-packing.csv",
+    "identical": true
+  },
+  {
+    "file": "BR1-g2-dblf-packing.csv",
+    "identical": true
+  },
+  {
+    "file": "BR1-g3-dblf-packing.csv",
+    "identical": true
+  },
+  {
+    "file": "BR15-g0-dblf-packing.csv",
+    "identical": true
+  },
+  {
+    "file": "BR15-g1-dblf-packing.csv",
+    "identical": true
+  },
+  {
+    "file": "BR15-g2-dblf-packing.csv",
+    "identical": true
+  },
+  {
+    "file": "BR15-g3-dblf-packing.csv",
+    "identical": true
+  }
+]

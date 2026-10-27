@@ -1,0 +1,24 @@
+{
+  "evaluations": 80,
+  "normal_sha256": "10F08CAFCE7BF4A49EBB9F42A495AC59FEDAA2C1A0A9C270704AA293D23C8AF9",
+  "repetitions": 5,
+  "note": "Pruning combines containment and duplicate removal. Phase timers exclude input reading, audit and export. Counters and extra intersection checks add instrumentation overhead. Other is total minus the four phase times.",
+  "warmup_repetitions_excluded": 1,
+  "flags": "-std=c++14 -O3 -DNDEBUG; instrumented adds -DBB3D_PROFILE_MAXIMAL_SPACES",
+  "clock": "steady_clock wall time per phase; GetProcessTimes total user+kernel CPU",
+  "identical_to_reference": 80,
+  "profiled_sha256": "DAE2C86BD43691515A621EFE3277E59FFA970EE893B43E73F41E229104CD8749",
+  "input_sha256": {
+    "BR1-g0-genome.csv": "BFA8675EE986B40D48ED7F268FF3CB28891A8501480EA92BF7561EAF3F8B906A",
+    "BR1-g3-genome.csv": "C76074AFFF7376FE361A4FA791FF252048AC8270D774B3C5982F941CBE7EECE1",
+    "BR15-g1-genome.csv": "3AC135633812A6D4B87887B86C8C522F06A4F40E4E9636039BE915F5A7ECC178",
+    "BR1-g1-genome.csv": "0A7E880B591F91EC6CBA223B64B6BFAA2740EBB3B6B4FC671763BD4EB6C40419",
+    "BR15-g0-genome.csv": "89A64FE018A8BD87B3B1D17B8E9C012C55C8EE9AB3343B227E51462B58966033",
+    "BR1-g2-genome.csv": "41291BFCA4562DEB6F4094C458E06E0704ACF27739134800BAED7A403A02D6E8",
+    "BR1": "5D9EB434F06CA408FC2738D7D200F4F699C590E7FBCB2EE670C0CEE3CFCA8917",
+    "BR15": "598DC5D805000C856B2C802296633A11FF90E7BDB849C72D00212272CC3A2F6F",
+    "BR15-g3-genome.csv": "B6D69FB5B5E63682402EB69B07DD29112D8A52819D5002C2F1B46E780A4611E5",
+    "BR15-g2-genome.csv": "FAEE8D094B3E2341041131191BA43B8AA91811E27F29261C6163AD1DD767B266"
+  },
+  "workload_note": "Concurrent beam pool remained active; no workloads were stopped. GetProcessTimes has coarse accounting granularity; CPU totals are supplementary."
+}

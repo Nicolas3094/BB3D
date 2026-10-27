@@ -19,7 +19,7 @@ void printExperimentSummary(std::ostream &output,const std::vector<ExperimentOut
                <<" | ocupacion: "<<100*row.fitness<<" % | tiempo: "<<row.milliseconds<<" ms | "<<reason;
         if(row.partialEvaluation)summary<<" | evaluacion parcial (empaquetado valido)";
         if(row.resumed)summary<<" | recuperado del archivo";
-        summary<<" | decodificador: "<<(row.decoder==PackingDecoder::Contact?"contacto":"DBLF");
+        summary<<" | decodificador: "<<packingDecoderName(row.decoder);
         summary<<'\n';
     }
     summary<<"Total: "<<rows.size()<<" resultados.\n";

@@ -12,6 +12,7 @@ struct CommandLineOptions {
     int population=-1,iterations=1000,rounds=1,instances=0,firstInstance=1,sites=-1,eliteSites=-1,eliteBees=4,nonEliteBees=3,movements=2,patience=25;
     double mutationProbability=-1,selection=0.85,crossover=0.75,rotationMutation=-1,diversity=0.001;
     std::size_t cacheEntries=0,cacheBytes=16*1024*1024;
+    int gaMatings=-1;
     ExperimentConfiguration configuration(const std::string &,ROTATION_WAY,MutationType,bool) const;
 };
 CommandLineOptions parseCommandLine(const std::vector<std::string> &arguments);

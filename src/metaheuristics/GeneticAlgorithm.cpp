@@ -4,6 +4,8 @@
 
 Poblacion GeneticAlgorithm::evolve()
 {
+    if(matingAttemptsPerIteration < -1 || (matingAttemptsPerIteration>=0 && isWithReplacement))
+        throw std::invalid_argument("Fixed GA mating attempts require adding mode (replacement=false).");
     if (numberOfIndividuals < 2 || numberOfIndividuals > std::numeric_limits<int>::max() || maxIteration < 0)
         throw std::invalid_argument("GA requires at least two individuals and non-negative iterations.");
     for (double probability : {selectionProbability, crossProability, mutationProbaility, dMutationProbability})
@@ -295,7 +297,7 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
     int numberOfAddedIndividuals, i;
     const int parentCount = static_cast<int>(poblation.size());
 
-    numberOfAddedIndividuals = defaultBinomialDistribution(numberOfIndividuals);
+    numberOfAddedIndividuals = matingAttemptsPerIteration>=0?matingAttemptsPerIteration:defaultBinomialDistribution(numberOfIndividuals);
 
     for (i = 0; i < numberOfAddedIndividuals; i++)
     {
@@ -361,6 +363,7 @@ GeneticAlgorithm &GeneticAlgorithm::setCrossProbability(double crossProability)
     this->crossProability = crossProability;
     return *this;
 }
+GeneticAlgorithm &GeneticAlgorithm::setMatingAttemptsPerIteration(int value) {matingAttemptsPerIteration=value;return *this;}
 GeneticAlgorithm &GeneticAlgorithm::setMutationProbabiliy(double mutationProbaility)
 {
     this->mutationProbaility = mutationProbaility;

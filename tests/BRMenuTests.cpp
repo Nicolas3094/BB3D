@@ -29,6 +29,14 @@ void menuTests(){
     std::istringstream contactInput(contactAnswers);std::ostringstream contactOutput;
     auto contact=BRExperimentMenu().choose(contactInput,contactOutput,defaults);
     require(contact.confirmed && contact.options.decoder==PackingDecoder::Contact && contact.options.candidates==DBLFCandidatePolicy::ThreePoints,"Contact menu selection failed");
+    auto maximalAnswers = answers();
+    maximalAnswers.replace(contactPosition, 10, "3\n5\n4\n1\n0\n");
+    std::istringstream maximalInput(maximalAnswers);
+    std::ostringstream maximalOutput;
+    auto maximal = BRExperimentMenu().choose(maximalInput, maximalOutput, defaults);
+    require(maximal.confirmed && maximal.options.decoder == PackingDecoder::MaximalSpaces &&
+            maximal.options.candidates == DBLFCandidatePolicy::ThreePoints,
+            "Maximal spaces menu selection failed");
     auto timedAnswers=answers();
     const auto modePosition=timedAnswers.find("4\n1\n0\n2\n123");
     require(modePosition!=std::string::npos,"Timed menu test fixture is invalid");

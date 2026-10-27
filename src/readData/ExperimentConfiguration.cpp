@@ -39,7 +39,10 @@ std::string ExperimentConfiguration::identity(const std::string &datasetHash,std
        <<";rotationMutation="<<rotationMutation<<";diversity="<<diversity<<";patience="<<patience
        <<";cacheEntries="<<cacheEntries<<";cacheBytes="<<cacheBytes;
     if(execution==ExecutionMode::ThirtySeconds)out<<";execution=30s;limit_ms=30000";
+    if (decoder == PackingDecoder::MaximalSpaces)
+        out << ";decoder=maximal-spaces-dbl-v1";
     if(decoder==PackingDecoder::Contact)out<<";decoder=contact-v1";
+    if(algorithm=="GA" && gaMatings>=0)out<<";gaMatings="<<gaMatings;
     return out.str();
 }
 Poblacion ExperimentConfiguration::run(DatasetBinBacking data) const {
@@ -59,6 +62,7 @@ Poblacion ExperimentConfiguration::runAlgorithm(DatasetBinBacking data,bool time
     const long maximumIterations=timeOnly?std::numeric_limits<long>::max():iterations;
     if(algorithm=="GA") {
         GeneticAlgorithm ga;
+        ga.setMatingAttemptsPerIteration(gaMatings);
         ga.setMaxIteration(maximumIterations).setNumberOfIndividuals(individuals).setCrossProbability(crossover)
           .setSelectionProbability(selection).setMutationProbabiliy(mutationProbability).setAdaptiveMutation(adaptive)
           .setDMutationProbability(rotationMutation).setMaxDiversityIndex(diversity).setStagnationLimit(timeOnly?0:patience).setIsWithReplacement(replacement)

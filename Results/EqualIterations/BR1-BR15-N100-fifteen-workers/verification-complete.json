@@ -1,0 +1,8 @@
+{
+  "unique_cases": 4500,
+  "evaluation_profile_checked": true,
+  "completed": 4500,
+  "all_geometry_audits_passed": true,
+  "class_algorithm_groups": 45,
+  "instances_per_group": 100
+}

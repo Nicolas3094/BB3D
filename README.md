@@ -213,7 +213,7 @@ mediciones y comprobar igualdad exacta de resultados:
 ./tests/benchmark-cache.ps1
 ```
 
-`tests/run.ps1` ejecuta los dieciséis binarios de pruebas, compila la aplicación y
+`tests/run.ps1` ejecuta los diecisiete binarios de pruebas, compila la aplicación y
 prueba la CLI con los tres algoritmos, dos rondas y reanudación. GitHub Actions
 ejecuta ese mismo script en Windows y Linux para cada push y pull request; su
 definición está en `.github/workflows/tests.yml`. Las dependencias de CI se instalan
@@ -344,3 +344,7 @@ la misma semilla puede producir resultados distintos según la carga del equipo.
 Las pruebas usan un reloj controlado para verificar el límite exacto, los tres
 algoritmos, ambos reemplazos, caché activada/desactivada, empaquetados parciales
 válidos y compatibilidad de checkpoints, sin esperar 30 segundos por caso.
+
+## Espacios Maximos
+
+Decodificador alternativo seleccionable: `--decoder maximal-spaces` o la opcion 5 del menu de empacado. DBLF sigue siendo predeterminado. Instrucciones, pruebas y comparacion breve: [experiments/MAXIMAL-SPACES.md](experiments/MAXIMAL-SPACES.md).

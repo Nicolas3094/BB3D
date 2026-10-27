@@ -16,6 +16,7 @@ private:
     long maxIteration;
     DatasetBinBacking dataSet;
     long numberOfIndividuals;
+    int matingAttemptsPerIteration=-1; // -1 preserves the original binomial draw.
 
     double selectionProbability;
     double crossProability;
@@ -62,6 +63,7 @@ public:
     GeneticAlgorithm &setIsWithReplacement(bool);
     GeneticAlgorithm &setSelectionProbability(double);
     GeneticAlgorithm &setCrossProbability(double);
+    GeneticAlgorithm &setMatingAttemptsPerIteration(int);
     GeneticAlgorithm &setMutationProbabiliy(double);
     GeneticAlgorithm &setAdaptiveMutation(bool enabled);
     GeneticAlgorithm &setDMutationProbability(double);

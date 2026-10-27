@@ -2,6 +2,7 @@
 #define INDEPENDENT_PACKING_AUDIT_HPP
 #include "../src/binPacking/Bin.hpp"
 #include <array>
+#include <algorithm>
 #include <unordered_set>
 #include <stdexcept>
 // Independent from the decoder's rotation, collision and feasibility helpers.

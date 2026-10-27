@@ -1,0 +1,129 @@
+{
+  "binary_sha256": "8E92BF7CF284007254E2EDC249C0158C3177631D0A95B77E2ECFDD478EE6E97F",
+  "flags": "-O3 -DNDEBUG -std=c++14",
+  "topology": [
+    {
+      "core": 0,
+      "logical_mask": "1",
+      "full_mask": "3"
+    },
+    {
+      "core": 1,
+      "logical_mask": "4",
+      "full_mask": "12"
+    },
+    {
+      "core": 2,
+      "logical_mask": "16",
+      "full_mask": "48"
+    },
+    {
+      "core": 3,
+      "logical_mask": "64",
+      "full_mask": "192"
+    },
+    {
+      "core": 4,
+      "logical_mask": "256",
+      "full_mask": "768"
+    },
+    {
+      "core": 5,
+      "logical_mask": "1024",
+      "full_mask": "3072"
+    },
+    {
+      "core": 6,
+      "logical_mask": "4096",
+      "full_mask": "12288"
+    },
+    {
+      "core": 7,
+      "logical_mask": "16384",
+      "full_mask": "49152"
+    }
+  ],
+  "datasets_sha256": {
+    "BR3": "0A02C49E94158A02693D22CF52776B94919705E0E272A18435A522B37D2E24BF",
+    "BR2": "CC763B3C3F460624AD8D1D240DD6FD21E99E1CB9AD6ED2CD4522135EE74D018A",
+    "BR8": "5C9824780ECA22AAB9298E2EF45C5D181E7A7A96129943ADDC79A0118287902B",
+    "BR12": "C7D0E32666C176B015B77E27E0D555CE6D5D1A88691BD869B53B78C106DDA54D",
+    "BR9": "49926C26AFF96B2DCFE3F98C162EDB1F3666DE41ED3E043718C866D03B55EECA",
+    "BR1": "5D9EB434F06CA408FC2738D7D200F4F699C590E7FBCB2EE670C0CEE3CFCA8917",
+    "BR6": "51BA71A092113296D0DADF630CEE30ACD8342A5684DFC27758893F605C4AB0C7",
+    "BR11": "7BD31F975A0460CA1051E4E28F649FDB42EAC2FB0C732869E03FDFA81241CE04",
+    "BR10": "8097A2F5D82470F7C5D7F196E16447F140048DD51F5A7C22DBC282DDFE759B02",
+    "BR15": "598DC5D805000C856B2C802296633A11FF90E7BDB849C72D00212272CC3A2F6F",
+    "BR7": "1BF0128243805361CC280D6D6C50A50CBFE08760BE19786CC2A533342CB5E715",
+    "BR14": "BD036B3DDABAA47A4692C67419717E5980D1684F9A1F8B0ED6C9D50FB92BB90F",
+    "BR4": "BB1DE1A8256B33BE3989F538A415A6E0CC25C2E484C40869FB6952A05188DEE4",
+    "BR13": "D2A454CF60198D4ED1ACF6B9A613F6F9F94F610BB3BC7E00E1C52F84528BC121",
+    "BR5": "D7DEBF833EF56C2FA4C26E1F014306B869C715235FD8A9F29069CE074CE17509"
+  },
+  "reserved_logical_cpu": 0,
+  "tasks": 4500,
+  "worker_cpu_masks": [
+    4,
+    16,
+    64,
+    256,
+    1024,
+    4096,
+    16384,
+    2,
+    8,
+    32,
+    128,
+    512,
+    2048,
+    8192,
+    32768
+  ],
+  "compiler": "g++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r3) 16.2.0",
+  "workers": 15,
+  "profile": {
+    "common": {
+      "population": 20,
+      "execution": "iterations",
+      "decoder": "contact",
+      "candidate_generation": "three original points, no projections",
+      "mutation": "C2",
+      "mutation_probability": 1.0,
+      "rotation": 6,
+      "rotation_mutation_probability": 0.05,
+      "replacement": false,
+      "patience": 0,
+      "cache_entries": 0,
+      "seed": 123
+    },
+    "GA": {
+      "ga_matings": 20,
+      "crossover_probability": 1.0,
+      "selection_probability": 0.85,
+      "new_evaluations_per_complete_iteration": 40
+    },
+    "ABC": {
+      "sites": 10,
+      "elite_sites": 5,
+      "elite_bees": 4,
+      "non_elite_bees": 2,
+      "global_sites": 10,
+      "new_evaluations_per_complete_iteration": 40
+    },
+    "FFA": {
+      "movements_per_firefly": 2,
+      "new_evaluations_per_complete_iteration": 40
+    },
+    "total_evaluations_if_N_iterations_complete": "20 + 40*N",
+    "notes": "Evaluations include repeated or rejected candidates, not necessarily unique solutions. Finding 100% can stop a search early. The original GA binomial mode remains the default unless ga_matings is explicitly supplied."
+  },
+  "iterations": 100,
+  "io_repair": {
+    "preserved_results": 1523,
+    "real_reader_lock_test_passed": true,
+    "previous_binary_sha256": "DDA831340FE2E5A381CD9DEDA68055F3458D893566D3F9B452B8E6007E9E0992",
+    "scope": "atomic I/O retry and nonfatal progress; search algorithms/profile unchanged",
+    "updated_utc": "2026-10-26T11:28:02.6334369Z",
+    "parity_cases": 14
+  }
+}

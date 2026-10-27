@@ -16,6 +16,7 @@ struct ExperimentConfiguration {
     ExecutionMode execution=ExecutionMode::Iterations;
     long iterations=1000;
     long patience=25;
+    int gaMatings=-1;
     std::size_t cacheEntries=0,cacheBytes=16*1024*1024;
     int individuals=50,sites=11,eliteSites=8,eliteBees=4,nonEliteBees=3,movements=2;
     double crossover=0.75,selection=0.85,mutationProbability=1,rotationMutation=0.05,diversity=0.001;

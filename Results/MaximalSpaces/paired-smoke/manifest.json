@@ -1,0 +1,15 @@
+{
+  "dblf_packings_identical_to_baseline": 8,
+  "seed": 123,
+  "compiler": "GCC 16.2.0",
+  "genomes_per_instance": 4,
+  "binary_sha256": "0FD128D0D35DA7ED333D50DB19C28F97940B7BFF29195C1ECBDDB99B9A93253A",
+  "note": "Single wall-time sample per evaluation. Concurrent beam workload. Peak is retained spaces after pruning; DBLF not applicable.",
+  "geometry_audits": 16,
+  "baseline_commit": "3edd521ac7b40c43f01d4bb626a91574c513cb65",
+  "flags": "-std=c++14 -O3 -DNDEBUG",
+  "instances": [
+    "BR1/1",
+    "BR15/1"
+  ]
+}

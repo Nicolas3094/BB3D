@@ -1,5 +1,123 @@
 # Experimento del decodificador por contacto
 
+## Cola dinámica con siete o quince procesos (Ryzen 7 5700X3D)
+
+```powershell
+./experiments/Run-EqualPool.ps1 -OutputDirectory Results/EqualIterations/BR1-BR15-N100-seven-workers -Workers 7 -Iterations 100
+# Reinicio independiente con 15 procesos:
+./experiments/Run-EqualPool.ps1 -OutputDirectory Results/EqualIterations/BR1-BR15-N100-fifteen-workers -Workers 15 -Iterations 100 -SkipBuild
+```
+
+Ejecuta las 100 instancias de BR1–BR15 con GA, ABC y Firefly: 4500 casos nuevos,
+sin reutilizar resultados del antiguo lote por tiempo. Utiliza el perfil igualado
+descrito abajo: 100 iteraciones completas implican 4020 evaluaciones por caso,
+salvo terminación anticipada con ocupación 100%. No tiene límite de 30 segundos.
+
+Se consulta la topología real de Windows (`GetLogicalProcessorInformationEx`),
+sin suponer que dos índices lógicos consecutivos sean núcleos físicos distintos.
+En el equipo de esta prueba aparecen ocho núcleos físicos y dos hilos lógicos
+por núcleo. Se usan siete núcleos físicos, un hilo de búsqueda por proceso,
+dejando el primero sin asignar a la búsqueda. La afinidad registrada corresponde
+a máscaras 4,16,64,256,1024,4096,16384.
+Con `-Workers 15` se utilizan también los hilos SMT restantes: 15 de los 16 hilos
+lógicos, dejando el lógico 0 sin asignar a la búsqueda. En ese modo no queda un
+núcleo físico completo reservado. La aceleración no es necesariamente proporcional
+al número de procesos, porque SMT comparte recursos y caché.
+Cada proceso puede ejecutar cualquiera de los
+tres algoritmos: no hay particiones rígidas por archivo o algoritmo.
+
+Cada trabajador intenta reclamar el siguiente caso pendiente mediante un archivo
+abierto con `CREATE_NEW`, sin compartir y con `FILE_FLAG_DELETE_ON_CLOSE`.
+La exclusión la garantiza Windows entre procesos. Si un trabajador muere, el SO
+libera la reclamación; el caso incompleto se puede retomar. El marcador
+`tasks/<caso>/result.csv` se publica al final mediante renombrado atómico, después
+de escribir genoma, secuencia de inserción y acomodo y aprobar la auditoría.
+Dos trabajadores no deben calcular simultáneamente el mismo caso. Las semillas
+dependen de la instancia, no del trabajador ni del orden de reclamación.
+
+Archivos de seguimiento, actualizados aproximadamente cada 15 segundos:
+
+- `tabla.md`: medias por BR/algoritmo, cantidad completada y tabla de trabajadores.
+- `estado.json`: PID del gestor, avance total y trabajador/PID/caso activo.
+- `worker-N.log`: mensajes `CLAIM` y `DONE` por caso.
+- `resultados.csv`: resultados individuales agregados.
+- `manifest.json`: perfil, compilador, hash del ejecutable/datos y topología.
+
+Para ver el trabajador que atiende cada caso en la terminal, sin iniciar otro lote:
+
+```powershell
+./experiments/Show-EqualPool.ps1 -Directory Results/EqualIterations/BR1-BR15-N100-seven-workers -Watch
+```
+
+Las medias son **parciales** hasta completar 100 instancias por celda. Cada caso
+valida su número de evaluaciones y su geometría, además de reconstruir el
+incumbente. Los resultados completos se conservan en las carpetas por caso.
+
+Las escrituras atómicas usan temporales únicos y reintentan bloqueos transitorios
+de Windows antes de fallar, registrando el código de error. El lector del gestor
+abre los archivos de trabajador con permiso de renombrado/borrado compartido, para
+no bloquear su reemplazo. Si se agota el reintento de un archivo meramente
+informativo (estado, tabla o agregado), se avisa y se vuelve a intentar en la
+siguiente publicación; eso no invalida ni detiene una búsqueda. Los marcadores
+`result.csv` por caso siguen siendo estrictos y solo se publican tras guardar y
+validar todo. La opción `--io-test <directorio>` del trabajador prueba un bloqueo
+real de lector Windows, recuperación por reintento y fallo informativo no fatal.
+
+El lote de 15 procesos se interrumpió en BR6 después de 1523 casos por un fallo al
+reemplazar `worker-11.csv`, después de terminar un caso válido. La reparación
+modifica solo E/S: se contrastaron 14 casos con el ejecutable anterior, coincidiendo
+exactamente fitness, evaluaciones y archivos de genoma/acomodo. Se conservaron los
+hashes de los 1523 resultados y una copia del ejecutable/manifiesto anteriores,
+registrando la actualización en `verification-io-repair.json` y `manifest.json`.
+
+Hay un bloqueo exclusivo del gestor para impedir dos gestores sobre la misma
+carpeta. Para reanudar se usa el mismo comando y carpeta: reutiliza el ejecutable
+congelado de esa corrida, comprueba hashes/configuración y omite resultados completos.
+Para cambiar iteraciones, datos o ejecutable, usar una carpeta nueva.
+
+Para solicitar parada conservando resultados, crear un archivo vacío `STOP` en
+la carpeta del lote. Cada trabajador terminará su caso actual y saldrá. Para
+reanudar después, quitar explícitamente ese marcador y volver a ejecutar el comando.
+El equipo debe permanecer encendido y sin suspensión. Un error detiene los demás
+trabajadores y registra el problema; no se mezclan ejecuciones fallidas con completas.
+
+Pruebas realizadas: 14 casos a una iteración, siete procesos frente a uno.
+Coinciden exactamente fitness, 60 evaluaciones, genomas, secuencias de inserción y
+acomodos. Reanudar el lote completado no agrega resultados duplicados. Se conserva
+la verificación de 20 iniciales + 40 por iteración y el modo binomial original de GA.
+
+## Perfil de igual número de evaluaciones por iteración
+
+Configuración guardada en `equal-iterations.json`. Ejecutar únicamente cuando se
+quiera iniciar una nueva comparación (no se reinicia automáticamente el lote detenido):
+
+```powershell
+./experiments/Run-EqualIterations.ps1 -Dataset BR1 -Instance 1 -Iterations 100
+```
+
+Entradas comunes: población 20, contacto, C2 con probabilidad fija 1, seis
+orientaciones sujetas a permisos y mutación de orientación 0.05; adición de
+candidatos (`replacement=false`), semilla 123, caché desactivada, modo por
+iteraciones y parada por estancamiento desactivada. No hay límite de 30 segundos.
+
+| Algoritmo | Entradas específicas | Evaluaciones nuevas por iteración completa |
+| --- | --- | ---: |
+| GA | `--ga-matings 20 --crossover 1 --selection 0.85` | 20 parejas x 2 hijos = 40 |
+| ABC | `--sites 10 --elite-sites 5 --elite-bees 4 --non-elite-bees 2` | 5x4 + 5x2 + (20-10) = 40 |
+| Firefly | `--movements 2` | 20x2 = 40 |
+
+GA no podía igualarse exactamente solo con sus opciones anteriores: sus intentos
+de cruce seguían una binomial interna. La opción nueva fija los intentos únicamente
+cuando se solicita; el valor predeterminado conserva la binomial. Requiere adición
+de candidatos. Cruce 1 garantiza que las 20 parejas generen sus dos hijos; con una
+probabilidad menor, la cantidad de evaluaciones vuelve a ser variable.
+
+Si completan N iteraciones son **20 + 40N** evaluaciones en cada algoritmo (4020
+para N=100). Alcanzar ocupación 100% puede terminar antes. Se cuentan evaluaciones,
+incluidas soluciones repetidas o descartadas, no soluciones únicas ni aceptadas.
+Igualar evaluaciones no iguala el tiempo ni la diversidad explorada.
+Los tests verifican las cantidades para N=0,1,3 y semillas 123,456,789.
+
 ## Barrido BR1–BR15 con adición de candidatos
 
 ```powershell

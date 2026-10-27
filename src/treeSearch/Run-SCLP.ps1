@@ -1,4 +1,4 @@
-param([string]$Dataset='BR15',[int]$Instance=1,[ValidateRange(1,3600)][double]$Seconds=30,[string]$OutputDirectory,[string]$DataRoot)
+param([string]$Dataset='BR15',[int]$Instance=1,[ValidateRange(1,3600)][double]$Seconds=30,[string]$OutputDirectory,[string]$DataRoot,[string]$BinaryPath)
 $ErrorActionPreference='Stop'
 function File-Sha256([string]$Path) {
     $stream=[IO.File]::OpenRead((Resolve-Path -LiteralPath $Path).Path)
@@ -8,6 +8,7 @@ function File-Sha256([string]$Path) {
 }
 $root=Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $binary=Join-Path $root 'build/sclp-release/sclp_reference.exe'
+if($BinaryPath){$binary=(Resolve-Path -LiteralPath $BinaryPath).Path}
 if(!(Test-Path $binary)){throw 'Compile src/treeSearch first; see README.md'}
 if(!$OutputDirectory){$OutputDirectory=Join-Path $root ('Results/TreeSearch/'+$Dataset+'-'+$Instance+'-'+(Get-Date -Format yyyyMMdd-HHmmss)+'-'+[guid]::NewGuid().ToString('N').Substring(0,6))}
 if(Test-Path $OutputDirectory){throw 'Use a new output directory to preserve previous experiments'}

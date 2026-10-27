@@ -9,7 +9,21 @@
 
 typedef std::vector<ItemBin> LoadedBins;
 enum class DBLFCandidatePolicy { ThreePoints, Projected, BestOfBoth };
-enum class PackingDecoder { DBLF, Contact };
+enum class PackingDecoder { DBLF, Contact, MaximalSpaces };
+
+/**
+ * @brief Devuelve el nombre del decodificador usado en opciones, informes y CSV.
+ * @return Cadena estatica; no requiere liberacion. Un valor no reconocido usa dblf.
+ */
+inline const char *packingDecoderName(PackingDecoder decoder)
+{
+    switch (decoder)
+    {
+    case PackingDecoder::MaximalSpaces: return "maximal-spaces";
+    case PackingDecoder::Contact: return "contact";
+    default: return "dblf";
+    }
+}
 
 class Bin
 {

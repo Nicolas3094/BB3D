@@ -82,10 +82,27 @@ BRMenuSelection BRExperimentMenu::choose(std::istream &input,std::ostream &outpu
         o.rotation=std::vector<std::string>{"0","2","6","all"}[number(input,output,"Orientaciones",1,4,3)-1];
         output<<"Reemplazo: 1=con reemplazo, 2=sin reemplazo, 3=ambos.\n";
         o.replacement=std::vector<std::string>{"true","false","both"}[number(input,output,"Reemplazo",1,3,1)-1];
-        output<<"Decodificador: 1=DBLF legacy, 2=DBLF proyectado, 3=DBLF best, 4=contacto (tres puntos originales).\n";
-        const int packing=number(input,output,"Decodificador de empacado",1,4,o.decoder==PackingDecoder::Contact?4:1);
-        o.decoder=packing==4?PackingDecoder::Contact:PackingDecoder::DBLF;
-        o.candidates=packing==4?DBLFCandidatePolicy::ThreePoints:static_cast<DBLFCandidatePolicy>(packing-1);
+        output<<"Decodificador: 1=DBLF legacy, 2=DBLF proyectado, 3=DBLF best, 4=contacto (tres puntos originales), 5=Espacios Maximos (DBL).\n";
+        int defaultDecoderOption = 1;
+        if (o.decoder == PackingDecoder::Contact)
+            defaultDecoderOption = 4;
+        if (o.decoder == PackingDecoder::MaximalSpaces)
+            defaultDecoderOption = 5;
+        const int decoderOption = number(input, output, "Decodificador de empacado", 1, 5, defaultDecoderOption);
+        o.candidates = DBLFCandidatePolicy::ThreePoints;
+        switch (decoderOption)
+        {
+        case 4:
+            o.decoder = PackingDecoder::Contact;
+            break;
+        case 5:
+            o.decoder = PackingDecoder::MaximalSpaces;
+            break;
+        default:
+            o.decoder = PackingDecoder::DBLF;
+            o.candidates = static_cast<DBLFCandidatePolicy>(decoderOption - 1);
+            break;
+        }
         o.population=number(input,output,"Tamano de poblacion",2,100000,o.population>=2?o.population:20);
         output<<"Ejecucion: 1=normal por iteraciones, 2=hasta 30 segundos por problema/algoritmo/ronda.\n";
         o.execution=number(input,output,"Modo de ejecucion",1,2,o.execution==ExecutionMode::ThirtySeconds?2:1)==2?ExecutionMode::ThirtySeconds:ExecutionMode::Iterations;
@@ -135,7 +152,7 @@ BRMenuSelection BRExperimentMenu::choose(std::istream &input,std::ostream &outpu
               <<". Total: "<<runs<<" ejecuciones.\n";
         if(o.execution==ExecutionMode::ThirtySeconds)output<<"Limite de busqueda: 30 segundos por ejecucion; los metodos se ejecutan en serie. Puede finalizar antes con ocupacion 100%.\n";
         else output<<"Maximo de iteraciones: "<<o.iterations<<".\n";
-        output<<"Decodificador seleccionado: "<<(o.decoder==PackingDecoder::Contact?"contacto":"DBLF")<<".\n";
+        output<<"Decodificador seleccionado: "<<packingDecoderName(o.decoder)<<".\n";
         result.confirmed=number(input,output,"Iniciar? 1=si, 0=cancelar",0,1,0)==1;
         if(!result.confirmed)output<<"Sesion cancelada; no se escribieron resultados.\n";
     } catch(const Cancelled &) {output<<"\nMenu cancelado; no se escribieron resultados.\n";}

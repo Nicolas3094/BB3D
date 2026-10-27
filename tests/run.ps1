@@ -94,6 +94,12 @@ try {
     if($LASTEXITCODE -ne 0) {throw 'Timed execution compilation failed'}
     Push-Location $root
     try {& $timedBinary;if($LASTEXITCODE -ne 0) {throw 'Timed execution tests failed'}} finally {Pop-Location}
+    $maximalBinary=Join-Path $PSScriptRoot 'maximal_spaces_tests.exe'
+    $maximalSources=@(Join-Path $PSScriptRoot 'MaximalSpacesTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
+    & $Compiler -std=c++14 $maximalSources -o $maximalBinary
+    if($LASTEXITCODE -ne 0) {throw 'Maximal spaces compilation failed'}
+    & $maximalBinary
+    if($LASTEXITCODE -ne 0) {throw 'Maximal spaces tests failed'}
     $contactBinary=Join-Path $PSScriptRoot 'contact_decoder_tests.exe'
     $contactSources=@(Join-Path $PSScriptRoot 'ContactDecoderTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
     & $Compiler -std=c++14 $contactSources -o $contactBinary
@@ -101,6 +107,12 @@ try {
     & $contactBinary
     if($LASTEXITCODE -ne 0) {throw 'Contact decoder tests failed'}
     $application=Join-Path $PSScriptRoot 'project_build_check.exe'
+    $equalBinary=Join-Path $PSScriptRoot 'equal_iteration_tests.exe'
+    $equalSources=@(Join-Path $PSScriptRoot 'EqualIterationTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
+    & $Compiler -std=c++14 $equalSources -o $equalBinary
+    if($LASTEXITCODE -ne 0) {throw 'Equal iteration test compilation failed'}
+    & $equalBinary
+    if($LASTEXITCODE -ne 0) {throw 'Equal iteration tests failed'}
     $menuBinary=Join-Path $PSScriptRoot 'br_menu_tests.exe'
     $menuSources=@(Join-Path $PSScriptRoot 'BRMenuTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
     & $Compiler -std=c++14 $menuSources -o $menuBinary

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "population": 20,
+    "execution": "iterations",
+    "decoder": "contact",
+    "candidate_generation": "three original points, no projections",
+    "mutation": "C2",
+    "mutation_probability": 1.0,
+    "rotation": 6,
+    "rotation_mutation_probability": 0.05,
+    "replacement": false,
+    "patience": 0,
+    "cache_entries": 0,
+    "seed": 123
+  },
+  "GA": {"ga_matings": 20, "crossover_probability": 1.0, "selection_probability": 0.85, "new_evaluations_per_complete_iteration": 40},
+  "ABC": {"sites": 10, "elite_sites": 5, "elite_bees": 4, "non_elite_bees": 2, "global_sites": 10, "new_evaluations_per_complete_iteration": 40},
+  "FFA": {"movements_per_firefly": 2, "new_evaluations_per_complete_iteration": 40},
+  "total_evaluations_if_N_iterations_complete": "20 + 40*N",
+  "notes": "Evaluations include repeated or rejected candidates, not necessarily unique solutions. Finding 100% can stop a search early. The original GA binomial mode remains the default unless ga_matings is explicitly supplied."
+}
