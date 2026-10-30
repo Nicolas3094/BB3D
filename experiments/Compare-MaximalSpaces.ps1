@@ -18,12 +18,15 @@ param(
     [string]$OutputDirectory = 'Results/MaximalSpaces/paired-smoke',
     [string]$Compiler = 'C:/mingw64/bin/g++.exe'
 )
+
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $previousPath = $env:PATH
 Push-Location $root
+
 try {
     $env:PATH = (Split-Path $Compiler -Parent) + ';' + $env:PATH
+
     if (Test-Path "$OutputDirectory/evaluations.csv") {
         throw 'Use a new output directory to preserve previous results'
     }
@@ -31,9 +34,15 @@ try {
     $sources = @(Get-ChildItem src -Recurse -Filter *.cpp |
         Where-Object Name -ne main.cpp | ForEach-Object FullName)
     & $Compiler -std=c++14 -O3 -DNDEBUG experiments/MaximalSpacesComparison.cpp $sources -o build/maximal_spaces_comparison.exe
-    if ($LASTEXITCODE) { throw 'Compilation failed' }
+
+    if ($LASTEXITCODE) {
+        throw 'Compilation failed'
+    }
     & ./build/maximal_spaces_comparison.exe $OutputDirectory
-    if ($LASTEXITCODE) { throw 'Comparison failed' }
+
+    if ($LASTEXITCODE) {
+        throw 'Comparison failed'
+    }
 
     $manifest = @{
         compiler = (& $Compiler --version | Select-Object -First 1)
@@ -50,14 +59,14 @@ try {
     Import-Csv "$OutputDirectory/evaluations.csv" | Group-Object dataset, decoder | ForEach-Object {
         $evaluations = $_.Group
         $meanOccupation = ($evaluations | ForEach-Object {
-            [double]$_.occupation_percent
-        } | Measure-Object -Average).Average
+                [double]$_.occupation_percent
+            } | Measure-Object -Average).Average
         $meanMilliseconds = ($evaluations | ForEach-Object {
-            [double]$_.microseconds / 1000
-        } | Measure-Object -Average).Average
+                [double]$_.microseconds / 1000
+            } | Measure-Object -Average).Average
         $maximumSpaces = ($evaluations | ForEach-Object {
-            [int]$_.peak_spaces
-        } | Measure-Object -Maximum).Maximum
+                [int]$_.peak_spaces
+            } | Measure-Object -Maximum).Maximum
         [pscustomobject]@{
             group = $_.Name
             occupation = $meanOccupation

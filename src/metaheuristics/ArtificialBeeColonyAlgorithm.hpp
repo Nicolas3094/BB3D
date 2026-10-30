@@ -10,7 +10,7 @@
 
 class ArtificialBeeColonyAlgorithm : public EvolutiveAlgorithm
 {
-private:
+  private:
     friend struct ArtificialBeeColonyAlgorithmTestAccess;
     std::map<std::string, bool> visitedIndividuals;
 
@@ -34,7 +34,7 @@ private:
     void neighorhoodSearch(Poblacion &, int);
     void orderSites(Poblacion &);
 
-public:
+  public:
     ArtificialBeeColonyAlgorithm();
     ~ArtificialBeeColonyAlgorithm();
     static ArtificialBeeColonyAlgorithm Build();

@@ -8,8 +8,7 @@
 
 bool hasPositiveDimensions(const MaximalSpace &space)
 {
-    return space.minimum.x < space.maximum.x &&
-           space.minimum.y < space.maximum.y &&
+    return space.minimum.x < space.maximum.x && space.minimum.y < space.maximum.y &&
            space.minimum.z < space.maximum.z;
 }
 
@@ -34,7 +33,8 @@ std::vector<MaximalSpace> splitFreeSpace(const MaximalSpace &space, const Maxima
         return {space};
 
     std::vector<MaximalSpace> remainingSpaces;
-    auto keepPositiveRegion = [&](const MaximalSpace &region) {
+    auto keepPositiveRegion = [&](const MaximalSpace &region)
+    {
         if (hasPositiveDimensions(region))
             remainingSpaces.push_back(region);
     };
@@ -61,6 +61,7 @@ std::vector<MaximalSpace> splitFreeSpace(const MaximalSpace &space, const Maxima
     region = space;
     region.minimum.z = std::max(space.minimum.z, occupied.maximum.z);
     keepPositiveRegion(region);
+
     return remainingSpaces;
 }
 
@@ -72,14 +73,17 @@ void removeRedundantSpaces(std::vector<MaximalSpace> &spaces)
     MaximalSpacesPhaseTimer pruningTimer(profile.pruningMicroseconds);
 #endif
     std::vector<MaximalSpace> retainedSpaces;
+
     for (size_t candidateIndex = 0; candidateIndex < spaces.size(); ++candidateIndex)
     {
         checkExecutionDeadline();
         const auto &candidate = spaces[candidateIndex];
+
         if (!hasPositiveDimensions(candidate))
             continue;
 
         bool redundant = false;
+
         for (size_t otherIndex = 0; otherIndex < spaces.size(); ++otherIndex)
         {
             checkExecutionDeadline();
@@ -103,6 +107,7 @@ void removeRedundantSpaces(std::vector<MaximalSpace> &spaces)
             ++profile.containmentChecks;
 #endif
             const bool strictlyContained = !containsSpace(candidate, other);
+
             if (earlierOccurrence || strictlyContained)
             {
 #ifdef BB3D_PROFILE_MAXIMAL_SPACES
@@ -126,12 +131,13 @@ void removeRedundantSpaces(std::vector<MaximalSpace> &spaces)
 #endif
     // Maximum corners only break ties between spaces with the same DBL origin.
     std::sort(retainedSpaces.begin(), retainedSpaces.end(),
-              [](const MaximalSpace &first, const MaximalSpace &second) {
-        return std::tie(first.minimum.x, first.minimum.z, first.minimum.y,
-                        first.maximum.x, first.maximum.z, first.maximum.y) <
-               std::tie(second.minimum.x, second.minimum.z, second.minimum.y,
-                        second.maximum.x, second.maximum.z, second.maximum.y);
-    });
+              [](const MaximalSpace &first, const MaximalSpace &second)
+              {
+                  return std::tie(first.minimum.x, first.minimum.z, first.minimum.y, first.maximum.x,
+                                  first.maximum.z, first.maximum.y) <
+                         std::tie(second.minimum.x, second.minimum.z, second.minimum.y, second.maximum.x,
+                                  second.maximum.z, second.maximum.y);
+              });
     spaces.swap(retainedSpaces);
 }
 
@@ -148,6 +154,7 @@ void subtractOccupiedSpace(std::vector<MaximalSpace> &spaces, const MaximalSpace
         checkExecutionDeadline();
 #ifdef BB3D_PROFILE_MAXIMAL_SPACES
         ++profile.spacesVisitedForSplit;
+
         if (spacesIntersect(space, occupied))
             ++profile.affectedSpaces;
 #endif

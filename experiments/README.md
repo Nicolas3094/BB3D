@@ -283,3 +283,11 @@ comparaciones sin elegir ni activar automáticamente una variante.
 Son experimentos piloto en dos instancias y dos semillas, no una prueba general
 de superioridad. La carga del sistema y el mayor coste por evaluación afectan
 la búsqueda de tiempo limitado; se conservan los números de evaluaciones intentadas.
+
+## BRKGA-CLP-U 2012
+
+Implementacion independiente por capas y lote de 15 procesos: [instrucciones, decisiones de reproduccion y validacion](../src/brkga/README.md). El lote agrega su columna a la tabla SCLP existente y conserva los datos originales.
+
+## Comparacion comun de 30 segundos CPU, BR1-BR17
+
+Nuevo protocolo con preservacion del lote N100 y extension de los cinco algoritmos: [TIME-COMPARISON.md](TIME-COMPARISON.md).

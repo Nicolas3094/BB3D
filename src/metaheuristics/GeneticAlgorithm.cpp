@@ -4,17 +4,25 @@
 
 Poblacion GeneticAlgorithm::evolve()
 {
-    if(matingAttemptsPerIteration < -1 || (matingAttemptsPerIteration>=0 && isWithReplacement))
+    if (matingAttemptsPerIteration < -1 || (matingAttemptsPerIteration >= 0 && isWithReplacement))
         throw std::invalid_argument("Fixed GA mating attempts require adding mode (replacement=false).");
+
     if (numberOfIndividuals < 2 || numberOfIndividuals > std::numeric_limits<int>::max() || maxIteration < 0)
         throw std::invalid_argument("GA requires at least two individuals and non-negative iterations.");
-    for (double probability : {selectionProbability, crossProability, mutationProbaility, dMutationProbability})
+
+    for (double probability :
+         {selectionProbability, crossProability, mutationProbaility, dMutationProbability})
         if (!std::isfinite(probability) || probability < 0.0 || probability > 1.0)
             throw std::invalid_argument("GA probabilities must be finite and in [0,1].");
-    if (!std::isfinite(maxDiversityIndex) || maxDiversityIndex < 0.0 || maxDiversityIndex > 1 || stagnationLimit < 0)
+
+    if (!std::isfinite(maxDiversityIndex) || maxDiversityIndex < 0.0 || maxDiversityIndex > 1 ||
+        stagnationLimit < 0)
         throw std::invalid_argument("GA requires diversity in [0,1] and non-negative stagnation patience.");
+
     visitedIndividuals.clear();
-    stagnantIterations=0; bestSeenFitness=-1;
+    stagnantIterations = 0;
+    bestSeenFitness = -1;
+
     if (isWithReplacement)
     {
         return evolveWithReplacement();
@@ -37,9 +45,7 @@ void GeneticAlgorithm::mutate(Individuo &individual, int step)
 // O(n)
 Individuo GeneticAlgorithm::crossover(Individuo parent1, Individuo parent2)
 {
-    return Individuo::Build()
-        .setGenome(crossOver(parent1.getGenome(), parent2.getGenome()))
-        .setFitness(0.0);
+    return Individuo::Build().setGenome(crossOver(parent1.getGenome(), parent2.getGenome())).setFitness(0.0);
 }
 
 // O(n^3): dominated by DBLF fitness evaluation for n items.
@@ -61,8 +67,9 @@ Individuo GeneticAlgorithm::instantiateChild(Individuo parent1, Individuo parent
 Poblacion GeneticAlgorithm::evolveWithReplacement()
 {
     long i;
-    Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
-    bestSeenFitness=poblation.front().getFitness();
+    Poblacion poblation =
+        initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    bestSeenFitness = poblation.front().getFitness();
 
     for (auto &ind : poblation)
     {
@@ -86,8 +93,9 @@ Poblacion GeneticAlgorithm::evolveWithReplacement()
 Poblacion GeneticAlgorithm::evolveWithAdded()
 {
     long i;
-    Poblacion poblation = initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
-    bestSeenFitness=poblation.front().getFitness();
+    Poblacion poblation =
+        initialHeuristicPoblation(numberOfIndividuals, dataSet.bin, dataSet.totalItems, rotationType);
+    bestSeenFitness = poblation.front().getFitness();
 
     for (auto &ind : poblation)
     {
@@ -110,31 +118,50 @@ Poblacion GeneticAlgorithm::evolveWithAdded()
 
 bool GeneticAlgorithm::terminateCondition(Poblacion currentPoblation)
 {
-    if (currentPoblation.empty()) throw std::invalid_argument("GA population cannot be empty.");
-    const double diversity=diversityIndex(currentPoblation);
-    const double best=currentPoblation.front().getFitness();
-    if(best>bestSeenFitness) { bestSeenFitness=best; stagnantIterations=0; }
-    else ++stagnantIterations;
-    return best==1 || (stagnationLimit>0 && stagnantIterations>=stagnationLimit && diversity<maxDiversityIndex);
+    if (currentPoblation.empty())
+        throw std::invalid_argument("GA population cannot be empty.");
+
+    const double diversity = diversityIndex(currentPoblation);
+    const double best = currentPoblation.front().getFitness();
+
+    if (best > bestSeenFitness)
+    {
+        bestSeenFitness = best;
+        stagnantIterations = 0;
+    }
+    else
+        ++stagnantIterations;
+
+    return best == 1 ||
+           (stagnationLimit > 0 && stagnantIterations >= stagnationLimit && diversity < maxDiversityIndex);
 }
 
 double GeneticAlgorithm::diversityIndex(Poblacion currentPoblation)
 {
-    if (currentPoblation.empty()) throw std::invalid_argument("GA population cannot be empty.");
-    const auto &reference=currentPoblation.front().getGenome();
-    double differences=0;
-    for(const auto &individual:currentPoblation) {
-        if(!std::isfinite(individual.getFitness()) || individual.getFitness()<0 || individual.getFitness()>1)
+    if (currentPoblation.empty())
+        throw std::invalid_argument("GA population cannot be empty.");
+
+    const auto &reference = currentPoblation.front().getGenome();
+    double differences = 0;
+
+    for (const auto &individual : currentPoblation)
+    {
+        if (!std::isfinite(individual.getFitness()) || individual.getFitness() < 0 ||
+            individual.getFitness() > 1)
             throw std::invalid_argument("GA diversity requires fitness in [0,1].");
-        differences+=hamming(reference,individual.getGenome());
+
+        differences += hamming(reference, individual.getGenome());
     }
-    const auto size=reference.getGenome().size();
-    return size==0?0:differences/(static_cast<double>(size)*currentPoblation.size());
+    const auto size = reference.getGenome().size();
+
+    return size == 0 ? 0 : differences / (static_cast<double>(size) * currentPoblation.size());
 }
 
 double GeneticAlgorithm::adaptiveMutationProbabiliy(Individuo individual, Individuo otherIndividual)
 {
-    if (!adaptiveMutation) return mutationProbaility;
+    if (!adaptiveMutation)
+        return mutationProbaility;
+
     return 1.0 - (individual.getFitness() + otherIndividual.getFitness()) / 2.0;
 }
 
@@ -146,6 +173,7 @@ void GeneticAlgorithm::mutatePoblation(Poblacion &poblation, int initIndex, int 
         {
             mutate(poblation[i]);
             evaluateFitness(poblation[i], dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
+
             if (visitedIndividuals[poblation[i].solution])
             {
                 poblation[i].setFitness(0.0);
@@ -162,8 +190,10 @@ std::vector<Individuo> GeneticAlgorithm::getParents(const Poblacion &poblation, 
 {
     if (eligibleCount < 2 || static_cast<size_t>(eligibleCount) > poblation.size())
         throw std::invalid_argument("GA requires at least two eligible parents.");
+
     const int first = tournament(poblation, eligibleCount, selectionProbability);
     const int second = tournament(poblation, eligibleCount, selectionProbability, first);
+
     return {poblation[first], poblation[second]};
 }
 
@@ -192,10 +222,12 @@ std::vector<Individuo> GeneticAlgorithm::getChildren(Individuo parent, Individuo
 
 void GeneticAlgorithm::addChildredToPoblation(Poblacion &poblation, Individuo child, Individuo secondChild)
 {
-    if(child.solution==secondChild.solution) {
-        if(!visitedIndividuals[child.solution]) {
-            visitedIndividuals[child.solution]=true;
-            poblation.push_back(child.getFitness()>=secondChild.getFitness()?child:secondChild);
+    if (child.solution == secondChild.solution)
+    {
+        if (!visitedIndividuals[child.solution])
+        {
+            visitedIndividuals[child.solution] = true;
+            poblation.push_back(child.getFitness() >= secondChild.getFitness() ? child : secondChild);
         }
         return;
     }
@@ -219,8 +251,8 @@ void GeneticAlgorithm::addChildredToPoblation(Poblacion &poblation, Individuo ch
     }
 }
 
-void GeneticAlgorithm::replacePoblationWithChildren(
-    Poblacion &poblation, Individuo child, Individuo secondChild, int atIndex)
+void GeneticAlgorithm::replacePoblationWithChildren(Poblacion &poblation, Individuo child,
+                                                    Individuo secondChild, int atIndex)
 {
     if (!visitedIndividuals[child.solution] && visitedIndividuals[secondChild.solution])
     {
@@ -266,6 +298,7 @@ void GeneticAlgorithm::nextGeneration(Poblacion &poblation)
 {
     if (poblation.size() != static_cast<size_t>(numberOfIndividuals) || poblation.size() < 2)
         throw std::invalid_argument("GA generation has an invalid population size.");
+
     int numberOfDeletedIndividual, initialIndex, i;
 
     numberOfDeletedIndividual = defaultBinomialDistribution(numberOfIndividuals);
@@ -294,10 +327,13 @@ void GeneticAlgorithm::nextGenerationByAdding(Poblacion &poblation)
 {
     if (poblation.size() != static_cast<size_t>(numberOfIndividuals) || poblation.size() < 2)
         throw std::invalid_argument("GA generation has an invalid population size.");
+
     int numberOfAddedIndividuals, i;
     const int parentCount = static_cast<int>(poblation.size());
 
-    numberOfAddedIndividuals = matingAttemptsPerIteration>=0?matingAttemptsPerIteration:defaultBinomialDistribution(numberOfIndividuals);
+    numberOfAddedIndividuals = matingAttemptsPerIteration >= 0
+                                   ? matingAttemptsPerIteration
+                                   : defaultBinomialDistribution(numberOfIndividuals);
 
     for (i = 0; i < numberOfAddedIndividuals; i++)
     {
@@ -329,78 +365,111 @@ GeneticAlgorithm::GeneticAlgorithm()
     this->rotationType = ROTATION_WAY::ZERO_WAY;
     this->maxDiversityIndex = 0.001;
 }
-GeneticAlgorithm::~GeneticAlgorithm()
-{
-}
+
+GeneticAlgorithm::~GeneticAlgorithm() {}
 
 GeneticAlgorithm GeneticAlgorithm::Build()
 {
     GeneticAlgorithm g;
+
     return g;
 }
 
 GeneticAlgorithm &GeneticAlgorithm::setMaxDiversityIndex(double maxDiversityIndex)
 {
     this->maxDiversityIndex = maxDiversityIndex;
+
     return *this;
 }
 
-GeneticAlgorithm &GeneticAlgorithm::setStagnationLimit(long limit) { stagnationLimit=limit; return *this; }
+GeneticAlgorithm &GeneticAlgorithm::setStagnationLimit(long limit)
+{
+    stagnationLimit = limit;
+
+    return *this;
+}
 
 GeneticAlgorithm &GeneticAlgorithm::setIsWithReplacement(bool isWithReplacement)
 {
     this->isWithReplacement = isWithReplacement;
+
     return *this;
 }
 
 GeneticAlgorithm &GeneticAlgorithm::setSelectionProbability(double selectionProbability)
 {
     this->selectionProbability = selectionProbability;
+
     return *this;
 }
+
 GeneticAlgorithm &GeneticAlgorithm::setCrossProbability(double crossProability)
 {
     this->crossProability = crossProability;
+
     return *this;
 }
-GeneticAlgorithm &GeneticAlgorithm::setMatingAttemptsPerIteration(int value) {matingAttemptsPerIteration=value;return *this;}
+
+GeneticAlgorithm &GeneticAlgorithm::setMatingAttemptsPerIteration(int value)
+{
+    matingAttemptsPerIteration = value;
+
+    return *this;
+}
+
 GeneticAlgorithm &GeneticAlgorithm::setMutationProbabiliy(double mutationProbaility)
 {
     this->mutationProbaility = mutationProbaility;
     adaptiveMutation = false;
+
     return *this;
 }
 
-GeneticAlgorithm &GeneticAlgorithm::setAdaptiveMutation(bool enabled) { adaptiveMutation=enabled; return *this; }
+GeneticAlgorithm &GeneticAlgorithm::setAdaptiveMutation(bool enabled)
+{
+    adaptiveMutation = enabled;
+
+    return *this;
+}
+
 GeneticAlgorithm &GeneticAlgorithm::setDMutationProbability(double dMutationProbability)
 {
     this->dMutationProbability = dMutationProbability;
+
     return *this;
 }
 
 GeneticAlgorithm &GeneticAlgorithm::setMutationType(MutationType mutationType)
 {
     this->mutationType = mutationType;
+
     return *this;
 }
 
 GeneticAlgorithm &GeneticAlgorithm::setRotationType(ROTATION_WAY rotationType)
 {
     this->rotationType = rotationType;
+
     return *this;
 }
+
 GeneticAlgorithm &GeneticAlgorithm::setMaxIteration(long maxIteration)
 {
     this->maxIteration = maxIteration;
+
     return *this;
 }
+
 GeneticAlgorithm &GeneticAlgorithm::setProblem(DatasetBinBacking dataset)
 {
     this->dataSet = dataset;
+
     return *this;
 }
+
 GeneticAlgorithm &GeneticAlgorithm::setNumberOfIndividuals(long numberOfIndividuals)
 {
     this->numberOfIndividuals = numberOfIndividuals;
+
     return *this;
 }

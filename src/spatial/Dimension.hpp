@@ -6,12 +6,12 @@
 
 class Dim
 {
-private:
+  private:
     int l;
     int w;
     int h;
 
-public:
+  public:
     Dim();
     ~Dim();
     Dim(int, int, int);

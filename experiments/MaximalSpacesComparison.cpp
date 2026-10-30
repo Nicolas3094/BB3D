@@ -20,6 +20,7 @@ void saveGenome(const std::string &path, const Chromosome &itemIds, const Chromo
 {
     std::ofstream output(path);
     output << "id,rotation\n";
+
     for (size_t index = 0; index < itemIds.size(); ++index)
         output << itemIds[index] << ',' << rotationGenes[index] << '\n';
 }
@@ -33,13 +34,13 @@ void savePacking(const std::string &path, const Bin &bin)
 {
     std::ofstream output(path);
     output << "id,rotation,x,y,z,dx,dy,dz\n";
+
     for (const auto &item : bin.getLoadedItems())
     {
         const auto position = item.getPunto();
         const auto dimensions = item.getCurrentDimension();
-        output << item.getId() << ',' << item.getRotationId() << ','
-               << position.x << ',' << position.y << ',' << position.z << ','
-               << dimensions.x << ',' << dimensions.y << ',' << dimensions.z << '\n';
+        output << item.getId() << ',' << item.getRotationId() << ',' << position.x << ',' << position.y << ','
+               << position.z << ',' << dimensions.x << ',' << dimensions.y << ',' << dimensions.z << '\n';
     }
 }
 }
@@ -80,10 +81,12 @@ int main(int argc, char **argv)
                     std::shuffle(itemIds.begin(), itemIds.end(), random);
 
                 Chromosome rotationGenes;
+
                 for (int itemId : itemIds)
                 {
                     const auto permissions = data.totalItems[itemId - 1].getRotations();
                     std::vector<int> permittedRotations;
+
                     if (permissions.z)
                     {
                         permittedRotations.push_back(1);
@@ -101,6 +104,7 @@ int main(int argc, char **argv)
                     }
                     if (permittedRotations.empty())
                         throw std::runtime_error("No legal orientation");
+
                     rotationGenes.push_back(permittedRotations[random() % permittedRotations.size()]);
                 }
 
@@ -117,19 +121,21 @@ int main(int argc, char **argv)
 
                     MaximalSpacesStats stats;
                     const auto start = std::chrono::steady_clock::now();
+
                     if (useMaximalSpaces)
                         maximalSpacesDecode(bin, itemIds, rotationGenes, data.totalItems, &stats);
                     else
                         DBLF(bin, itemIds, rotationGenes, data.totalItems);
-                    const auto microseconds = std::chrono::duration<double, std::micro>(
-                        std::chrono::steady_clock::now() - start).count();
+                    const auto microseconds =
+                        std::chrono::duration<double, std::micro>(std::chrono::steady_clock::now() - start)
+                            .count();
 
                     auditPacking(bin, data.totalItems, itemIds, rotationGenes);
                     const std::string decoder = packingDecoderName(bin.getDecoder());
-                    const double occupationPercent = 100.0 * bin.getLoadedVolume() /
-                                                     bin.getDimensions().getVolumen();
-                    results << dataset << ",1," << genomeIndex << ',' << decoder << ','
-                            << occupationPercent << ',' << microseconds << ',';
+                    const double occupationPercent =
+                        100.0 * bin.getLoadedVolume() / bin.getDimensions().getVolumen();
+                    results << dataset << ",1," << genomeIndex << ',' << decoder << ',' << occupationPercent
+                            << ',' << microseconds << ',';
                     if (useMaximalSpaces)
                         results << stats.peakRetainedSpaces;
                     results << ",1\n";
@@ -139,11 +145,13 @@ int main(int argc, char **argv)
         }
         if (!results)
             throw std::runtime_error("Could not write results");
+
         std::cout << "PASS: 8 paired genomes, 16 independently audited packings\n";
     }
     catch (const std::exception &error)
     {
         std::cerr << error.what() << '\n';
+
         return 1;
     }
 }

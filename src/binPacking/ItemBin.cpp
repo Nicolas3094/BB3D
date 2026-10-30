@@ -10,29 +10,34 @@ ItemBin::ItemBin()
     this->hasValidRotation = true;
     rotationId = 0;
 }
+
 ItemBin::~ItemBin() {}
 
 ItemBin ItemBin::Build()
 {
     ItemBin item;
+
     return item;
 }
 
 ItemBin &ItemBin::setId(int id)
 {
     this->id = id;
+
     return *this;
 }
 
 ItemBin &ItemBin::setTipo(int id)
 {
     this->tipo = id;
+
     return *this;
 }
 
 ItemBin &ItemBin::setPosicion(Punto point)
 {
     this->posicion = point;
+
     return *this;
 }
 
@@ -40,6 +45,7 @@ ItemBin &ItemBin::setAlto(int alto)
 {
     this->dimension.setAlto(alto);
     this->currentDimension.z = alto;
+
     return *this;
 }
 
@@ -47,6 +53,7 @@ ItemBin &ItemBin::setLargo(int longitud)
 {
     this->dimension.setLargo(longitud);
     this->currentDimension.x = longitud;
+
     return *this;
 }
 
@@ -54,24 +61,28 @@ ItemBin &ItemBin::setAncho(int ancho)
 {
     this->dimension.setAncho(ancho);
     this->currentDimension.y = ancho;
+
     return *this;
 }
 
 ItemBin &ItemBin::setCurrentDimension(Punto dim)
 {
     this->currentDimension = dim;
+
     return *this;
 }
 
 ItemBin &ItemBin::setRotations(Punto rots)
 {
     this->rotations = rots;
+
     return *this;
 }
 
 ItemBin &ItemBin::setRotation(ROTATION_WAY rot)
 {
     this->rotation = rot;
+
     return *this;
 }
 
@@ -134,19 +145,23 @@ Punto ItemBin::getCurrentDimension() const
 {
     return currentDimension;
 }
+
 int ItemBin::getRotationId() const
 {
     return rotationId;
 }
+
 void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
 {
     this->rotationId = getIdFromRotation(rotationMode);
     this->rotation = rotationWay;
     currentDimension = dimension.getVector();
     hasValidRotation = false;
+
     if (rotationWay == ROTATION_WAY::ZERO_WAY)
     {
         hasValidRotation = rotationMode == ROTATION_MODE::NONE && rotations.z == 1;
+
         return;
     }
     if (rotationWay == ROTATION_WAY::TWO_WAY)
@@ -157,12 +172,14 @@ void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
             currentDimension = dimension.getVector();
             hasValidRotation = rotations.z == 1;
             break;
+
         case TWO:
             currentDimension.x = dimension.getAncho();
             currentDimension.y = dimension.getLargo();
             currentDimension.z = dimension.getAlto();
             hasValidRotation = rotations.z == 1;
             break;
+
         default:
             break;
         }
@@ -175,36 +192,42 @@ void ItemBin::rotate(ROTATION_WAY rotationWay, ROTATION_MODE rotationMode)
             currentDimension = dimension.getVector();
             hasValidRotation = rotations.z == 1;
             break;
+
         case TWO:
             currentDimension.x = dimension.getLargo();
             currentDimension.y = dimension.getAlto();
             currentDimension.z = dimension.getAncho();
             hasValidRotation = rotations.y == 1;
             break;
+
         case THREE:
             currentDimension.x = dimension.getAncho();
             currentDimension.y = dimension.getLargo();
             currentDimension.z = dimension.getAlto();
             hasValidRotation = rotations.z == 1;
             break;
+
         case FOUR:
             currentDimension.x = dimension.getAncho();
             currentDimension.y = dimension.getAlto();
             currentDimension.z = dimension.getLargo();
             hasValidRotation = rotations.x == 1;
             break;
+
         case FIVE:
             currentDimension.x = dimension.getAlto();
             currentDimension.y = dimension.getLargo();
             currentDimension.z = dimension.getAncho();
             hasValidRotation = rotations.y == 1;
             break;
+
         case SIX:
             currentDimension.x = dimension.getAlto();
             currentDimension.y = dimension.getAncho();
             currentDimension.z = dimension.getLargo();
             hasValidRotation = rotations.x == 1;
             break;
+
         default:
             break;
         }

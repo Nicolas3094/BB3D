@@ -11,7 +11,7 @@
 
 class FireflyAlgorithm : public EvolutiveAlgorithm
 {
-private:
+  private:
     friend struct FireflyAlgorithmTestAccess;
     std::map<std::string, bool> visitedIndividuals;
 
@@ -38,7 +38,7 @@ private:
     void handleFireflyIntoPoblation(Individuo, Poblacion &, int);
     void orderFireFlyPoblation(Poblacion &);
 
-public:
+  public:
     FireflyAlgorithm();
     ~FireflyAlgorithm();
     static FireflyAlgorithm Build();

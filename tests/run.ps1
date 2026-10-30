@@ -11,7 +11,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Tests failed: exit code $LASTEXITCODE" }
     # Link the core with controlled RNG inputs; exclude application and search drivers.
     $mutationBinary = Join-Path $PSScriptRoot 'flip_mutation_tests.exe'
-    $mutationSources = @(Join-Path $PSScriptRoot 'FlipMutationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp','ExperimentConfiguration.cpp','ExperimentExecution.cpp','CommandLine.cpp','ExperimentRunner.cpp','BRExperimentMenu.cpp','BRExperimentSession.cpp') -and $_.Directory.Name -ne 'metaheuristics' } | ForEach-Object { $_.FullName })
+    $mutationSources = @(Join-Path $PSScriptRoot 'FlipMutationTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp','RandomNumbers.cpp','ExperimentConfiguration.cpp','ExperimentExecution.cpp','CommandLine.cpp','ExperimentRunner.cpp','BRExperimentMenu.cpp','BRExperimentSession.cpp') -and $_.Directory.Name -ne 'metaheuristics' -and $_.Directory.Name -ne 'brkga' } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $mutationSources -o $mutationBinary
     if ($LASTEXITCODE -ne 0) { throw 'Mutation test compilation failed.' }
     & $mutationBinary
@@ -23,7 +23,7 @@ try {
     & $populationBinary
     if ($LASTEXITCODE -ne 0) { throw "Population tests failed: exit code $LASTEXITCODE" }
     $fireflyBinary = Join-Path $PSScriptRoot 'firefly_search_tests.exe'
-    $fireflySources = @(Join-Path $PSScriptRoot 'FireflySearchTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp', 'FitnessOperators.cpp', 'GeneticsOperators.cpp', 'GeneticAlgorithm.cpp', 'ArtificialBeeColonyAlgorithm.cpp','ExperimentConfiguration.cpp','ExperimentExecution.cpp','CommandLine.cpp','ExperimentRunner.cpp','BRExperimentMenu.cpp','BRExperimentSession.cpp') } | ForEach-Object { $_.FullName })
+    $fireflySources = @(Join-Path $PSScriptRoot 'FireflySearchTests.cpp') + @(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object { $_.Name -notin @('main.cpp', 'RandomNumbers.cpp', 'FitnessOperators.cpp', 'GeneticsOperators.cpp', 'GeneticAlgorithm.cpp', 'ArtificialBeeColonyAlgorithm.cpp','ExperimentConfiguration.cpp','ExperimentExecution.cpp','CommandLine.cpp','ExperimentRunner.cpp','BRExperimentMenu.cpp','BRExperimentSession.cpp') -and $_.Directory.Name -ne 'brkga' } | ForEach-Object { $_.FullName })
     & $Compiler -std=c++14 $fireflySources -o $fireflyBinary
     if ($LASTEXITCODE -ne 0) { throw 'Firefly test compilation failed.' }
     & $fireflyBinary
@@ -94,6 +94,13 @@ try {
     if($LASTEXITCODE -ne 0) {throw 'Timed execution compilation failed'}
     Push-Location $root
     try {& $timedBinary;if($LASTEXITCODE -ne 0) {throw 'Timed execution tests failed'}} finally {Pop-Location}
+    $brkgaBinary=Join-Path $PSScriptRoot 'brkga2012_tests.exe'
+    $brkgaSources=@(Join-Path $PSScriptRoot 'BRKGA2012Tests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
+    & $Compiler -std=c++14 $brkgaSources -o $brkgaBinary
+    if($LASTEXITCODE -ne 0) {throw 'BRKGA 2012 compilation failed'}
+    Push-Location $root
+    try { & $brkgaBinary; if($LASTEXITCODE -ne 0) {throw 'BRKGA 2012 tests failed'} }
+    finally { Pop-Location }
     $maximalBinary=Join-Path $PSScriptRoot 'maximal_spaces_tests.exe'
     $maximalSources=@(Join-Path $PSScriptRoot 'MaximalSpacesTests.cpp')+@(Get-ChildItem (Join-Path $root 'src') -Recurse -Filter *.cpp | Where-Object Name -ne 'main.cpp' | ForEach-Object FullName)
     & $Compiler -std=c++14 $maximalSources -o $maximalBinary

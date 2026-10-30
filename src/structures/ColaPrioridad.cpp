@@ -1,13 +1,12 @@
 #include "ColaPrioridad.hpp"
 #include <algorithm>
 
-ColaPuntosDBL::ColaPuntosDBL()
-{
-}
+ColaPuntosDBL::ColaPuntosDBL() {}
 
 ColaPuntosDBL ColaPuntosDBL::Build()
 {
     ColaPuntosDBL cola;
+
     return cola;
 }
 
@@ -39,6 +38,7 @@ void ColaPuntosDBL::push(Punto pt)
     if (this->cola.size() == 0)
     {
         this->cola.push_back(pt);
+
         return;
     }
     if (cola.at(cola.size() - 1) == pt)
@@ -48,6 +48,7 @@ void ColaPuntosDBL::push(Punto pt)
     if (condition(pt, cola.at(cola.size() - 1)))
     {
         this->cola.push_back(pt);
+
         return;
     }
     for (int i = this->cola.size() - 1; i >= 0; i--)
@@ -56,6 +57,7 @@ void ColaPuntosDBL::push(Punto pt)
         if (condition(pt, cola[i]))
         {
             cola.insert(cola.begin() + i + 1, pt);
+
             return;
         }
         // Do not add if the point is already in list.
@@ -126,10 +128,12 @@ bool ColaPuntosDBL::condition(Punto pt1, Punto pt2)
 std::ostream &operator<<(std::ostream &COUT, ColaPuntosDBL &cola)
 {
     COUT << "rear->";
+
     for (int j = cola.size() - 1; j >= 0; j--)
     {
         COUT << cola[j] << "<->";
     }
     COUT << "head";
+
     return COUT;
 }

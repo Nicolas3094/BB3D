@@ -13,14 +13,13 @@
 // Each instance may contain a different total number of boxes.
 class BRInstanceReader
 {
-public:
+  public:
     // Configurable expansion limit; IDs must also fit the project's int genes.
     explicit BRInstanceReader(std::size_t maximumItemsPerInstance = 1000000);
     std::vector<DatasetBinBacking> read(const std::string &path) const;
-    std::vector<DatasetBinBacking> read(std::istream &input,
-                                      const std::string &source = "<stream>") const;
+    std::vector<DatasetBinBacking> read(std::istream &input, const std::string &source = "<stream>") const;
 
-private:
+  private:
     std::size_t maximumItemsPerInstance;
 };
 

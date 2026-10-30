@@ -4,10 +4,15 @@
 
 Bin::~Bin() {}
 
-Bin &Bin::setCandidatePolicy(DBLFCandidatePolicy policy) {
-    if(policy!=DBLFCandidatePolicy::ThreePoints && policy!=DBLFCandidatePolicy::Projected && policy!=DBLFCandidatePolicy::BestOfBoth)
+Bin &Bin::setCandidatePolicy(DBLFCandidatePolicy policy)
+{
+    if (policy != DBLFCandidatePolicy::ThreePoints && policy != DBLFCandidatePolicy::Projected &&
+        policy != DBLFCandidatePolicy::BestOfBoth)
         throw std::invalid_argument("Unsupported DBLF candidate policy.");
-    candidatePolicy=policy; return *this;
+
+    candidatePolicy = policy;
+
+    return *this;
 }
 
 Bin::Bin()
@@ -17,41 +22,53 @@ Bin::Bin()
     this->numberOfLoadedItems = 0;
     this->loadedVolume = 0;
 }
+
 Bin Bin::Build()
 {
     Bin bin;
+
     return bin;
 }
 
 Bin &Bin::addItem(ItemBin itemBin)
 {
     const std::int64_t volume = itemBin.getVolumen();
+
     if (loadedVolume > std::numeric_limits<std::int64_t>::max() - volume)
         throw std::overflow_error("Loaded volume exceeds int64 range.");
+
     this->loadedItems.push_back(itemBin);
     this->numberOfLoadedItems += 1;
     this->loadedVolume += volume;
+
     return *this;
 }
+
 Bin &Bin::setLargo(int largo)
 {
     this->dimensions.setLargo(largo);
+
     return *this;
 }
+
 Bin &Bin::setAncho(int ancho)
 {
     this->dimensions.setAncho(ancho);
+
     return *this;
 }
+
 Bin &Bin::setAlto(int alto)
 {
     this->dimensions.setAlto(alto);
+
     return *this;
 }
 
 Bin &Bin::setRotationWay(ROTATION_WAY rotation)
 {
     this->rotation = rotation;
+
     return *this;
 }
 
@@ -59,6 +76,7 @@ const Dim Bin::getDimensions() const
 {
     return dimensions;
 }
+
 std::int64_t Bin::getLoadedVolume() const
 {
     return this->loadedVolume;
@@ -73,9 +91,11 @@ const LoadedBins &Bin::getLoadedItems() const
 {
     return this->loadedItems;
 }
+
 std::vector<Punto> Bin::getPostitionOfItems()
 {
     std::vector<Punto> points;
+
     for (int i = 0; i < loadedItems.size(); i++)
     {
         points.push_back(loadedItems[i].getPunto());
@@ -86,6 +106,7 @@ std::vector<Punto> Bin::getPostitionOfItems()
 std::vector<int> Bin::getIdItems()
 {
     std::vector<int> ids;
+
     for (int i = 0; i < loadedItems.size(); i++)
     {
         ids.push_back(loadedItems[i].getId());
@@ -101,8 +122,7 @@ ROTATION_WAY Bin::getRotationWay() const
 std::ostream &operator<<(std::ostream &COUT, const LoadedBins &loadedBins)
 {
     COUT << "LOADED BINS\n"
-         << "size: " << loadedBins.size()
-         << "\nLoaded Items: |";
+         << "size: " << loadedBins.size() << "\nLoaded Items: |";
 
     for (const auto &items : loadedBins)
     {
@@ -112,6 +132,7 @@ std::ostream &operator<<(std::ostream &COUT, const LoadedBins &loadedBins)
 
     return COUT;
 }
+
 std::ostream &operator<<(std::ostream &COUT, Bin bin)
 {
     COUT << "BIN\n"

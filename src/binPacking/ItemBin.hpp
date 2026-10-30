@@ -7,7 +7,7 @@
 
 class ItemBin
 {
-private:
+  private:
     int id;
     int tipo;
     Dim dimension;
@@ -18,7 +18,7 @@ private:
     Punto rotations;
     bool hasValidRotation;
 
-public:
+  public:
     ItemBin();
     ~ItemBin();
 
@@ -60,6 +60,7 @@ struct VolumeGreater
         return lx.getVolumen() < rx.getVolumen();
     }
 };
+
 struct VolumeLess
 {
     bool operator()(ItemBin lx, ItemBin rx)
@@ -67,6 +68,7 @@ struct VolumeLess
         return lx.getVolumen() > rx.getVolumen();
     }
 };
+
 struct LengthGreater
 {
     bool operator()(ItemBin lx, ItemBin rx)
@@ -74,6 +76,7 @@ struct LengthGreater
         return lx.getLargo() < rx.getLargo();
     }
 };
+
 struct LengthLess
 {
     bool operator()(ItemBin lx, ItemBin rx)
@@ -81,6 +84,7 @@ struct LengthLess
         return lx.getLargo() > rx.getLargo();
     }
 };
+
 struct WidthGreater
 {
     bool operator()(ItemBin lx, ItemBin rx)
@@ -88,6 +92,7 @@ struct WidthGreater
         return lx.getAncho() < rx.getAncho();
     }
 };
+
 struct WidthLess
 {
     bool operator()(ItemBin lx, ItemBin rx)

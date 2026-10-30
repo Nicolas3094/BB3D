@@ -30,6 +30,7 @@ task.json
                 "src/genetic/*.cpp",
                 "src/heuristics/*.cpp",
                 "src/metaheuristics/*.cpp",
+                "src/brkga/*.cpp",
                 "src/readData/*.cpp",
                 "src/spatial/*.cpp",
                 "src/structures/*.cpp",
@@ -348,3 +349,7 @@ válidos y compatibilidad de checkpoints, sin esperar 30 segundos por caso.
 ## Espacios Maximos
 
 Decodificador alternativo seleccionable: `--decoder maximal-spaces` o la opcion 5 del menu de empacado. DBLF sigue siendo predeterminado. Instrucciones, pruebas y comparacion breve: [experiments/MAXIMAL-SPACES.md](experiments/MAXIMAL-SPACES.md).
+
+## BRKGA-CLP-U (Goncalves y Resende, 2012)
+
+Algoritmo independiente por capas, opcion 6 del menu. Compilacion, parametros publicados, pruebas, limites y lote de 15 procesos: [src/brkga/README.md](src/brkga/README.md).

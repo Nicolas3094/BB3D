@@ -9,12 +9,12 @@ typedef std::vector<int> Chromosome;
 
 class DoubleGenome
 {
-private:
+  private:
     Chromosome genome;
     Chromosome doubleGenome;
     int size;
 
-public:
+  public:
     DoubleGenome();
 
     ~DoubleGenome();

@@ -20,14 +20,15 @@ namespace
  * se comparan por diferencias para evitar desbordamiento al sumar coordenadas.
  * @throws ExecutionTimeLimit Si vence el presupuesto activo.
  */
-bool findDeepestBottomLeftPlacement(const std::vector<MaximalSpace> &spaces,
-                                   Punto itemDimensions, Punto &bestPosition)
+bool findDeepestBottomLeftPlacement(const std::vector<MaximalSpace> &spaces, Punto itemDimensions,
+                                    Punto &bestPosition)
 {
 #ifdef BB3D_PROFILE_MAXIMAL_SPACES
     auto &profile = maximalSpacesProfile();
     MaximalSpacesPhaseTimer placementTimer(profile.placementMicroseconds);
 #endif
     bool found = false;
+
     for (const auto &space : spaces)
     {
         checkExecutionDeadline();
@@ -42,8 +43,9 @@ bool findDeepestBottomLeftPlacement(const std::vector<MaximalSpace> &spaces,
             continue;
 
         const auto position = space.minimum;
+
         if (!found || std::tie(position.x, position.z, position.y) <
-                      std::tie(bestPosition.x, bestPosition.z, bestPosition.y))
+                          std::tie(bestPosition.x, bestPosition.z, bestPosition.y))
         {
             found = true;
             bestPosition = position;
@@ -58,14 +60,14 @@ void maximalSpacesDecode(Bin &bin, LoadedBins orientedItems, MaximalSpacesStats 
     validateDBLFInput(bin, orientedItems);
     const auto dimensions = bin.getDimensions();
     std::vector<MaximalSpace> freeSpaces = {
-        {{0, 0, 0}, {dimensions.getLargo(), dimensions.getAncho(), dimensions.getAlto()}}
-    };
+        {{0, 0, 0}, {dimensions.getLargo(), dimensions.getAncho(), dimensions.getAlto()}}};
     if (stats)
         stats->peakRetainedSpaces = 1;
 
     for (auto &item : orientedItems)
     {
         checkExecutionDeadline();
+
         if (bin.getRotationWay() == ROTATION_WAY::ZERO_WAY)
             item.rotate(ROTATION_WAY::ZERO_WAY, ROTATION_MODE::NONE);
         if (!item.isValidOrientation())
@@ -73,12 +75,14 @@ void maximalSpacesDecode(Bin &bin, LoadedBins orientedItems, MaximalSpacesStats 
 
         const auto itemDimensions = item.getCurrentDimension();
         Punto position;
+
         if (!findDeepestBottomLeftPlacement(freeSpaces, itemDimensions, position))
             continue;
 
         item.setPosicion(position);
         bin.addItem(item);
         subtractOccupiedSpace(freeSpaces, {position, position + itemDimensions});
+
         if (stats)
             stats->peakRetainedSpaces = std::max(stats->peakRetainedSpaces, freeSpaces.size());
     }
@@ -90,6 +94,7 @@ void maximalSpacesDecode(Bin &bin, const Chromosome &itemIds, const Chromosome &
     validateDBLFInput(bin, itemIds, rotationGenes, itemsById);
     LoadedBins orientedItems;
     orientedItems.reserve(itemIds.size());
+
     for (size_t geneIndex = 0; geneIndex < itemIds.size(); ++geneIndex)
     {
         checkExecutionDeadline();

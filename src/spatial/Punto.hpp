@@ -6,7 +6,7 @@
 
 class Punto
 {
-public:
+  public:
     std::int64_t x;
     std::int64_t y;
     std::int64_t z;

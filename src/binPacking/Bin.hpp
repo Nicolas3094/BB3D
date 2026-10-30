@@ -8,8 +8,18 @@
 #include <vector>
 
 typedef std::vector<ItemBin> LoadedBins;
-enum class DBLFCandidatePolicy { ThreePoints, Projected, BestOfBoth };
-enum class PackingDecoder { DBLF, Contact, MaximalSpaces };
+enum class DBLFCandidatePolicy
+{
+    ThreePoints,
+    Projected,
+    BestOfBoth
+};
+enum class PackingDecoder
+{
+    DBLF,
+    Contact,
+    MaximalSpaces
+};
 
 /**
  * @brief Devuelve el nombre del decodificador usado en opciones, informes y CSV.
@@ -19,15 +29,20 @@ inline const char *packingDecoderName(PackingDecoder decoder)
 {
     switch (decoder)
     {
-    case PackingDecoder::MaximalSpaces: return "maximal-spaces";
-    case PackingDecoder::Contact: return "contact";
-    default: return "dblf";
+    case PackingDecoder::MaximalSpaces:
+        return "maximal-spaces";
+
+    case PackingDecoder::Contact:
+        return "contact";
+
+    default:
+        return "dblf";
     }
 }
 
 class Bin
 {
-private:
+  private:
     Dim dimensions;
     std::int64_t loadedVolume;
     long numberOfLoadedItems;
@@ -36,7 +51,7 @@ private:
     DBLFCandidatePolicy candidatePolicy = DBLFCandidatePolicy::ThreePoints;
     PackingDecoder decoder = PackingDecoder::DBLF;
 
-public:
+  public:
     Bin();
     ~Bin();
 
@@ -58,9 +73,23 @@ public:
     std::vector<int> getIdItems();
     ROTATION_WAY getRotationWay() const;
     Bin &setCandidatePolicy(DBLFCandidatePolicy policy);
-    DBLFCandidatePolicy getCandidatePolicy() const { return candidatePolicy; }
-    Bin &setDecoder(PackingDecoder value) {decoder=value;return *this;}
-    PackingDecoder getDecoder() const {return decoder;}
+
+    DBLFCandidatePolicy getCandidatePolicy() const
+    {
+        return candidatePolicy;
+    }
+
+    Bin &setDecoder(PackingDecoder value)
+    {
+        decoder = value;
+
+        return *this;
+    }
+
+    PackingDecoder getDecoder() const
+    {
+        return decoder;
+    }
 };
 
 std::ostream &operator<<(std::ostream &, const LoadedBins &);

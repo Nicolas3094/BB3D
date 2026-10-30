@@ -4,10 +4,12 @@
 
 Poblacion ArtificialBeeColonyAlgorithm::evolve()
 {
-    validateSearch(dataSet, numberOfIndividuals, maxIteration, mutationProbaility, dMutationProbability, mutationType, rotationType);
+    validateSearch(dataSet, numberOfIndividuals, maxIteration, mutationProbaility, dMutationProbability,
+                   mutationType, rotationType);
     if (numberOfSites < 0 || numberOfSites > numberOfIndividuals || numberOfEliteSites < 0 ||
         numberOfEliteSites > numberOfSites || numberOfEliteBees < 0 || numberOfNonEliteBees < 0)
-        throw std::invalid_argument("ABC requires 0 <= elite sites <= sites <= population and non-negative bee counts.");
+        throw std::invalid_argument(
+            "ABC requires 0 <= elite sites <= sites <= population and non-negative bee counts.");
     visitedIndividuals.clear();
     long iteration;
     int eliteSite, noneEliteSite, eliteBee, nonEliteBee, restOfSites;
@@ -71,14 +73,13 @@ void ArtificialBeeColonyAlgorithm::orderSites(Poblacion &sites)
 void ArtificialBeeColonyAlgorithm::globalSearch(Poblacion &sites, int site)
 {
     checkExecutionDeadline();
-    Individuo newSite = Individuo::Build()
-                            .setGenome(DoubleGenome::Build()
-                                           .setGenome(generatePermutation(dataSet.totalItems.size()))
-                                           .setDGenome(
-                                               generateRandomRepeatedAlalleleChromosome(
-                                                   /* NumberCount= */ dataSet.totalItems.size(),
-                                                   /* minimum= */ 1,
-                                                   /* maximum= */ getIdFromRotationWay(rotationType))));
+    Individuo newSite =
+        Individuo::Build().setGenome(DoubleGenome::Build()
+                                         .setGenome(generatePermutation(dataSet.totalItems.size()))
+                                         .setDGenome(generateRandomRepeatedAlalleleChromosome(
+                                             /* NumberCount= */ dataSet.totalItems.size(),
+                                             /* minimum= */ 1,
+                                             /* maximum= */ getIdFromRotationWay(rotationType))));
 
     evaluateFitness(newSite, dataSet.totalItems, dataSet.bin.setRotationWay(rotationType));
 
@@ -144,57 +145,70 @@ ArtificialBeeColonyAlgorithm::ArtificialBeeColonyAlgorithm()
     this->dMutationProbability = 0.01;
     this->mutationProbaility = 1.0;
 }
+
 ArtificialBeeColonyAlgorithm::~ArtificialBeeColonyAlgorithm() {}
 
 ArtificialBeeColonyAlgorithm ArtificialBeeColonyAlgorithm::Build()
 {
     ArtificialBeeColonyAlgorithm algorithm;
+
     return algorithm;
 }
 
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setIsWithReplacement(bool isWithReplacement)
 {
     this->isWithReplacement = isWithReplacement;
+
     return *this;
 }
+
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setMaxIteration(long maxIteration)
 {
     this->maxIteration = maxIteration;
+
     return *this;
 }
 
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setNumberOfSites(int numberOfSites)
 {
     this->numberOfSites = numberOfSites;
+
     return *this;
 }
 
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setNumberOfEliteSites(int numberOfEliteSites)
 {
     this->numberOfEliteSites = numberOfEliteSites;
+
     return *this;
 }
 
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setNumberOfEliteBees(int numberOfEliteBees)
 {
     this->numberOfEliteBees = numberOfEliteBees;
+
     return *this;
 }
+
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setNumberOfNonEliteBees(int numberOfNonEliteBees)
 {
     this->numberOfNonEliteBees = numberOfNonEliteBees;
+
     return *this;
 }
 
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setMutationProbabiliy(double mutationProbaility)
 {
     this->mutationProbaility = mutationProbaility;
+
     return *this;
 }
 
-ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setDMutationProbability(double dMutationProbability)
+ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setDMutationProbability(
+    double dMutationProbability)
 {
     this->dMutationProbability = dMutationProbability;
+
     return *this;
 }
 
@@ -202,22 +216,27 @@ ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setMutationType(Muta
 {
 
     this->mutationType = mutationType;
+
     return *this;
 }
+
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setRotationType(ROTATION_WAY rotationType)
 {
     this->rotationType = rotationType;
+
     return *this;
 }
 
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setProblem(DatasetBinBacking dataSet)
 {
     this->dataSet = dataSet;
+
     return *this;
 }
 
 ArtificialBeeColonyAlgorithm &ArtificialBeeColonyAlgorithm::setNumberOfIndividuals(int numberOfIndividuals)
 {
     this->numberOfIndividuals = numberOfIndividuals;
+
     return *this;
 }

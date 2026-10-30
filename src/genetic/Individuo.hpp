@@ -9,11 +9,11 @@
 
 class Individuo
 {
-private:
+  private:
     DoubleGenome genome;
     double fitness = 0;
 
-public:
+  public:
     std::string solution;
 
     Individuo();
@@ -35,6 +35,7 @@ struct greater_fitness
     inline bool operator()(const Individuo &struct1, const Individuo &struct2)
     {
         checkExecutionDeadline();
+
         return (struct1.getFitness() > struct2.getFitness());
     }
 };

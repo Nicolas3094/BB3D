@@ -10,13 +10,13 @@
 
 class GeneticAlgorithm : public EvolutiveAlgorithm
 {
-private:
+  private:
     friend struct GeneticAlgorithmTestAccess;
     std::map<std::string, bool> visitedIndividuals;
     long maxIteration;
     DatasetBinBacking dataSet;
     long numberOfIndividuals;
-    int matingAttemptsPerIteration=-1; // -1 preserves the original binomial draw.
+    int matingAttemptsPerIteration = -1; // -1 preserves the original binomial draw.
 
     double selectionProbability;
     double crossProability;
@@ -24,8 +24,8 @@ private:
     bool adaptiveMutation = true;
     double dMutationProbability;
     double maxDiversityIndex;
-    long stagnationLimit=25,stagnantIterations=0;
-    double bestSeenFitness=-1;
+    long stagnationLimit = 25, stagnantIterations = 0;
+    double bestSeenFitness = -1;
 
     bool isWithReplacement;
 
@@ -52,7 +52,7 @@ private:
 
     double diversityIndex(Poblacion);
 
-public:
+  public:
     GeneticAlgorithm();
     ~GeneticAlgorithm();
     static GeneticAlgorithm Build();

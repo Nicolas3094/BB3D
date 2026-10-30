@@ -9,18 +9,21 @@ Individuo::Individuo()
 Individuo Individuo::Build()
 {
     Individuo newInd;
+
     return newInd;
 }
 
 Individuo &Individuo::setFitness(double fitness)
 {
     this->fitness = fitness;
+
     return *this;
 }
 
 Individuo &Individuo::setGenome(DoubleGenome genome)
 {
     this->genome = genome;
+
     return *this;
 }
 
@@ -34,7 +37,10 @@ DoubleGenome &Individuo::getGenome()
     return this->genome;
 }
 
-const DoubleGenome &Individuo::getGenome() const { return genome; }
+const DoubleGenome &Individuo::getGenome() const
+{
+    return genome;
+}
 
 std::ostream &operator<<(std::ostream &COUT, Individuo &ind)
 {
@@ -48,12 +54,11 @@ LoadedBins decodificateIndividual(Individuo indivudual, LoadedBins dataSet, Bin 
     validateDBLFInput(bin, indivudual.getGenome().getGenome(), indivudual.getGenome().getDGenome(), dataSet);
     int genomeSize = indivudual.getGenome().getGenome().size();
     LoadedBins itemsToPack(genomeSize);
+
     for (int i = 0; i < genomeSize; i++)
     {
         ItemBin item = dataSet[indivudual.getGenome().getGenome()[i] - 1];
-        item.rotate(
-            bin.getRotationWay(),
-            getRotationFromId(indivudual.getGenome().getDGenome()[i]));
+        item.rotate(bin.getRotationWay(), getRotationFromId(indivudual.getGenome().getDGenome()[i]));
 
         itemsToPack[i] = item;
     }

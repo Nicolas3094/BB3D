@@ -31,6 +31,7 @@ struct MaximalSpacesProfile
 inline MaximalSpacesProfile &maximalSpacesProfile()
 {
     static thread_local MaximalSpacesProfile profile;
+
     return profile;
 }
 
@@ -42,15 +43,20 @@ class MaximalSpacesPhaseTimer
     Clock::time_point start = Clock::now();
     bool running = true;
 
-public:
+  public:
     explicit MaximalSpacesPhaseTimer(double &destination) : microseconds(destination) {}
-    ~MaximalSpacesPhaseTimer() { finish(); }
+
+    ~MaximalSpacesPhaseTimer()
+    {
+        finish();
+    }
 
     /** @brief Cierra la medicion una sola vez, antes de iniciar la siguiente fase. */
     void finish()
     {
         if (!running)
             return;
+
         microseconds += std::chrono::duration<double, std::micro>(Clock::now() - start).count();
         running = false;
     }

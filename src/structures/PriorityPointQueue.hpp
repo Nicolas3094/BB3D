@@ -6,7 +6,7 @@
 
 class PriorityPointQueue
 {
-private:
+  private:
     int size;
 
     Node<Punto> *rear;
@@ -16,7 +16,7 @@ private:
     bool condition2(Punto, Punto);
     bool condition3(Punto, Punto);
 
-public:
+  public:
     PriorityPointQueue();
     ~PriorityPointQueue();
     PriorityPointQueue(const PriorityPointQueue &);

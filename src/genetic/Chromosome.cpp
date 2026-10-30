@@ -2,28 +2,36 @@
 
 DoubleGenome::DoubleGenome() {}
 
-DoubleGenome::~DoubleGenome()
+DoubleGenome::~DoubleGenome() {}
+
+const Chromosome &DoubleGenome::getGenome() const
 {
+    return genome;
 }
 
-const Chromosome &DoubleGenome::getGenome() const { return genome; }
-const Chromosome &DoubleGenome::getDGenome() const { return doubleGenome; }
+const Chromosome &DoubleGenome::getDGenome() const
+{
+    return doubleGenome;
+}
 
 DoubleGenome DoubleGenome::Build()
 {
     DoubleGenome newGenome;
+
     return newGenome;
 }
 
 DoubleGenome &DoubleGenome::setGenome(Chromosome chromosome)
 {
     genome = chromosome;
+
     return *this;
 }
 
 DoubleGenome &DoubleGenome::setDGenome(Chromosome chromosome)
 {
     this->doubleGenome = chromosome;
+
     return *this;
 }
 
@@ -44,6 +52,7 @@ std::ostream &operator<<(std::ostream &COUT, DoubleGenome &gen)
     for (int i = 0; i < gen.getGenome().size(); i++)
     {
         COUT << gen.getGenome()[i] << " " << gen.getDGenome()[i];
+
         if (i != gen.getGenome().size() - 1)
         {
             COUT << "|";
@@ -51,12 +60,15 @@ std::ostream &operator<<(std::ostream &COUT, DoubleGenome &gen)
     }
     return COUT;
 }
+
 std::ostream &operator<<(std::ostream &COUT, Chromosome &chr)
 {
     COUT << "|";
+
     for (int i = 0; i < chr.size(); i++)
     {
         COUT << chr[i];
+
         if (i != chr.size() - 1)
         {
             COUT << "|";

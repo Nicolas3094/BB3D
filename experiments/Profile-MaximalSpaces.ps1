@@ -15,49 +15,74 @@ param(
     [string]$Compiler = 'C:/mingw64/bin/g++.exe',
     [switch]$SkipBuild
 )
+
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $previousPath = $env:PATH
 Push-Location $root
+
 try {
-    if ($Repetitions -lt 1) { throw 'Repetitions must be positive' }
-    if (Test-Path $OutputDirectory) { throw 'Use a new output directory' }
+    if ($Repetitions -lt 1) {
+        throw 'Repetitions must be positive'
+    }
+
+    if (Test-Path $OutputDirectory) {
+        throw 'Use a new output directory'
+    }
     $env:PATH = (Split-Path $Compiler -Parent) + ';' + $env:PATH
     $buildDirectory = 'build/maximal-spaces-profile'
     New-Item -ItemType Directory -Force $buildDirectory, $OutputDirectory | Out-Null
+
     if (!$SkipBuild) {
         $sources = @(Get-ChildItem src -Recurse -Filter *.cpp |
             Where-Object Name -ne main.cpp | ForEach-Object FullName)
         & $Compiler -std=c++14 -O3 -DNDEBUG experiments/Profile-MaximalSpaces.cpp $sources -o "$buildDirectory/normal.exe"
-        if ($LASTEXITCODE) { throw 'Normal benchmark compilation failed' }
+
+        if ($LASTEXITCODE) {
+            throw 'Normal benchmark compilation failed'
+        }
         & $Compiler -std=c++14 -O3 -DNDEBUG -DBB3D_PROFILE_MAXIMAL_SPACES experiments/Profile-MaximalSpaces.cpp $sources -o "$buildDirectory/profiled.exe"
-        if ($LASTEXITCODE) { throw 'Profiled benchmark compilation failed' }
+
+        if ($LASTEXITCODE) {
+            throw 'Profiled benchmark compilation failed'
+        }
     }
 
     # Repetition zero warms both versions and is excluded from the aggregate.
     for ($repetition = 0; $repetition -le $Repetitions; $repetition++) {
-        $modes = if ($repetition % 2) { @('profiled', 'normal') } else { @('normal', 'profiled') }
+        $modes = if ($repetition % 2) {
+            @('profiled', 'normal')
+        } else {
+            @('normal', 'profiled')
+        }
+
         foreach ($mode in $modes) {
             & "./$buildDirectory/$mode.exe" $OutputDirectory $ReferenceDirectory $repetition
-            if ($LASTEXITCODE) { throw "$mode repetition $repetition failed" }
+
+            if ($LASTEXITCODE) {
+                throw "$mode repetition $repetition failed"
+            }
         }
     }
 
     $rows = @(Get-ChildItem "$OutputDirectory/*.csv" | ForEach-Object {
-        Import-Csv $_.FullName | Where-Object { [int]$_.repetition -gt 0 }
-    })
+            Import-Csv $_.FullName | Where-Object {
+                [int]$_.repetition -gt 0
+            }
+        })
     $referenceRows = @(Import-Csv "$ReferenceDirectory/evaluations.csv" |
         Where-Object decoder -eq 'maximal-spaces')
     foreach ($row in $rows) {
         $label = "$($row.dataset)-g$($row.genome)"
         $reference = Join-Path $ReferenceDirectory "$label-maximal-spaces-packing.csv"
         $packing = Join-Path $OutputDirectory "$($row.mode)-r$($row.repetition)-$label-packing.csv"
+
         if ((Get-FileHash $reference).Hash -ne (Get-FileHash $packing).Hash) {
             throw "Packing changed: $packing"
         }
         $expected = @($referenceRows | Where-Object {
-            $_.dataset -eq $row.dataset -and $_.genome -eq $row.genome
-        })
+                $_.dataset -eq $row.dataset -and $_.genome -eq $row.genome
+            })
         if ($expected.Count -ne 1 -or $row.valid -ne '1' -or
             [double]$row.occupation_percent -ne [double]$expected[0].occupation_percent -or
             [int]$row.peak_retained -ne [int]$expected[0].peak_spaces) {
@@ -69,6 +94,7 @@ try {
     Get-ChildItem "$ReferenceDirectory/*-genome.csv" | ForEach-Object {
         $inputHashes[$_.Name] = (Get-FileHash $_.FullName).Hash
     }
+
     foreach ($dataset in @('BR1', 'BR15')) {
         $inputHashes[$dataset] = (Get-FileHash "Instance/BR/$dataset.txt").Hash
     }

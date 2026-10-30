@@ -10,19 +10,20 @@ int hamming(const DoubleGenome &gen1, const DoubleGenome &gen2)
     const auto &rotations1 = gen1.getDGenome();
     const auto &rotations2 = gen2.getDGenome();
     const bool withRotations = !rotations1.empty();
-    if (items1.size() != items2.size() ||
-        rotations1.empty() != rotations2.empty() ||
+
+    if (items1.size() != items2.size() || rotations1.empty() != rotations2.empty() ||
         (!rotations1.empty() && rotations1.size() != items1.size()) ||
         (!rotations2.empty() && rotations2.size() != items2.size()))
     {
         throw std::invalid_argument("Hamming requires compatible chromosome lengths and rotation encoding.");
     }
     int count = 0;
+
     for (size_t i = 0; i < items1.size(); ++i)
     {
-        if((i&255)==0)checkExecutionDeadline();
-        if (items1[i] != items2[i] ||
-            (withRotations && rotations1[i] != rotations2[i]))
+        if ((i & 255) == 0)
+            checkExecutionDeadline();
+        if (items1[i] != items2[i] || (withRotations && rotations1[i] != rotations2[i]))
         {
             ++count;
         }
@@ -33,23 +34,32 @@ int hamming(const DoubleGenome &gen1, const DoubleGenome &gen2)
 DoubleGenome crossOx(DoubleGenome gen1, DoubleGenome gen2, int i, int j)
 {
     const size_t size = gen1.getGenome().size();
+
     if (size == 0 || size > static_cast<size_t>(std::numeric_limits<int>::max()) ||
-        gen2.getGenome().size() != size || gen1.getDGenome().size() != size || gen2.getDGenome().size() != size)
+        gen2.getGenome().size() != size || gen1.getDGenome().size() != size ||
+        gen2.getDGenome().size() != size)
         throw std::invalid_argument("Crossover requires matching non-empty item and rotation chromosomes.");
+
     if (i < 0 || j < i || static_cast<size_t>(j) >= size)
         throw std::invalid_argument("Crossover cut indices are outside the chromosome.");
+
     std::unordered_set<int> firstIds, secondIds;
+
     for (size_t index = 0; index < size; ++index)
     {
         const int first = gen1.getGenome()[index], second = gen2.getGenome()[index];
+
         if (first <= 0 || second <= 0 || !firstIds.insert(first).second || !secondIds.insert(second).second)
             throw std::invalid_argument("Crossover parents must contain positive, unique item IDs.");
+
         const int firstRotation = gen1.getDGenome()[index], secondRotation = gen2.getDGenome()[index];
+
         if (firstRotation < 0 || firstRotation > 6 || secondRotation < 0 || secondRotation > 6)
             throw std::invalid_argument("Crossover parents contain an invalid rotation code.");
     }
     if (firstIds != secondIds)
         throw std::invalid_argument("Crossover parents must contain the same item IDs.");
+
     int n = gen1.getGenome().size();
     Chromosome resultant(n);
     Chromosome resultantRot(n);
@@ -99,6 +109,7 @@ void swapPointValue(DoubleGenome &gen, int i, int value)
     }
     int tmp = gen.getGenome()[i];
     int tmpRot = gen.getDGenome()[i];
+
     for (int j = 0; j < gen.getGenome().size(); j++)
     {
         if (i != j && gen.getGenome()[j] == value)
@@ -117,6 +128,7 @@ void inverseMutation(DoubleGenome &gen, int i, int j)
     if (gen.getGenome().size() != gen.getDGenome().size() || i < 0 || j < i ||
         static_cast<size_t>(j) > gen.getGenome().size())
         throw std::invalid_argument("Inversion requires matching chromosomes and a valid half-open range.");
+
     std::reverse(gen.getGenome().begin() + i, gen.getGenome().begin() + j);
     std::reverse(gen.getDGenome().begin() + i, gen.getDGenome().begin() + j);
 }
@@ -201,8 +213,7 @@ void swapSubsequences(DoubleGenome &gen, int init1, int end1, int init2, int end
     copySubsequence(gen, first, init2, end2);
 }
 
-void randomReversingSwapOfSubsequences(
-    DoubleGenome &gen, int init1, int end1, int init2, int end2)
+void randomReversingSwapOfSubsequences(DoubleGenome &gen, int init1, int end1, int init2, int end2)
 {
     if (end1 - init1 != end2 - init2)
     {
@@ -266,11 +277,15 @@ void mutateC1(DoubleGenome &gen, int randomStep)
 {
     if (gen.getGenome().size() != gen.getDGenome().size() || randomStep < -1)
         throw std::invalid_argument("C1 requires matching chromosomes and step >= -1.");
+
     const int n = static_cast<int>(gen.getGenome().size());
-    if (n < 2) return;
+
+    if (n < 2)
+        return;
+
     const int half = n / 2;
-    const int length = randomStep == -1 ? randomInteger(1, half)
-        : std::min(half, std::max(1, randomStep / 2));
+    const int length =
+        randomStep == -1 ? randomInteger(1, half) : std::min(half, std::max(1, randomStep / 2));
     // Equal, non-empty segments in disjoint halves; explicit steps are bounded.
     const int first = randomInteger(0, half - length);
     const int second = randomInteger(half, n - length);
@@ -281,16 +296,19 @@ void mutateC2(DoubleGenome &gen, int randomStep)
 {
     if (gen.getGenome().size() != gen.getDGenome().size() || randomStep < -1)
         throw std::invalid_argument("C2 requires matching chromosomes and step >= -1.");
+
     const int n = static_cast<int>(gen.getGenome().size());
-    if (n < 2) return;
-    const int length = randomStep == -1 ? randomInteger(1, n - 1)
-        : std::min(n - 1, std::max(1, randomStep));
+
+    if (n < 2)
+        return;
+
+    const int length = randomStep == -1 ? randomInteger(1, n - 1) : std::min(n - 1, std::max(1, randomStep));
     const int init = randomInteger(0, n - length);
     const int end = init + length - 1;
     // Insertion uses the original vector boundary. Skip the immediately
     // adjacent boundary on the right, which would leave the sequence unchanged.
-    const int index = init > 0 && (end == n - 1 || uniformUnit() < 0.5)
-        ? randomInteger(0, init - 1) : randomInteger(end + 2, n);
+    const int index = init > 0 && (end == n - 1 || uniformUnit() < 0.5) ? randomInteger(0, init - 1)
+                                                                        : randomInteger(end + 2, n);
     combine2(gen, index, init, end);
 }
 
@@ -298,10 +316,13 @@ void mutateInversion(DoubleGenome &gen, int randomStep)
 {
     if (gen.getGenome().size() != gen.getDGenome().size() || randomStep < -1)
         throw std::invalid_argument("Inversion requires matching chromosomes and step >= -1.");
+
     const int n = static_cast<int>(gen.getGenome().size());
-    if (n < 2) return;
-    const int length = randomStep == -1 ? randomInteger(2, n)
-        : std::min(n, std::max(2, randomStep));
+
+    if (n < 2)
+        return;
+
+    const int length = randomStep == -1 ? randomInteger(2, n) : std::min(n, std::max(2, randomStep));
     const int start = randomInteger(0, n - length);
     inverseMutation(gen, start, start + length); // End iterator is exclusive.
 }
@@ -330,39 +351,46 @@ void addToGenome(DoubleGenome &gen, int value, int valueRot)
     gen.getDGenome().push_back(valueRot);
 }
 
-void copyEqualRangeToGenome(
-    DoubleGenome &gen, DoubleGenome genToAdd, int initGen, int endGen, int initCopy, int endCopy)
+void copyEqualRangeToGenome(DoubleGenome &gen, DoubleGenome genToAdd, int initGen, int endGen, int initCopy,
+                            int endCopy)
 {
-    if(gen.getGenome().size()!=gen.getDGenome().size() || genToAdd.getGenome().size()!=genToAdd.getDGenome().size() ||
-       initGen<0 || initCopy<0 || endGen<initGen || endCopy<initCopy ||
-       static_cast<size_t>(endGen)>=gen.getGenome().size() || static_cast<size_t>(endCopy)>=genToAdd.getGenome().size() ||
-       endGen-initGen!=endCopy-initCopy)
-        throw std::invalid_argument("Copy requires valid inclusive intervals of equal length and paired chromosomes.");
-    for (size_t offset=0;offset<=static_cast<size_t>(endGen-initGen);++offset)
+    if (gen.getGenome().size() != gen.getDGenome().size() ||
+        genToAdd.getGenome().size() != genToAdd.getDGenome().size() || initGen < 0 || initCopy < 0 ||
+        endGen < initGen || endCopy < initCopy || static_cast<size_t>(endGen) >= gen.getGenome().size() ||
+        static_cast<size_t>(endCopy) >= genToAdd.getGenome().size() || endGen - initGen != endCopy - initCopy)
+        throw std::invalid_argument(
+            "Copy requires valid inclusive intervals of equal length and paired chromosomes.");
+    for (size_t offset = 0; offset <= static_cast<size_t>(endGen - initGen); ++offset)
     {
-        gen.getGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getGenome()[static_cast<size_t>(initCopy)+offset];
-        gen.getDGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getDGenome()[static_cast<size_t>(initCopy)+offset];
+        gen.getGenome()[static_cast<size_t>(initGen) + offset] =
+            genToAdd.getGenome()[static_cast<size_t>(initCopy) + offset];
+        gen.getDGenome()[static_cast<size_t>(initGen) + offset] =
+            genToAdd.getDGenome()[static_cast<size_t>(initCopy) + offset];
     }
 }
 
-void copyReversedEqualRangeToGenome(
-    DoubleGenome &gen, DoubleGenome genToAdd, int initGen, int endGen, int initCopy, int endCopy)
+void copyReversedEqualRangeToGenome(DoubleGenome &gen, DoubleGenome genToAdd, int initGen, int endGen,
+                                    int initCopy, int endCopy)
 {
-    if(gen.getGenome().size()!=gen.getDGenome().size() || genToAdd.getGenome().size()!=genToAdd.getDGenome().size() ||
-       initGen<0 || initCopy<0 || endGen<initGen || endCopy<initCopy ||
-       static_cast<size_t>(endGen)>=gen.getGenome().size() || static_cast<size_t>(endCopy)>=genToAdd.getGenome().size() ||
-       endGen-initGen!=endCopy-initCopy)
-        throw std::invalid_argument("Reverse copy requires valid inclusive intervals of equal length and paired chromosomes.");
-    for (size_t offset=0;offset<=static_cast<size_t>(endGen-initGen);++offset)
+    if (gen.getGenome().size() != gen.getDGenome().size() ||
+        genToAdd.getGenome().size() != genToAdd.getDGenome().size() || initGen < 0 || initCopy < 0 ||
+        endGen < initGen || endCopy < initCopy || static_cast<size_t>(endGen) >= gen.getGenome().size() ||
+        static_cast<size_t>(endCopy) >= genToAdd.getGenome().size() || endGen - initGen != endCopy - initCopy)
+        throw std::invalid_argument(
+            "Reverse copy requires valid inclusive intervals of equal length and paired chromosomes.");
+    for (size_t offset = 0; offset <= static_cast<size_t>(endGen - initGen); ++offset)
     {
-        gen.getGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getGenome()[static_cast<size_t>(endCopy)-offset];
-        gen.getDGenome()[static_cast<size_t>(initGen)+offset] = genToAdd.getDGenome()[static_cast<size_t>(endCopy)-offset];
+        gen.getGenome()[static_cast<size_t>(initGen) + offset] =
+            genToAdd.getGenome()[static_cast<size_t>(endCopy) - offset];
+        gen.getDGenome()[static_cast<size_t>(initGen) + offset] =
+            genToAdd.getDGenome()[static_cast<size_t>(endCopy) - offset];
     }
 }
 
 DoubleGenome buildSubsequence(DoubleGenome gen, int init, int end)
 {
     DoubleGenome subSequence;
+
     for (int i = init; i <= end; i++)
     {
         subSequence.getGenome().push_back(gen.getGenome()[i]);
@@ -389,6 +417,7 @@ void reverseGenome(DoubleGenome &subSequenceGenome)
 DoubleGenome buildSubsequenceGenome(DoubleGenome fullSequence, int init, int end)
 {
     DoubleGenome subSequence;
+
     for (int i = init; i < end + 1; i++)
     {
         subSequence.getGenome().push_back(fullSequence.getGenome()[i]);
@@ -397,8 +426,8 @@ DoubleGenome buildSubsequenceGenome(DoubleGenome fullSequence, int init, int end
     return subSequence;
 }
 
-void addSubsequence(
-    DoubleGenome &fullSequence, DoubleGenome subSequence, int indexToInsert, int init, int end)
+void addSubsequence(DoubleGenome &fullSequence, DoubleGenome subSequence, int indexToInsert, int init,
+                    int end)
 {
     int n;
 
@@ -412,20 +441,16 @@ void addSubsequence(
                                         fullSequence.getDGenome().begin() + end + 1);
 
         fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert,
-                                        subSequence.getGenome().begin(),
-                                        subSequence.getGenome().end());
+                                        subSequence.getGenome().begin(), subSequence.getGenome().end());
         fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert,
-                                         subSequence.getDGenome().begin(),
-                                         subSequence.getDGenome().end());
+                                         subSequence.getDGenome().begin(), subSequence.getDGenome().end());
     }
     else if (indexToInsert > end)
     {
         fullSequence.getGenome().insert(fullSequence.getGenome().begin() + indexToInsert,
-                                        subSequence.getGenome().begin(),
-                                        subSequence.getGenome().end());
+                                        subSequence.getGenome().begin(), subSequence.getGenome().end());
         fullSequence.getDGenome().insert(fullSequence.getDGenome().begin() + indexToInsert,
-                                         subSequence.getDGenome().begin(),
-                                         subSequence.getDGenome().end());
+                                         subSequence.getDGenome().begin(), subSequence.getDGenome().end());
 
         fullSequence.getGenome().erase(fullSequence.getGenome().begin() + init,
                                        fullSequence.getGenome().begin() + end + 1);

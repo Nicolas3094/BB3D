@@ -32,6 +32,15 @@ void budgets(){
 }
 void strategies(){
     static_assert(ThirtySecondExecution::limitMilliseconds==30000,"Production limit is not thirty seconds");
+    for(const std::string algorithm:{"GA","ABC","FFA"}) {
+        auto config=makeExperimentConfiguration(algorithm,ROTATION_WAY::ZERO_WAY,MutationType::C2,false);
+        config.individuals=4;config.sites=2;config.eliteSites=1;config.eliteBees=1;config.nonEliteBees=1;
+        int ticks=0;
+        ThirtySecondExecution shortBudget([&]{return ExecutionBudget::Clock::time_point{}+std::chrono::milliseconds(ticks++);},std::chrono::milliseconds(5));
+        const auto result=shortBudget.execute(config,problem());
+        require(result.timeLimitReached && ticks<=10,"Explicit test duration was ignored");
+        rejects([&]{ThirtySecondExecution invalid(std::chrono::steady_clock::now,std::chrono::milliseconds(0));invalid.execute(config,problem());});
+    }
     for(const std::string algorithm:{"GA","ABC","FFA"})for(bool replacement:{false,true})for(bool cached:{false,true}) {
         auto config=makeExperimentConfiguration(algorithm,ROTATION_WAY::ZERO_WAY,MutationType::C2,replacement);
         config.individuals=4;config.iterations=0;config.sites=2;config.eliteSites=1;config.eliteBees=1;config.nonEliteBees=1;config.movements=1;config.cacheEntries=cached?8:0;
